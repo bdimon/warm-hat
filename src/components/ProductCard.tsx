@@ -5,13 +5,20 @@ import { ShoppingCart } from 'lucide-react';
 
 export interface Product {
   id: number;
-  name: string;
+  name_en: string;
+  name_ru?: string;
+  name_ua?: string;
+  name_pl?: string;
   price: number;
-  image: string;
-  category: string;
-  isNew?: boolean;
-  isSale?: boolean;
-  salePrice?: number;
+  images: string[];
+  category: string[];
+  isnew?: boolean;
+  issale?: boolean;
+  saleprice?: number;
+  description_en: string;
+  description_ru?: string;
+  description_ua?: string;
+  description_pl?: string;
 }
 
 interface ProductCardProps {
@@ -23,16 +30,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group">
       <div className="relative h-64 overflow-hidden">
         <img 
-          src={product.image} 
-          alt={product.name} 
+          src={product.images[0]} 
+          alt={product.name_en} 
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
-        {product.isNew && (
+        {product.isnew && (
           <div className="absolute top-3 left-3 bg-shop-blue-dark text-white text-xs font-bold uppercase py-1 px-2 rounded">
             Новинка
           </div>
         )}
-        {product.isSale && (
+        {product.issale && (
           <div className="absolute top-3 right-3 bg-[#FF5252] text-white text-xs font-bold uppercase py-1 px-2 rounded">
             Скидка
           </div>
@@ -41,13 +48,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <div className="p-4">
         <div className="text-sm text-gray-500 mb-1">{product.category}</div>
         <h3 className="text-lg font-semibold mb-2 text-shop-text transition-colors group-hover:text-shop-blue-dark">
-          {product.name}
+          {product.name_en}
         </h3>
         <div className="flex justify-between items-center">
           <div>
-            {product.isSale && product.salePrice ? (
+            {product.issale && product.saleprice ? (
               <div className="flex items-center gap-2">
-                <span className="text-xl font-bold text-shop-text">{product.salePrice}₽</span>
+                <span className="text-xl font-bold text-shop-text">{product.saleprice}₽</span>
                 <span className="text-sm text-gray-500 line-through">{product.price}₽</span>
               </div>
             ) : (

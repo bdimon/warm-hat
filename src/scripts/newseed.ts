@@ -107,9 +107,9 @@ async function seed() {
   clearTables();
 
   // Сидирование
-  await seedProducts();
-  await seedUsers();
-  await seedOrders();
+  // await seedProducts();
+  // await seedUsers();
+  // await seedOrders();
 
   console.log("✅ Сидирование завершено!");
 }

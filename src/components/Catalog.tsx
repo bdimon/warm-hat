@@ -7,73 +7,82 @@ import { Button } from '@/components/ui/button';
 const PRODUCTS: Product[] = [
   {
     id: 1,
-    name: "Шапка с логотипом",
+    name_en: "Шапка с логотипом",
     price: 12990,
-    image: "/hamed-darzi-6dILIIipKHk-unsplash.jpg",
-    category: "Шапки",
-    isNew: true
+    description_en: "Описание продукта",
+    images: ["/hamed-darzi-6dILIIipKHk-unsplash.jpg", "/hamed-darzi-6dILIIipKHk-unsplash.jpg", "/hamed-darzi-6dILIIipKHk-unsplash.jpg"],
+    category: ["Шапки", "Все"],
+    isnew: true
   },
   {
     id: 2,
-    name: "Шапка теплая",
+    name_en: "Шапка теплая",
     price: 8990,
-    image: "/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg",
-    category: "Шапки",
-    isSale: true,
-    salePrice: 7490
+    description_en: "Описание продукта",
+    images: ["/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg", "/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg", "/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg"],
+    category: ["Шапки", "Все"],
+    issale: true,
+    saleprice: 7490
   },
   {
     id: 3,
-    name: "Шапка бини",
+    name_en: "Шапка бини",
     price: 5990,
-    image: "/erik-mclean-CSlBUY-R6dY-unsplash.jpg",
-    category: "Шапки"
+    description_en: "Описание продукта",
+    images: ["/erik-mclean-CSlBUY-R6dY-unsplash.jpg", "/erik-mclean-CSlBUY-R6dY-unsplash.jpg", "/erik-mclean-CSlBUY-R6dY-unsplash.jpg"],
+    category: ["Шапки", "Все"],
   },
   {
     id: 4,
-    name: "Шарфы вязаные",
+    name_en: "Шарфы вязаные",
     price: 18990,
-    image: "/kelly-sikkema-scarfs-unsplash.jpg",
-    category: "Шарфы и снуды"
+    description_en: "Описание продукта",
+    images: ["/kelly-sikkema-scarfs-unsplash.jpg", "/kelly-sikkema-scarfs-unsplash.jpg", "/kelly-sikkema-scarfs-unsplash.jpg"],
+    category: ["Шарфы и снуды", "Все"], // "Шарфы и снуды"
   },
   {
     id: 5,
-    name: "Комплект 1",
+    name_en: "Комплект 1",
     price: 21990,
-    image: "/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg",
-    category: "Комплекты",
-    isNew: true
+    description_en: "Описание продукта",
+    images: ["/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg", "/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg", "/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg"],
+    category: ["Комплекты", "Все"], // "Комплекты",
+    isnew: true
   },
   {
     id: 6,
-    name: "Шарф вязаный",
+    name_en: "Шарф вязаный",
     price: 4990,
-    image: "/hamed-darzi-6dILIIipKHk-unsplash.jpg",
-    category: "Шарфы и снуды",
-    isSale: true,
-    salePrice: 3990
+    description_en: "Описание продукта",
+    images: ["/hamed-darzi-6dILIIipKHk-unsplash.jpg", "/hamed-darzi-6dILIIipKHk-unsplash.jpg", "/hamed-darzi-6dILIIipKHk-unsplash.jpg"],
+    category: ["Шарфы и снуды", "Все"],
+    issale: true,
+    saleprice: 3990
   },
   {
     id: 7,
-    name: "Комплект шапочка и шарф",
+    name_en: "Комплект шапочка и шарф",
     price: 3490,
-    image: "/public/maria-kovalets-e0mkwiV22Mk-unsplash.jpg",
-    category: "Комплекты"
+    description_en: "Описание продукта",
+    images: ["/public/maria-kovalets-e0mkwiV22Mk-unsplash.jpg", "/public/maria-kovalets-e0mkwiV22Mk-unsplash.jpg", "/public/maria-kovalets-e0mkwiV22Mk-unsplash.jpg"],
+    category: ["Комплекты", "Все"], // "Комплекты"
   },
   {
     id: 8,
-    name: "Комплект бини и снуд",
+    name_en: "Комплект бини и снуд",
     price: 2990,
-    image: "/public/kerim-ayar-WWpJViNdatc-unsplash.jpg",
-    category: "Комплекты"
+    description_en: "Описание продукта",
+    images: ["/public/kerim-ayar-WWpJViNdatc-unsplash.jpg", "/public/kerim-ayar-WWpJViNdatc-unsplash.jpg", "/public/kerim-ayar-WWpJViNdatc-unsplash.jpg"],
+    category: ["Комплекты", "Все"], // "Комплекты"
   }
 ];
 
 // Filter category options
 const CATEGORIES = ["Все", "Шапки", "Шарфы и снуды", "Комплекты"];
+console.log(CATEGORIES);
 
 const Catalog = () => {
-  const [selectedCategory, setSelectedCategory] = useState("Все");
+  const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[0]);
   const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
   const [isVisible, setIsVisible] = useState(false);
   const catalogRef = useRef<HTMLDivElement>(null);
@@ -102,10 +111,10 @@ const Catalog = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedCategory === "Все") {
+    if (selectedCategory === CATEGORIES[0]) {
       setDisplayedProducts(PRODUCTS);
     } else {
-      setDisplayedProducts(PRODUCTS.filter(product => product.category === selectedCategory));
+      setDisplayedProducts(PRODUCTS.filter(product => product.category.includes(selectedCategory)));
     }
   }, [selectedCategory]);
 
