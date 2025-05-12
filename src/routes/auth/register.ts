@@ -1,13 +1,8 @@
 import express from "express";
-import { createClient } from "@supabase/supabase-js";
+import { supabase } from "../../lib/supabase";
 import "dotenv/config";
 
 const router = express.Router();
-
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_ANON_KEY!
-);
 
 router.post("/register", async (req, res) => {
   const { email, password } = req.body;
@@ -29,10 +24,3 @@ router.post("/register", async (req, res) => {
 });
 
 export default router;
-/*Отключи подтверждение email в настройках проекта Supabase:
-
-Перейди в Supabase → Authentication → Settings → Email Auth.
-
-Отключи галочку Enable email confirmations (или Confirm email).
-
-Сохрани изменения.*/

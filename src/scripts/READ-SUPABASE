@@ -12,5 +12,12 @@ $$ LANGUAGE plpgsql;
 Вы можете проверить существующие политики с помощью следующего запроса:
 SELECT * FROM information_schema.policies WHERE table_name = 'users';
 
+/*Отключи подтверждение email в настройках проекта Supabase:
+
+Перейди в Supabase → Authentication → Settings → Email Auth.
+
+Отключи галочку Enable email confirmations (или Confirm email).
+
+Сохрани изменения.*/
 
 */

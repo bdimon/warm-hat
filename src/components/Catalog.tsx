@@ -79,7 +79,6 @@ const PRODUCTS: Product[] = [
 
 // Filter category options
 const CATEGORIES = ["Все", "Шапки", "Шарфы и снуды", "Комплекты"];
-console.log(CATEGORIES);
 
 const Catalog = () => {
   const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[0]);
