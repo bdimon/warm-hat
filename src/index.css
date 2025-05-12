@@ -1,0 +1,91 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 210 100% 91%;
+    --primary-foreground: 210 40% 40%;
+
+    --secondary: 24 100% 91%;
+    --secondary-foreground: 24 40% 40%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 195 80% 57%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+
+  * {
+    @apply border-border;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground overflow-x-hidden;
+    font-family: 'Inter', sans-serif;
+  }
+
+  section {
+    @apply py-16 px-4;
+  }
+
+  .container {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn-primary {
+    @apply bg-shop-blue-dark text-white rounded-full py-3 px-8 font-medium transition-all hover:shadow-lg hover:translate-y-[-2px];
+  }
+
+  .btn-secondary {
+    @apply bg-shop-peach text-shop-text rounded-full py-3 px-8 font-medium transition-all hover:shadow-lg hover:translate-y-[-2px];
+  }
+
+  .card-hover {
+    @apply transition-all hover:shadow-lg hover:translate-y-[-5px];
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold mb-6 relative;
+  }
+  
+  .section-title::after {
+    content: '';
+    @apply absolute left-0 bottom-[-8px] w-20 h-1 bg-shop-blue-dark;
+  }
+
+  /* Mobile menu animation */
+  .mobile-menu-enter {
+    @apply opacity-0 scale-95;
+  }
+  .mobile-menu-enter-active {
+    @apply opacity-100 scale-100 transition-all duration-300;
+  }
+  .mobile-menu-exit {
+    @apply opacity-100 scale-100;
+  }
+  .mobile-menu-exit-active {
+    @apply opacity-0 scale-95 transition-all duration-300;
+  }
+}

@@ -1,0 +1,16 @@
+/* 
+select * from pg_proc where proname = 'truncate_table';
+DROP FUNCTION IF EXISTS truncate_table(text);
+
+
+CREATE OR REPLACE FUNCTION truncate_table(table_name text)
+RETURNS void AS $$
+BEGIN
+    EXECUTE format('TRUNCATE TABLE %I CASCADE', table_name);
+END;
+$$ LANGUAGE plpgsql;
+Вы можете проверить существующие политики с помощью следующего запроса:
+SELECT * FROM information_schema.policies WHERE table_name = 'users';
+
+
+*/
