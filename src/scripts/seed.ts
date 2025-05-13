@@ -7,7 +7,9 @@ const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
-
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 // Очистка таблицы
 async function clearTable(tableName: string) {
   console.log(`Clearing table: ${tableName}`);
@@ -15,7 +17,7 @@ async function clearTable(tableName: string) {
     .from(tableName)
     .delete({ count: "exact" })
     .not("id", "is", null); // Удалить все строки
-  // await new Promise((resolve) => setTimeout(resolve, 1000));
+  await sleep(1000);
 
   if (error) {
     console.error(`❌ Ошибка при очистке таблицы ${tableName}:`, error);
@@ -27,19 +29,12 @@ async function clearTable(tableName: string) {
 // Очистка таблиц
 async function clearTables() {
   await clearTable("orders");
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
   await clearTable("products");
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
   await clearTable("users");
-  await new Promise((resolve) => setTimeout(resolve, 1000));
 }
 // 2. Сидинг продуктов
 async function seedProducts() {
-  const categories = ["All", "Hats", "Scarves", "Combinations"];
-  const categgory =
-    categories[Math.floor(Math.random() * (categories.length - 1))];
+  const categories = ["Hats", "Scarves", "Combinations"];
   const products = Array.from({ length: 10 }, (_, i) => ({
     id: uuidv4(),
     name_en: faker.commerce.productName(),
@@ -55,7 +50,7 @@ async function seedProducts() {
     issale: faker.datatype.boolean(),
     saleprice: faker.commerce.price({ min: 10, max: 200 }),
     isnew: faker.datatype.boolean(),
-    category_en: `{ All, ${categgory}}`,
+    category_en: categories[Math.floor(Math.random() * categories.length)],
     created_at: new Date().toISOString(),
   }));
 

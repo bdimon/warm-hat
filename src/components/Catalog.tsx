@@ -79,7 +79,37 @@ import { Button } from '@/components/ui/button';
 // ];
 
 // Filter category options
-const CATEGORIES = ["Все", "Шапки", "Шарфы и снуды", "Комплекты"];
+type RawProduct = {
+  id: string;
+  name_en?: string;
+  name?: string;
+  description_en?: string;
+  description?: string;
+  price: number;
+  quantity: number;
+  images: string[];
+  category_en: string;
+  isnew: boolean;
+  issale: boolean;
+  saleprice: number | null;
+};
+
+
+function mapProductFromAPI(raw: RawProduct): Product {
+  return {
+    id: raw.id,
+    name: raw.name_en || raw.name || "Без названия",
+    description: raw.description_en || raw.description || "",
+    price: raw.price,
+    quantity: raw.quantity,
+    images: raw.images || [],
+    category: raw.category_en || "Прочее",
+    isNew: raw.isnew,
+    isSale: raw.issale,
+    salePrice: raw.saleprice ?? undefined,
+  };
+}
+const CATEGORIES = ["All", "Hats", "Scarves", "Combinations"];
 
 const Catalog = () => {
   const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[0]);
@@ -88,59 +118,60 @@ const Catalog = () => {
   const [isVisible, setIsVisible] = useState(false);
   const catalogRef = useRef<HTMLDivElement>(null);
 
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver(
-  //     ([entry]) => {
-  //       if (entry.isIntersecting) {
-  //         setIsVisible(true);
-  //         observer.disconnect();
-  //       }
-  //     },
-  //     {
-  //       root: null,
-  //       threshold: 0.1
-  //     }
-  //   );
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      {
+        root: null,
+        threshold: 0.1
+      }
+    );
 
-  //   if (catalogRef.current) {
-  //     observer.observe(catalogRef.current);
-  //   }
+    if (catalogRef.current) {
+      observer.observe(catalogRef.current);
+    }
 
-  //   return () => {
-  //     observer.disconnect();
-  //   };
-  // }, []);
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
   useEffect(() => {
     // Подгружаем с бэкенда
     fetch("http://localhost:3010/api/products")
-      .then(res => res.json())
       .then(res => {
-        const mapped = res.data.map((item: Product) => ({
-          id: item.id,
-          name_en: item.name_en,
-          price: item.price,
-          description_en: item.description_en,
-          images: item.images,
-          category: item.category,
-          isNew: item.isnew,
-          isSale: item.issale,
-          salePrice: item.saleprice,
-        }));
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
+      .then(res => {
+        const mapped: Product[] = res.data.map(mapProductFromAPI);
         setAllProducts(mapped);
         setDisplayedProducts(mapped);
       })
       .catch(err => console.error("Ошибка загрузки товаров:", err));
   }, []);
+
   useEffect(() => {
     if (selectedCategory === CATEGORIES[0]) {
       setDisplayedProducts(allProducts);
     } else {
-      setDisplayedProducts(allProducts.filter(product => product.category.includes(selectedCategory)));
+      setDisplayedProducts(allProducts.filter(
+        (product) => product.category === selectedCategory
+      ));
     }
   }, [selectedCategory, allProducts]);
 
+
   return (
+    
     <section id="catalog" className="py-20">
+      
       <div className="container mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-shop-text">Каталог товаров</h2>
@@ -170,6 +201,7 @@ const Catalog = () => {
           ref={catalogRef}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8"
         >
+          
           {displayedProducts.map((product, index) => (
             <div 
               key={product.id}
@@ -180,8 +212,15 @@ const Catalog = () => {
               }`}
               style={{ transitionDelay: `${index * 100}ms` }}
             >
-              <ProductCard product={product} />
+              {isVisible || index < 10 ? (
+                <ProductCard product={product} />
+              ) : null}
             </div>
+            
+//             <div className="bg-yellow-200 p-4 rounded shadow">
+//   <p>{product.name}</p>
+//   <p>{product.price} ₽</p>
+// </div>
           ))}
         </div>
 
@@ -198,3 +237,10 @@ const Catalog = () => {
 };
 
 export default Catalog;
+/*{displayedProducts.length === 0 ? (
+  <p className="text-center py-4">Загрузка товаров...</p>
+) : (
+  displayedProducts.map((product) => (
+    <ProductCard key={product.id} product={product} />
+  ))
+)}*/

@@ -1,21 +1,25 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart } from 'lucide-react';
 
 export interface Product {
   id: string;
-  name_en: string;
+  name: string;
   name_ru?: string;
   name_ua?: string;
   name_pl?: string;
   price: number;
+  quantity: number;
   images: string[];
-  category: string[];
-  isnew?: boolean;
-  issale?: boolean;
-  saleprice?: number;
-  description_en: string;
+  category: string;
+  category_ru?: string;
+  category_ua?: string;
+  category_pl?: string;
+  isNew?: boolean;
+  isSale?: boolean;
+  salePrice?: number;
+  description: string;
   description_ru?: string;
   description_ua?: string;
   description_pl?: string;
@@ -26,35 +30,39 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  // console.log('ProductCard render');
+  useEffect(() => {
+    // console.log(product)
+  }, [product])
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group">
       <div className="relative h-64 overflow-hidden">
         <img 
-          src={product.images[0]} 
-          alt={product.name_en} 
+          src={product.images?.[0] || "/placeholder.svg"} 
+          alt={product.name || "Без названия"}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
-        {product.isnew && (
+        {product.isNew && (
           <div className="absolute top-3 left-3 bg-shop-blue-dark text-white text-xs font-bold uppercase py-1 px-2 rounded">
             Новинка
           </div>
         )}
-        {product.issale && (
+        {product.isSale && (
           <div className="absolute top-3 right-3 bg-[#FF5252] text-white text-xs font-bold uppercase py-1 px-2 rounded">
             Скидка
           </div>
         )}
       </div>
       <div className="p-4">
-        <div className="text-sm text-gray-500 mb-1">{product.category}</div>
+        <div className="text-sm text-gray-500 mb-1">{product.category || "Категория"}</div>
         <h3 className="text-lg font-semibold mb-2 text-shop-text transition-colors group-hover:text-shop-blue-dark">
-          {product.name_en}
+          {product.name}
         </h3>
         <div className="flex justify-between items-center">
           <div>
-            {product.issale && product.saleprice ? (
+            {product.isSale && product.salePrice ? (
               <div className="flex items-center gap-2">
-                <span className="text-xl font-bold text-shop-text">{product.saleprice}₽</span>
+                <span className="text-xl font-bold text-shop-text">{product.salePrice}₽</span>
                 <span className="text-sm text-gray-500 line-through">{product.price}₽</span>
               </div>
             ) : (
