@@ -3,6 +3,8 @@ import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom'; // or 'next/link';
+import { useCart } from "@/context/CartContext";
+
 
 export interface Product {
   id: string;
@@ -31,6 +33,7 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const { addToCart } = useCart();
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group">
       <div className="relative h-64 overflow-hidden">
@@ -68,7 +71,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               <span className="text-xl font-bold text-shop-text">{product.price}₽</span>
             )}
           </div>
-          <Button 
+          <Button
+            onClick={() => addToCart(product)} 
             className="bg-shop-blue-dark text-white hover:bg-shop-blue-dark/90 rounded-full p-2 h-10 w-10"
             aria-label="Добавить в корзину"
           >

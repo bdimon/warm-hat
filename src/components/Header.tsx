@@ -3,11 +3,15 @@ import React, { useState, useEffect } from 'react';
 import { ShoppingCart, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import {Link } from 'react-router-dom';
+import { useCart } from "@/context/CartContext";
+
+
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [cartItemCount, setCartItemCount] = useState(0);
+  // const [cartItemCount, setCartItemCount] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,11 +26,16 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    // This would normally be connected to your cart state
-    // For demo purposes, we'll just set a random number
-    setCartItemCount(3);
-  }, []);
+  const { cart } = useCart();
+
+  const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+
+  // useEffect(() => {
+  //   // This would normally be connected to your cart state
+  //   // For demo purposes, we'll just set a random number
+  //   setCartItemCount(3);
+  // }, []);
 
   return (
     <header className={cn(
@@ -60,14 +69,14 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" className="relative p-2">
+          <Link to="/cart" className="relative p-2">
             <ShoppingCart className="h-6 w-6" />
             {cartItemCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-shop-blue-dark text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                 {cartItemCount}
               </span>
-            )}
-          </Button>
+             )} 
+          </Link>
           <Button className="hidden md:inline-flex bg-shop-blue-dark text-white hover:bg-shop-blue-dark/90">
             Войти
           </Button>
