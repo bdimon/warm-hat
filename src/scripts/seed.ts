@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
+import { faker } from "@faker-js/faker";
 import "dotenv/config";
-
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -15,6 +15,7 @@ async function clearTable(tableName: string) {
     .from(tableName)
     .delete({ count: "exact" })
     .not("id", "is", null); // Удалить все строки
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
 
   if (error) {
     console.error(`❌ Ошибка при очистке таблицы ${tableName}:`, error);
@@ -26,34 +27,43 @@ async function clearTable(tableName: string) {
 // Очистка таблиц
 async function clearTables() {
   await clearTable("orders");
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   await clearTable("products");
-  const { count } = await supabase
-    .from("products")
-    .select("*", { count: "exact", head: true });
-  console.log("🧮 Продуктов осталось:", count);
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   await clearTable("users");
-  await new Promise((res) => setTimeout(res, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 }
 // 2. Сидинг продуктов
 async function seedProducts() {
+  const categories = ["All", "Hats", "Scarves", "Combinations"];
+  const categgory =
+    categories[Math.floor(Math.random() * (categories.length - 1))];
   const products = Array.from({ length: 10 }, (_, i) => ({
     id: uuidv4(),
-    name: `Продукт #${i + 1}`,
-    price: Math.floor(Math.random() * 3000) + 500,
+    name_en: faker.commerce.productName(),
+    price: faker.commerce.price({ min: 10, max: 200, dec: 2 }),
     quantity: Math.floor(Math.random() * 20) + 1,
-    description: `Описание продукта #${i + 1}`,
+    description_en: faker.commerce.productDescription(),
     images: [
-      `https://via.placeholder.com/300x300.png?text=Item+${i + 1}`,
-      `https://via.placeholder.com/300x300.png?text=Item+${i + 1}+Alt`,
-      `https://via.placeholder.com/300x300.png?text=Item+${i + 1}+Alt`,
+      faker.image.url(),
+      faker.image.url(),
+      faker.image.url(),
+      faker.image.url(),
     ],
+    issale: faker.datatype.boolean(),
+    saleprice: faker.commerce.price({ min: 10, max: 200 }),
+    isnew: faker.datatype.boolean(),
+    category_en: `{ All, ${categgory}}`,
+    created_at: new Date().toISOString(),
   }));
 
   const { error } = await supabase.from("products").insert(products);
   if (error) {
     console.error("Ошибка при добавлении продуктов:", error);
   } else {
-    console.log("🧶 Добавлены 100 продуктов");
+    console.log("🧶 Добавлены 10 продуктов");
   }
 }
 // 3. Сидинг пользователей
@@ -61,7 +71,8 @@ async function seedUsers() {
   const users = Array.from({ length: 5 }, (_, i) => ({
     id: uuidv4(),
     email: `user${i + 1}@test.com`,
-    full_name: `Пользователь ${i + 1}`,
+    password_hash: faker.internet.password(), // В реальном приложении используйте bcrypt
+    role: i < 3 ? "customer" : "admin", // 3 customer, 2 admin
     created_at: new Date().toISOString(),
   }));
   const { error } = await supabase.from("users").insert(users);
@@ -105,9 +116,10 @@ async function seed() {
 
   // Очистка таблиц
   clearTables();
+  await new Promise((resolve) => setTimeout(resolve, 5000));
 
   // Сидирование
-  // await seedProducts();
+  await seedProducts();
   // await seedUsers();
   // await seedOrders();
 
