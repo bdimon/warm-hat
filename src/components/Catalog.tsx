@@ -64,7 +64,7 @@ const PRODUCTS: Product[] = [
     name_en: "Комплект шапочка и шарф",
     price: 3490,
     description_en: "Описание продукта",
-    images: ["/public/maria-kovalets-e0mkwiV22Mk-unsplash.jpg", "/public/maria-kovalets-e0mkwiV22Mk-unsplash.jpg", "/public/maria-kovalets-e0mkwiV22Mk-unsplash.jpg"],
+    images: ["/maria-kovalets-e0mkwiV22Mk-unsplash.jpg", "/maria-kovalets-e0mkwiV22Mk-unsplash.jpg", "/maria-kovalets-e0mkwiV22Mk-unsplash.jpg"],
     category: ["Комплекты", "Все"], // "Комплекты"
   },
   {
@@ -72,7 +72,7 @@ const PRODUCTS: Product[] = [
     name_en: "Комплект бини и снуд",
     price: 2990,
     description_en: "Описание продукта",
-    images: ["/public/kerim-ayar-WWpJViNdatc-unsplash.jpg", "/public/kerim-ayar-WWpJViNdatc-unsplash.jpg", "/public/kerim-ayar-WWpJViNdatc-unsplash.jpg"],
+    images: ["/kerim-ayar-WWpJViNdatc-unsplash.jpg", "/kerim-ayar-WWpJViNdatc-unsplash.jpg", "/kerim-ayar-WWpJViNdatc-unsplash.jpg"],
     category: ["Комплекты", "Все"], // "Комплекты"
   }
 ];
