@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ShoppingCart } from 'lucide-react';
 
 export interface Product {
-  id: number;
+  id: string;
   name_en: string;
   name_ru?: string;
   name_ua?: string;

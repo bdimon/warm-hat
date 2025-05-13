@@ -2,120 +2,142 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ProductCard, { Product } from './ProductCard';
 import { Button } from '@/components/ui/button';
+// import { v4 as uuidv4 } from "uuid";// from "uuid";
 
 // Mock products data
-const PRODUCTS: Product[] = [
-  {
-    id: 1,
-    name_en: "Шапка с логотипом",
-    price: 12990,
-    description_en: "Описание продукта",
-    images: ["/hamed-darzi-6dILIIipKHk-unsplash.jpg", "/hamed-darzi-6dILIIipKHk-unsplash.jpg", "/hamed-darzi-6dILIIipKHk-unsplash.jpg"],
-    category: ["Шапки", "Все"],
-    isnew: true
-  },
-  {
-    id: 2,
-    name_en: "Шапка теплая",
-    price: 8990,
-    description_en: "Описание продукта",
-    images: ["/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg", "/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg", "/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg"],
-    category: ["Шапки", "Все"],
-    issale: true,
-    saleprice: 7490
-  },
-  {
-    id: 3,
-    name_en: "Шапка бини",
-    price: 5990,
-    description_en: "Описание продукта",
-    images: ["/erik-mclean-CSlBUY-R6dY-unsplash.jpg", "/erik-mclean-CSlBUY-R6dY-unsplash.jpg", "/erik-mclean-CSlBUY-R6dY-unsplash.jpg"],
-    category: ["Шапки", "Все"],
-  },
-  {
-    id: 4,
-    name_en: "Шарфы вязаные",
-    price: 18990,
-    description_en: "Описание продукта",
-    images: ["/kelly-sikkema-scarfs-unsplash.jpg", "/kelly-sikkema-scarfs-unsplash.jpg", "/kelly-sikkema-scarfs-unsplash.jpg"],
-    category: ["Шарфы и снуды", "Все"], // "Шарфы и снуды"
-  },
-  {
-    id: 5,
-    name_en: "Комплект 1",
-    price: 21990,
-    description_en: "Описание продукта",
-    images: ["/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg", "/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg", "/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg"],
-    category: ["Комплекты", "Все"], // "Комплекты",
-    isnew: true
-  },
-  {
-    id: 6,
-    name_en: "Шарф вязаный",
-    price: 4990,
-    description_en: "Описание продукта",
-    images: ["/hamed-darzi-6dILIIipKHk-unsplash.jpg", "/hamed-darzi-6dILIIipKHk-unsplash.jpg", "/hamed-darzi-6dILIIipKHk-unsplash.jpg"],
-    category: ["Шарфы и снуды", "Все"],
-    issale: true,
-    saleprice: 3990
-  },
-  {
-    id: 7,
-    name_en: "Комплект шапочка и шарф",
-    price: 3490,
-    description_en: "Описание продукта",
-    images: ["/maria-kovalets-e0mkwiV22Mk-unsplash.jpg", "/maria-kovalets-e0mkwiV22Mk-unsplash.jpg", "/maria-kovalets-e0mkwiV22Mk-unsplash.jpg"],
-    category: ["Комплекты", "Все"], // "Комплекты"
-  },
-  {
-    id: 8,
-    name_en: "Комплект бини и снуд",
-    price: 2990,
-    description_en: "Описание продукта",
-    images: ["/kerim-ayar-WWpJViNdatc-unsplash.jpg", "/kerim-ayar-WWpJViNdatc-unsplash.jpg", "/kerim-ayar-WWpJViNdatc-unsplash.jpg"],
-    category: ["Комплекты", "Все"], // "Комплекты"
-  }
-];
+// const PRODUCTS: Product[] = [
+//   {
+//     id: uuidv4(),
+//     name_en: "Шапка с логотипом",
+//     price: 12990,
+//     description_en: "Описание продукта",
+//     images: ["/hamed-darzi-6dILIIipKHk-unsplash.jpg", "/hamed-darzi-6dILIIipKHk-unsplash.jpg", "/hamed-darzi-6dILIIipKHk-unsplash.jpg"],
+//     category: ["Шапки", "Все"],
+//     isnew: true
+//   },
+//   {
+//     id: uuidv4,
+//     name_en: "Шапка теплая",
+//     price: 8990,
+//     description_en: "Описание продукта",
+//     images: ["/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg", "/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg", "/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg"],
+//     category: ["Шапки", "Все"],
+//     issale: true,
+//     saleprice: 7490
+//   },
+//   {
+//     id: 3,
+//     name_en: "Шапка бини",
+//     price: 5990,
+//     description_en: "Описание продукта",
+//     images: ["/erik-mclean-CSlBUY-R6dY-unsplash.jpg", "/erik-mclean-CSlBUY-R6dY-unsplash.jpg", "/erik-mclean-CSlBUY-R6dY-unsplash.jpg"],
+//     category: ["Шапки", "Все"],
+//   },
+//   {
+//     id: 4,
+//     name_en: "Шарфы вязаные",
+//     price: 18990,
+//     description_en: "Описание продукта",
+//     images: ["/kelly-sikkema-scarfs-unsplash.jpg", "/kelly-sikkema-scarfs-unsplash.jpg", "/kelly-sikkema-scarfs-unsplash.jpg"],
+//     category: ["Шарфы и снуды", "Все"], // "Шарфы и снуды"
+//   },
+//   {
+//     id: 5,
+//     name_en: "Комплект 1",
+//     price: 21990,
+//     description_en: "Описание продукта",
+//     images: ["/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg", "/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg", "/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg"],
+//     category: ["Комплекты", "Все"], // "Комплекты",
+//     isnew: true
+//   },
+//   {
+//     id: 6,
+//     name_en: "Шарф вязаный",
+//     price: 4990,
+//     description_en: "Описание продукта",
+//     images: ["/hamed-darzi-6dILIIipKHk-unsplash.jpg", "/hamed-darzi-6dILIIipKHk-unsplash.jpg", "/hamed-darzi-6dILIIipKHk-unsplash.jpg"],
+//     category: ["Шарфы и снуды", "Все"],
+//     issale: true,
+//     saleprice: 3990
+//   },
+//   {
+//     id: 7,
+//     name_en: "Комплект шапочка и шарф",
+//     price: 3490,
+//     description_en: "Описание продукта",
+//     images: ["/maria-kovalets-e0mkwiV22Mk-unsplash.jpg", "/maria-kovalets-e0mkwiV22Mk-unsplash.jpg", "/maria-kovalets-e0mkwiV22Mk-unsplash.jpg"],
+//     category: ["Комплекты", "Все"], // "Комплекты"
+//   },
+//   {
+//     id: 8,
+//     name_en: "Комплект бини и снуд",
+//     price: 2990,
+//     description_en: "Описание продукта",
+//     images: ["/kerim-ayar-WWpJViNdatc-unsplash.jpg", "/kerim-ayar-WWpJViNdatc-unsplash.jpg", "/kerim-ayar-WWpJViNdatc-unsplash.jpg"],
+//     category: ["Комплекты", "Все"], // "Комплекты"
+//   }
+// ];
 
 // Filter category options
 const CATEGORIES = ["Все", "Шапки", "Шарфы и снуды", "Комплекты"];
 
 const Catalog = () => {
   const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[0]);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
   const [isVisible, setIsVisible] = useState(false);
   const catalogRef = useRef<HTMLDivElement>(null);
 
+  // useEffect(() => {
+  //   const observer = new IntersectionObserver(
+  //     ([entry]) => {
+  //       if (entry.isIntersecting) {
+  //         setIsVisible(true);
+  //         observer.disconnect();
+  //       }
+  //     },
+  //     {
+  //       root: null,
+  //       threshold: 0.1
+  //     }
+  //   );
+
+  //   if (catalogRef.current) {
+  //     observer.observe(catalogRef.current);
+  //   }
+
+  //   return () => {
+  //     observer.disconnect();
+  //   };
+  // }, []);
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      {
-        root: null,
-        threshold: 0.1
-      }
-    );
-
-    if (catalogRef.current) {
-      observer.observe(catalogRef.current);
-    }
-
-    return () => {
-      observer.disconnect();
-    };
+    // Подгружаем с бэкенда
+    fetch("http://localhost:3010/api/products")
+      .then(res => res.json())
+      .then(res => {
+        const mapped = res.data.map((item: Product) => ({
+          id: item.id,
+          name_en: item.name_en,
+          price: item.price,
+          description_en: item.description_en,
+          images: item.images,
+          category: item.category,
+          isNew: item.isnew,
+          isSale: item.issale,
+          salePrice: item.saleprice,
+        }));
+        setAllProducts(mapped);
+        setDisplayedProducts(mapped);
+      })
+      .catch(err => console.error("Ошибка загрузки товаров:", err));
   }, []);
-
   useEffect(() => {
     if (selectedCategory === CATEGORIES[0]) {
-      setDisplayedProducts(PRODUCTS);
+      setDisplayedProducts(allProducts);
     } else {
-      setDisplayedProducts(PRODUCTS.filter(product => product.category.includes(selectedCategory)));
+      setDisplayedProducts(allProducts.filter(product => product.category.includes(selectedCategory)));
     }
-  }, [selectedCategory]);
+  }, [selectedCategory, allProducts]);
 
   return (
     <section id="catalog" className="py-20">
