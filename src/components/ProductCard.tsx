@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart } from 'lucide-react';
+import { Link } from 'react-router-dom'; // or 'next/link';
 
 export interface Product {
   id: string;
@@ -30,18 +31,16 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  // console.log('ProductCard render');
-  useEffect(() => {
-    // console.log(product)
-  }, [product])
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group">
       <div className="relative h-64 overflow-hidden">
+        <Link to={`/catalog/${product.id}`}>
         <img 
           src={product.images?.[0] || "/placeholder.svg"} 
           alt={product.name || "Без названия"}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
+        </Link >
         {product.isNew && (
           <div className="absolute top-3 left-3 bg-shop-blue-dark text-white text-xs font-bold uppercase py-1 px-2 rounded">
             Новинка

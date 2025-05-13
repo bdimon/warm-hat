@@ -39,9 +39,9 @@ const Index = () => {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main>
-        <Hero />        
-        <Benefits />
-        <Catalog />
+        <Hero />
+        <Catalog />        
+        <Benefits />        
         <Testimonials />
         <Contact />
       </main>
