@@ -5,7 +5,7 @@ import authRouter from "@/routes/auth/register";
 import loginRoute from "@/routes/auth/login";
 import productsRoute from "@/routes/products/index";
 import usersRoute from "@/routes/users/index";
-import ordersRoute from "@/routes/orders/index";
+import ordersRoute from "@/routes/orders";
 
 dotenv.config();
 

@@ -1,6 +1,7 @@
 import { useCart } from "@/context/CartContext";
 import { X, Plus, Minus } from "lucide-react";
-import { useMemo } from 'react';
+import OrderFormModal from "./OrderFormModal";
+import { useState } from "react";
 
 interface CartModalProps {
   isOpen: boolean;
@@ -8,106 +9,226 @@ interface CartModalProps {
 }
 
 export default function CartModal({ isOpen, onClose }: CartModalProps) {
-  const { cart, removeFromCart, clearCart, addToCart } = useCart();
-  const showClearButton = useMemo(() => cart.length > 0, [cart]);
-
+  const { cart, removeFromCart, clearCart, addToCart, updateQuantity } = useCart();
+  const [isOrderFormOpen, setIsOrderFormOpen] = useState(false);
 
   const decreaseQuantity = (id: string) => {
     const item = cart.find((i) => i.id === id);
     if (!item) return;
-    if (item.quantity === 1 || item.quantity !== undefined) {
+    if (item.quantity === 1) {
       removeFromCart(id);
     } else {
-      const updated = { ...item, quantity: item.quantity - 1 };
-      removeFromCart(id);
-      addToCart(updated); // hack: add updated item
+      updateQuantity(id, item.quantity - 1);
     }
   };
 
-  const total = cart.length === 0 ? 0 : cart.reduce((sum, item) => {
+  const increaseQuantity = (id: string) => {
+    const item = cart.find((i) => i.id === id);
+    if (item) {
+      updateQuantity(id, item.quantity + 1);
+    }
+  };
+  
+  
+
+  const total = cart.reduce((sum, item) => {
     const price = item.isSale && item.salePrice ? item.salePrice : item.price;
     return sum + price * item.quantity;
   }, 0);
 
+  // const handleOrderSubmit = async () => {
+  //   const items = cart.map((item) => ({
+  //     id: item.id,
+  //     name: item.name,
+  //     quantity: item.quantity,
+  //     price: item.price,
+  //   }));
+  //   console.log(items);
+  
+  //   const total = cart.reduce((sum, item) => {
+  //     const price = item.isSale && item.salePrice ? item.salePrice : item.price;
+  //     return sum + price * item.quantity;
+  //   }, 0);
+  
+  //   try {
+  //     const res = await fetch("http://localhost:3010/api/orders", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ items, total }),
+  //     });
+  
+  //     if (!res.ok) throw new Error("Ошибка оформления заказа");
+  
+  //     clearCart();
+  //     onClose();
+  //     alert("✅ Заказ успешно оформлен!");
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert("❌ Не удалось оформить заказ");
+  //   }
+  // };
+  
+
   if (!isOpen) return null;
-
-
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-end" onClick={(e) => {
-      if (e.target === e.currentTarget) {
-        onClose();
-      }
-    }}>
-      <div className="w-full max-w-md bg-white h-full p-6 overflow-y-auto shadow-lg relative">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-600 hover:text-black"
-        >
-          <X />
-        </button>
-        <div className="flex justify-center items-center mb-2 mr-2">
-        <h2 className="text-shop-blue-dark text-2xl font-bold">Корзина</h2></div>
-        <div className="flex justify-center items-center mb-4">
-          {showClearButton && (
-            <button
-            onClick={clearCart}
-            className="text-sm text-red-500 hover:underline  border border-red-500 rounded-md px-4 py-2"
-          >
-            Очистить корзину
-          </button>
-            
-            )}
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-end" onClick={onClose}>
+      <div className="w-full max-w-md bg-white h-full flex flex-col shadow-lg relative" onClick={(e) => e.stopPropagation()}>
         
-          </div>
-
+        {/* Шапка */}
+        <div className="p-4 border-b flex justify-between items-center">
+          <h2 className="text-xl font-bold">🛒 Ваша корзина</h2>
+          {cart.length > 0 && (
+            <button
+              onClick={clearCart}
+              className="text-sm text-red-500 hover:underline hover:text-red-600 border border-red-500 rounded-md px-2 py-1"
+            >
+              Очистить
+            </button>
+          )}
+          <button onClick={onClose} className="text-gray-500 hover:text-black-600">
+            <X size={20} />
+          </button>
+        </div>
+  
+        {/* Список товаров */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {cart.length === 0 ? (
-          <p className="text-center text-gray-500">Вы еще ничего не добавили</p>
+          <div className="text-center text-gray-500 space-y-4">
+            <p>Корзина пуста</p>
+            <button
+              onClick={onClose}
+              className="px-4 py-2 rounded bg-shop-blue-dark text-white hover:bg-shop-blue-dark/90"
+            >
+              Продолжить покупки
+            </button>
+          </div>
         ) : (
-          <ul className="space-y-4 mb-6">
-            {cart.map((item) => (
-              <li key={item.id} className="flex gap-4 items-center">
-                <img
-                  src={item.images?.[0]}
-                  alt={item.name}
-                  className="w-16 h-16 object-cover rounded"
-                />
-                <div className="flex-1">
-                  <h3 className="font-semibold shop-text-dark-blue">{item.name}</h3>
-                  <p className="text-sm text-gray-500">{item.price} ₽</p>
-                  <div className="flex items-center mt-1 space-x-2">
-                    <button onClick={() => decreaseQuantity(item.id)}><Minus size={16} /></button>
-                    <span>{item.quantity}</span>
-                    <button onClick={() => addToCart(item)}><Plus size={16} /></button>
-                  </div>
+          cart.map((item) => (
+            <div key={item.id} className="flex gap-4 items-center border-b pb-4">
+              <img
+                src={item.images?.[0]}
+                alt={item.name}
+                className="w-16 h-16 object-cover rounded"
+              />
+              <div className="flex-1">
+                <h3 className="font-semibold text-sm">{item.name}</h3>
+                <p className="text-sm text-gray-500 mb-1">{item.price} ₽</p>
+                <div className="flex items-center gap-2">
+                  <button onClick={() => decreaseQuantity(item.id)} className="border border-red-300">
+                    <Minus size={16} />
+                  </button>
+                  <span className="px-2">{item.quantity}</span>
+                  <button onClick={() => increaseQuantity(item.id)} className="border border-green-300">
+                    <Plus size={16} />
+                  </button>
                 </div>
-                <button
-                  onClick={() => removeFromCart(item.id)}
-                  className="text-red-500 hover:underline text-sm border border-red-500 rounded-md px-4 py-2"
-                >
-                  Удалить
-                </button>
-              </li>
-            ))}
-          </ul>
+              </div>
+              <button
+                onClick={() => removeFromCart(item.id)}
+                className="text-red-500 text-xs hover:underline hover:text-red-600 border border-red-500 rounded-md px-2 py-1"
+              >
+                Удалить
+              </button>
+            </div>
+          ))
         )}
+      </div>
 
-        <div className="border-t pt-4 flex justify-between items-center">
-          <span className="font-bold text-lg">Итого:</span>
-          <span className="text-lg">{total.toFixed(2)} ₽</span>
-        </div>
-
-        <div className="mt-6 flex justify-between">
-          {cart.length > 0 &&
-        <button className="bg-shop-blue-dark text-white px-4 py-2 rounded hover:bg-shop-blue-dark/90">
-            Оформить заказ
-          </button>
-          }
-          <button onClick={onClose} className="bg-shop-blue-dark text-white px-4 py-2 rounded hover:bg-shop-blue-dark/90">          
-            Продолжить покупки
-          </button>
+  
+        {/* Футер */}
+        {cart.length > 0 && (
           
+        
+        <div className="p-4 border-t">
+          <div className="flex justify-between items-center mb-4">
+            <span className="font-semibold">Итого:</span>
+            <span className="text-lg font-bold">{total.toFixed(2)} ₽</span>
+          </div>
+          <div className="flex justify-center">
+            {/* <button
+              onClick={clearCart}
+              className="text-sm text-red-500 hover:underline"
+            >
+              Очистить
+            </button> */}
+            {/* {cart.length > 0 && ( */}
+              <button
+                onClick={() => setIsOrderFormOpen(true)}
+                className="px-4 py-2 rounded-md bg-shop-blue-dark text-white hover:bg-shop-blue-dark/90"
+              >
+               Оформить заказ 
+              </button>
+            {/* // )} */}
+            <OrderFormModal isOpen={isOrderFormOpen} onClose={() => setIsOrderFormOpen(false)} />
+          </div>
         </div>
+        )}
       </div>
     </div>
+    
   );
+  
+
+  // return (
+  //   <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-end">
+  //     <div className="w-full max-w-md bg-white h-full p-6 overflow-y-auto shadow-lg relative">
+  //       <button
+  //         onClick={onClose}
+  //         className="absolute top-4 right-4 text-gray-600 hover:text-black"
+  //       >
+  //         <X />
+  //       </button>
+
+  //       <h2 className="text-2xl font-bold mb-6">Корзина</h2>
+
+  //       {cart.length === 0 ? (
+  //         <p className="text-center text-gray-500">Корзина пуста</p>
+  //       ) : (
+  //         <ul className="space-y-4 mb-6">
+  //           {cart.map((item) => (
+  //             <li key={item.id} className="flex gap-4 items-center">
+  //               <img
+  //                 src={item.images?.[0]}
+  //                 alt={item.name}
+  //                 className="w-16 h-16 object-cover rounded"
+  //               />
+  //               <div className="flex-1">
+  //                 <h3 className="font-semibold">{item.name}</h3>
+  //                 <p className="text-sm text-gray-500">{item.price} ₽</p>
+  //                 <div className="flex items-center mt-1 space-x-2">
+  //                   <button onClick={() => decreaseQuantity(item.id)}><Minus size={16} /></button>
+  //                   <span>{item.quantity}</span>
+  //                   <button onClick={() => increaseQuantity(item.id)}><Plus size={16} /></button>
+  //                 </div>
+  //               </div>
+  //               <button
+  //                 onClick={() => removeFromCart(item.id)}
+  //                 className="text-red-500 hover:underline text-sm"
+  //               >
+  //                 Удалить
+  //               </button>
+  //             </li>
+  //           ))}
+  //         </ul>
+  //       )}
+
+  //       <div className="border-t pt-4 flex justify-between items-center">
+  //         <span className="font-bold text-lg">Итого:</span>
+  //         <span className="text-lg">{total.toFixed(2)} ₽</span>
+  //       </div>
+
+  //       <div className="mt-6 flex justify-between">
+  //         <button
+  //           onClick={clearCart}
+  //           className="text-sm text-red-500 hover:underline"
+  //         >
+  //           Очистить
+  //         </button>
+  //         <button className="bg-shop-blue-dark text-white px-4 py-2 rounded hover:bg-shop-blue-dark/90">
+  //           Оформить заказ
+  //         </button>
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
 }
