@@ -27,7 +27,7 @@ export default function ProductPage() {
           <img
             src={mainImage}
             alt={product.name}
-            className="w-full h-auto rounded shadow mb-4"
+            className="w-full h-auto object-cover rounded shadow mb-4"
           />
           <div className="flex gap-2">
             {product.images?.map((img, idx) => (
@@ -36,7 +36,7 @@ export default function ProductPage() {
                 src={img}
                 alt={`preview-${idx}`}
                 onClick={() => setMainImage(img)}
-                className={`h-20 w-20 object-cover cursor-pointer rounded border ${
+                className={`h-20 w-20 object-cover cursor-pointer rounded-lg border ${
                   img === mainImage ? "border-blue-500" : "border-transparent"
                 }`}
               />

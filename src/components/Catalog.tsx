@@ -216,11 +216,7 @@ const Catalog = () => {
                 <ProductCard product={product} />
               ) : null}
             </div>
-            
-//             <div className="bg-yellow-200 p-4 rounded shadow">
-//   <p>{product.name}</p>
-//   <p>{product.price} ₽</p>
-// </div>
+ 
           ))}
         </div>
 
@@ -237,10 +233,3 @@ const Catalog = () => {
 };
 
 export default Catalog;
-/*{displayedProducts.length === 0 ? (
-  <p className="text-center py-4">Загрузка товаров...</p>
-) : (
-  displayedProducts.map((product) => (
-    <ProductCard key={product.id} product={product} />
-  ))
-)}*/
