@@ -46,5 +46,43 @@ router.post("/", async (req, res) => {
 
   res.status(201).json({ message: "Order created successfully" });
 });
+// routes/orders.ts
+router.get("/", async (req, res) => {
+  const { data, error } = await supabase
+    .from("orders")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) return res.status(500).json({ error });
+  res.json(data);
+});
+
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { data, error } = await supabase
+    .from("orders")
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (error) return res.status(500).json({ error });
+  res.json(data);
+});
+
+router.patch("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  const { data, error } = await supabase
+    .from("orders")
+    .update({ status })
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) return res.status(500).json({ error });
+  res.json(data);
+});
+
+
 
 export default router;

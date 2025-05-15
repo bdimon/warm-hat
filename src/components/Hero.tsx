@@ -57,7 +57,7 @@ const Hero = () => {
         <div className={`relative transition-all duration-1000 delay-300 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}>
           <div className="bg-white p-4 rounded-2xl shadow-xl overflow-hidden">
             <img 
-              src="/hamed-darzi-gKmXGDQY_Cc-unsplash.jpg" 
+              src="/images/four-hats.webp" 
               alt="Разнообразные товары" 
               className="w-full h-[400px] object-cover rounded-xl"
             />

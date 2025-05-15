@@ -1,6 +1,6 @@
 import express from "express";
-import { supabase } from "@/lib/supabase";
-import { v4 as uuidv4 } from "uuid";
+import { servbase as supabase } from "@/lib/supabase";
+// import { v4 as uuidv4 } from "uuid";
 
 const router = express.Router();
 // 🔁 Получить все товары
@@ -53,14 +53,14 @@ router.get("/:id", async (req, res) => {
 // ➕ Добавить товар
 // 🔹 POST /api/products — создать товар
 router.post("/", async (req, res) => {
-  const { name, price, quantity, description, images } = req.body;
+  const { name, price, quantity, description, category, images } = req.body;
   const { error } = await supabase.from("products").insert([
     {
-      id: uuidv4(),
       name,
       price,
       quantity,
       description,
+      category,
       images,
     },
   ]);
@@ -68,23 +68,31 @@ router.post("/", async (req, res) => {
   res.status(201).json({ message: "Товар добавлен" });
 });
 
-// 🔹 PUT /api/products/:id — обновить товар
-router.put("/:id", async (req, res) => {
+// 🔹 PATCH /api/products/:id — обновить поля товара
+router.patch("/:id", async (req, res) => {
   const { id } = req.params;
-  const { name, price, quantity, description, images } = req.body;
-  const { error } = await supabase
+  const updates = req.body;
+
+  // Проверка: если ничего не передано
+  if (!updates || Object.keys(updates).length === 0) {
+    return res.status(400).json({ error: "Нет данных для обновления" });
+  }
+
+  const { data, error } = await supabase
     .from("products")
-    .update({
-      name,
-      price,
-      quantity,
-      description,
-      images,
-    })
-    .eq("id", id);
-  if (error) return res.status(500).json({ error: error.message });
-  res.json({ message: "Товар обновлен" });
+    .update(updates)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Ошибка при обновлении товара" });
+  }
+
+  res.json(data);
 });
+
 
 // 🔹 DELETE /api/products/:id — удалить товар
 router.delete("/:id", async (req, res) => {

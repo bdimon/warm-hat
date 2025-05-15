@@ -4,9 +4,11 @@ interface FormFieldProps {
   label: string;
   name: string;
   type?: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value: string | number;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   error?: string;
+  textarea?: boolean;
+  required?: boolean;
   placeholder?: string;
 }
 
@@ -18,23 +20,35 @@ export default function FormField({
   onChange,
   error,
   placeholder,
+  textarea = false,
+  required = false,
 }: FormFieldProps) {
+  const inputClass = `w-full border p-2 rounded ${error ? "border-red-500" : "border-gray-300"}`;
+
   return (
     <div className="mb-4">
       <label htmlFor={name} className="block font-medium mb-1">
-        {label}
+        {label} {required && "*"}
       </label>
-      <input
+      {textarea ? (
+        <textarea
+          id={name}
+          name={name}
+          value={value ?? ""}
+          onChange={onChange}
+          className={inputClass}
+          rows={4}
+        />
+      ) : (<input
         id={name}
         name={name}
         type={type}
-        value={value}
+        value={value ?? ""}
         onChange={onChange}
         placeholder={placeholder}
-        className={`w-full border p-2 rounded ${
-          error ? "border-red-500" : "border-gray-300"
-        }`}
+        className={inputClass}
       />
+      )}
       {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
   );

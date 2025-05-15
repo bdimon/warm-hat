@@ -89,6 +89,7 @@ type RawProduct = {
   quantity: number;
   images: string[];
   category_en: string;
+  category: string;
   isnew: boolean;
   issale: boolean;
   saleprice: number | null;
@@ -103,7 +104,7 @@ function mapProductFromAPI(raw: RawProduct): Product {
     price: raw.price,
     quantity: raw.quantity,
     images: raw.images || [],
-    category: raw.category_en || "Прочее",
+    category: raw.category_en || raw.category ||"Прочее",
     isNew: raw.isnew,
     isSale: raw.issale,
     salePrice: raw.saleprice ?? undefined,
