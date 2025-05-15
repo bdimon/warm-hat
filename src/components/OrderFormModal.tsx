@@ -1,14 +1,19 @@
 import { useCart } from "@/context/CartContext";
 import { X } from "lucide-react";
 import { useState } from "react";
+import { useSnackbar } from "@/context/SnackbarContext";
 
 interface OrderFormModalProps {
   isOpen: boolean;
   onClose: () => void;
+  closeCart: () => void;
 }
 
-export default function OrderFormModal({ isOpen, onClose }: OrderFormModalProps) {
+
+
+export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderFormModalProps) {
   const { cart, clearCart } = useCart();
+  const { showSnackbar } = useSnackbar();
 
   const [form, setForm] = useState({
     name: "",
@@ -27,20 +32,30 @@ export default function OrderFormModal({ isOpen, onClose }: OrderFormModalProps)
   }, 0);
 
   const handleSubmit = async () => {
+    // Простая валидация
+  if (!form.name.trim() || !form.email.trim() || !form.address.trim()) {
+    showSnackbar("Пожалуйста, заполните все поля", "error");
+    return;
+  }
+
+  // Проверка email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(form.email)) {
+    showSnackbar("Введите корректный email", "error");
+    return;
+  }
+
+  if (cart.length === 0) {
+    showSnackbar("Корзина пуста", "error");
+    return;
+  }
     const items = cart.map((item) => ({
       id: item.id,
       name: item.name,
       quantity: item.quantity,
       price: item.price,
     }));
-    console.log("Отправляем заказ:", {
-        items,
-        total,
-        customer_name: form.name,
-        customer_email: form.email,
-        customer_address: form.address,
-        payment_method: form.payment,
-      });
+    
       
 
     try {
@@ -59,14 +74,19 @@ export default function OrderFormModal({ isOpen, onClose }: OrderFormModalProps)
         }),
       });
 
-      if (!res.ok) throw new Error("Ошибка оформления");
+      if (!res.ok) {const errText = await res.text();
+      console.error("Ошибка сервера:", errText);
+      showSnackbar("Ошибка сервера", "error");
+      return;}
 
       clearCart();
-      onClose();
-      alert("✅ Заказ оформлен успешно!");
+      onClose(); 
+      closeCart();     
+      showSnackbar("Заказ оформлен успешно!", "success");
+      
     } catch (err) {
       console.error(err);
-      alert("❌ Ошибка оформления заказа");
+      showSnackbar("Ошибка оформления заказа", "error");
     }
   };
 
@@ -141,3 +161,4 @@ export default function OrderFormModal({ isOpen, onClose }: OrderFormModalProps)
     </div>
   );
 }
+

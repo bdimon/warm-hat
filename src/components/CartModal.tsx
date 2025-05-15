@@ -2,15 +2,18 @@ import { useCart } from "@/context/CartContext";
 import { X, Plus, Minus } from "lucide-react";
 import OrderFormModal from "./OrderFormModal";
 import { useState } from "react";
+import { useSnackbar } from "@/context/SnackbarContext";
 
 interface CartModalProps {
   isOpen: boolean;
   onClose: () => void;
+  
 }
 
 export default function CartModal({ isOpen, onClose }: CartModalProps) {
   const { cart, removeFromCart, clearCart, addToCart, updateQuantity } = useCart();
   const [isOrderFormOpen, setIsOrderFormOpen] = useState(false);
+  
 
   const decreaseQuantity = (id: string) => {
     const item = cart.find((i) => i.id === id);
@@ -29,44 +32,11 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
     }
   };
   
-  
-
   const total = cart.reduce((sum, item) => {
     const price = item.isSale && item.salePrice ? item.salePrice : item.price;
     return sum + price * item.quantity;
   }, 0);
 
-  // const handleOrderSubmit = async () => {
-  //   const items = cart.map((item) => ({
-  //     id: item.id,
-  //     name: item.name,
-  //     quantity: item.quantity,
-  //     price: item.price,
-  //   }));
-  //   console.log(items);
-  
-  //   const total = cart.reduce((sum, item) => {
-  //     const price = item.isSale && item.salePrice ? item.salePrice : item.price;
-  //     return sum + price * item.quantity;
-  //   }, 0);
-  
-  //   try {
-  //     const res = await fetch("http://localhost:3010/api/orders", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ items, total }),
-  //     });
-  
-  //     if (!res.ok) throw new Error("Ошибка оформления заказа");
-  
-  //     clearCart();
-  //     onClose();
-  //     alert("✅ Заказ успешно оформлен!");
-  //   } catch (err) {
-  //     console.error(err);
-  //     alert("❌ Не удалось оформить заказ");
-  //   }
-  // };
   
 
   if (!isOpen) return null;
@@ -159,7 +129,10 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                Оформить заказ 
               </button>
             {/* // )} */}
-            <OrderFormModal isOpen={isOrderFormOpen} onClose={() => setIsOrderFormOpen(false)} />
+            <OrderFormModal 
+              isOpen={isOrderFormOpen} 
+              onClose={() => setIsOrderFormOpen(false)}
+              closeCart={onClose} />
           </div>
         </div>
         )}
@@ -167,68 +140,6 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
     </div>
     
   );
-  
+ 
 
-  // return (
-  //   <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-end">
-  //     <div className="w-full max-w-md bg-white h-full p-6 overflow-y-auto shadow-lg relative">
-  //       <button
-  //         onClick={onClose}
-  //         className="absolute top-4 right-4 text-gray-600 hover:text-black"
-  //       >
-  //         <X />
-  //       </button>
-
-  //       <h2 className="text-2xl font-bold mb-6">Корзина</h2>
-
-  //       {cart.length === 0 ? (
-  //         <p className="text-center text-gray-500">Корзина пуста</p>
-  //       ) : (
-  //         <ul className="space-y-4 mb-6">
-  //           {cart.map((item) => (
-  //             <li key={item.id} className="flex gap-4 items-center">
-  //               <img
-  //                 src={item.images?.[0]}
-  //                 alt={item.name}
-  //                 className="w-16 h-16 object-cover rounded"
-  //               />
-  //               <div className="flex-1">
-  //                 <h3 className="font-semibold">{item.name}</h3>
-  //                 <p className="text-sm text-gray-500">{item.price} ₽</p>
-  //                 <div className="flex items-center mt-1 space-x-2">
-  //                   <button onClick={() => decreaseQuantity(item.id)}><Minus size={16} /></button>
-  //                   <span>{item.quantity}</span>
-  //                   <button onClick={() => increaseQuantity(item.id)}><Plus size={16} /></button>
-  //                 </div>
-  //               </div>
-  //               <button
-  //                 onClick={() => removeFromCart(item.id)}
-  //                 className="text-red-500 hover:underline text-sm"
-  //               >
-  //                 Удалить
-  //               </button>
-  //             </li>
-  //           ))}
-  //         </ul>
-  //       )}
-
-  //       <div className="border-t pt-4 flex justify-between items-center">
-  //         <span className="font-bold text-lg">Итого:</span>
-  //         <span className="text-lg">{total.toFixed(2)} ₽</span>
-  //       </div>
-
-  //       <div className="mt-6 flex justify-between">
-  //         <button
-  //           onClick={clearCart}
-  //           className="text-sm text-red-500 hover:underline"
-  //         >
-  //           Очистить
-  //         </button>
-  //         <button className="bg-shop-blue-dark text-white px-4 py-2 rounded hover:bg-shop-blue-dark/90">
-  //           Оформить заказ
-  //         </button>
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
 }
