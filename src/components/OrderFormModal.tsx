@@ -2,6 +2,7 @@ import { useCart } from "@/context/CartContext";
 import { X } from "lucide-react";
 import { useState } from "react";
 import { useSnackbar } from "@/context/SnackbarContext";
+import FormField from "./FormField";
 
 interface OrderFormModalProps {
   isOpen: boolean;
@@ -19,7 +20,15 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
     name: "",
     email: "",
     address: "",
+    phone: "",
     payment: "card",
+  });
+
+  const [formErrors, setFormErrors] = useState({
+    name: "",
+    email: "",
+    address: "",
+    phone: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -32,18 +41,30 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
   }, 0);
 
   const handleSubmit = async () => {
-    // Простая валидация
-  if (!form.name.trim() || !form.email.trim() || !form.address.trim()) {
-    showSnackbar("Пожалуйста, заполните все поля", "error");
-    return;
-  }
 
-  // Проверка email
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(form.email)) {
-    showSnackbar("Введите корректный email", "error");
-    return;
-  }
+    const errors = {
+      name: form.name.trim() ? "" : "Введите имя",
+      email: "",
+      address: form.address.trim() ? "" : "Введите адрес",
+      phone: "",
+    };
+  
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!form.email.trim()) {
+      errors.email = "Введите email";
+    } else if (!emailRegex.test(form.email)) {
+      errors.email = "Некорректный email";
+    }
+
+    if (form.phone && !/^\+?\d{10,15}$/.test(form.phone)) {
+      errors.phone = "Введите корректный номер телефона";
+    }
+  
+    setFormErrors(errors);
+  
+    const hasErrors = Object.values(errors).some((e) => e);
+    if (hasErrors) return;
+  
 
   if (cart.length === 0) {
     showSnackbar("Корзина пуста", "error");
@@ -69,6 +90,7 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
           customer_name: form.name,
           customer_email: form.email,
           customer_address: form.address,
+          customer_phone: form.phone,
           payment_method: form.payment,
           status: "created",
         }),
@@ -107,33 +129,44 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
         <h2 className="text-xl font-bold mb-4">Оформление заказа</h2>
 
         <div className="space-y-4">
-          <input
-            type="text"
-            name="name"
-            placeholder="Имя и фамилия"
-            value={form.name}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-            required
-          />
-          <input
-            type="email"
+        <FormField
+          label="Имя и фамилия"
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+          error={formErrors.name}
+          placeholder="Введите имя"
+        />
+          {/* {formErrors.name && <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>} */}
+          <FormField
+            label="Email"
             name="email"
-            placeholder="Email"
+            type="email"
             value={form.email}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
-            required
+            error={formErrors.email}
+            placeholder="Введите email"
           />
-          <input
-            type="text"
+          {/* {formErrors.email && <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>} */}
+          <FormField
+            label="Адрес доставки"
             name="address"
-            placeholder="Адрес доставки"
+            type="text"
             value={form.address}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
-            required
+            error={formErrors.address}
+            placeholder="Введите адрес"
           />
+          <FormField
+            label="Телефон"
+            name="phone"
+            type="tel"
+            value={form.phone}
+            onChange={handleChange}
+            error={formErrors.phone}
+            placeholder="+7..."
+          />
+          {/* {formErrors.address && <p className="text-red-500 text-sm mt-1">{formErrors.address}</p>} */}
           <select
             name="payment"
             value={form.payment}

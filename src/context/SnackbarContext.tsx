@@ -25,7 +25,7 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
     setMessage(msg);
     setType(variant);
     setVisible(true);
-    setTimeout(() => setVisible(false), 3000);
+    setTimeout(() => setVisible(false), 5000);
   };
 
 //   return (
@@ -46,7 +46,7 @@ return (
       {children}
       {visible && (
         <div
-          className={`fixed bottom-6 left-1/2 transform -translate-x-1/2 min-w-[240px] max-w-[90%] px-4 py-3 pr-10 rounded shadow-lg flex items-center text-white text-sm transition-all duration-300
+          className={`fixed bottom-6 left-1/2 transform -translate-x-1/2 min-w-[240px] max-w-[90%] px-4 py-3 pr-10 rounded-xl shadow-lg flex items-center text-white text-md transition-all duration-300
             ${type === "success" ? "bg-green-600" : type === "error" ? "bg-red-500" : "bg-gray-700"}`}
         >
           {/* Иконка */}
