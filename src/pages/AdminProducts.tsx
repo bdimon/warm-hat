@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Product } from "@/types/Product";
+import { mapProductFromAPI } from "@/lib/mappers/products";
 
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  category: string;
-  images: string[];
-}
+
+// interface Product {
+//   id: string;
+//   name: string;
+//   price: number;
+//   quantity: number;
+//   category: string;
+//   images: string[];
+// }
 
 export default function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -22,7 +25,9 @@ export default function AdminProducts() {
         const res = await fetch("http://localhost:3010/api/products");
         if (!res.ok) throw new Error("Ошибка загрузки товаров");
         const json = await res.json();
-        setProducts(json.data);
+        const mappedProducts = json.data.map(mapProductFromAPI);
+        // setProducts(json.data);
+        setProducts(mappedProducts);
       } catch (err) {
         if (err instanceof Error) setError(err.message);
         else setError("Неизвестная ошибка");
@@ -76,6 +81,9 @@ export default function AdminProducts() {
             <h2 className="font-semibold">{product.name}</h2>
             <p>Категория: {product.category}</p>
             <p>Цена: {product.price.toFixed(2)} ₽</p>
+            {product.isSale && product.salePrice && (
+              <p className="mt-1 text-red-600 font-semibold">Скидка: ₽ {product.salePrice}</p>
+            )}
             <p>В наличии: {product.quantity} шт.</p>
 
             <div className="flex gap-2">

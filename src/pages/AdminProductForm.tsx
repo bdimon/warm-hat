@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import FormField from "@/components/FormField";
+import { Product } from "@/types/Product"
+import { mapProductFromAPI, mapProductToAPI } from "@/lib/mappers/products";
 
 interface ProductForm {
   name: string;
@@ -11,20 +13,23 @@ interface ProductForm {
   images: string[]; // Пути к изображениям, например: ["/images/hat.jpg"]
 }
 
-const initialForm: ProductForm = {
-  name: "",
-  price: 0,
-  quantity: 0,
-  description: "",
-  category: "",
-  images: [],
-};
+const initialForm: Product = {
+    id: "",
+    name: "",
+    description: "",
+    price: 0,
+    quantity: 0,
+    category: "",
+    images: [],
+    isNew: false,
+    isSale: false,
+    salePrice: undefined,
+  };
 
 export default function AdminProductForm() {
   const { id } = useParams(); // если есть, значит редактируем
   const navigate = useNavigate();
-
-  const [form, setForm] = useState<ProductForm>(initialForm);
+  const [form, setForm] = useState<Product>(initialForm);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [formErrors, setFormErrors] = useState<{[key: string]: string}>({});
@@ -39,7 +44,8 @@ export default function AdminProductForm() {
         const res = await fetch(`http://localhost:3010/api/products/${id}`);
         if (!res.ok) throw new Error("Ошибка загрузки товара");
         const data = await res.json();
-        setForm(data);
+        const mappedData = mapProductFromAPI(data);
+        setForm(mappedData);
       } catch (err) {
         setError("Не удалось загрузить товар");
       } finally {
@@ -50,10 +56,12 @@ export default function AdminProductForm() {
   }, [id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+    const target = e.target;
+  const { name, value, type } = target;
+  const checked = (target as HTMLInputElement).checked; // add type guard
     setForm((prev) => ({
       ...prev,
-      [name]: name === "price" || name === "quantity" ? Number(value) : value,
+      [name]: type === "checkbox" ? checked : name === "price" || name === "quantity" ? Number(value) : value,
     }));
   };
 
@@ -65,10 +73,13 @@ export default function AdminProductForm() {
         ? `http://localhost:3010/api/products/${id}`
         : "http://localhost:3010/api/products";
 
+      const payload = mapProductToAPI(form);
+      
+
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) throw new Error("Ошибка сохранения");
@@ -117,27 +128,50 @@ export default function AdminProductForm() {
           name="price"
           value={form.price}
           onChange={handleChange}
-          placeholder="Цена"
-          error={formErrors.price}
         />
         <FormField
           label="Количество"
           type="number"
           name="quantity"
           value={form.quantity}
-          onChange={handleChange}
-          placeholder="Количество"
-          error={formErrors.quantity}
+          onChange={handleChange}          
         />
-        <input
+        <FormField
+          label="Изображения (через запятую)"
           name="images"
-          value={form.images.join(",")}
+          value={form.images.join(", ")}
           onChange={(e) =>
-            setForm((prev) => ({ ...prev, images: e.target.value.split(",").map((s) => s.trim()) }))
+            setForm((prev) => ({
+              ...prev,
+              images: e.target.value.split(",").map((s) => s.trim()),
+            }))
           }
-          placeholder="Ссылки на изображения (через запятую)"
-          className="w-full border p-2 rounded"
         />
+
+
+        <label className="flex items-center space-x-2">
+          <input type="checkbox" name="isNew" checked={form.isNew} onChange={handleChange} />
+          <span>Новинка</span>
+        </label>
+
+        <label className="flex items-center space-x-2">
+          <input type="checkbox" name="isSale" checked={form.isSale} onChange={handleChange} />
+          <span>Скидка</span>
+        </label>
+        {form.isSale && (
+          <FormField
+            label="Цена со скидкой"
+            type="number"
+            name="salePrice"
+            value={form.salePrice?.toString() ?? ""}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                salePrice: e.target.value === "" ? undefined : Number(e.target.value),
+              }))
+            }
+          />
+        )}
       </div>
 
       <button

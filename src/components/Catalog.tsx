@@ -1,8 +1,11 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import ProductCard, { Product } from './ProductCard';
+import ProductCard  from './ProductCard';
 import { Button } from '@/components/ui/button';
 // import { v4 as uuidv4 } from "uuid";// from "uuid";
+import { RawProduct, Product } from '@/types/Product';
+import { mapProductFromAPI } from "@/lib/mappers/products";
+
 
 // Mock products data
 // const PRODUCTS: Product[] = [
@@ -79,37 +82,37 @@ import { Button } from '@/components/ui/button';
 // ];
 
 // Filter category options
-type RawProduct = {
-  id: string;
-  name_en?: string;
-  name?: string;
-  description_en?: string;
-  description?: string;
-  price: number;
-  quantity: number;
-  images: string[];
-  category_en: string;
-  category: string;
-  isnew: boolean;
-  issale: boolean;
-  saleprice: number | null;
-};
+// type RawProduct = {
+//   id: string;
+//   name_en?: string;
+//   name?: string;
+//   description_en?: string;
+//   description?: string;
+//   price: number;
+//   quantity: number;
+//   images: string[];
+//   category_en: string;
+//   category: string;
+//   isnew: boolean;
+//   issale: boolean;
+//   saleprice: number | null;
+// };
 
 
-function mapProductFromAPI(raw: RawProduct): Product {
-  return {
-    id: raw.id,
-    name: raw.name_en || raw.name || "Без названия",
-    description: raw.description_en || raw.description || "",
-    price: raw.price,
-    quantity: raw.quantity,
-    images: raw.images || [],
-    category: raw.category_en || raw.category ||"Прочее",
-    isNew: raw.isnew,
-    isSale: raw.issale,
-    salePrice: raw.saleprice ?? undefined,
-  };
-}
+// function mapProductFromAPI(raw: RawProduct): Product {
+//   return {
+//     id: raw.id,
+//     name: raw.name_en || raw.name || "Без названия",
+//     description: raw.description_en || raw.description || "",
+//     price: raw.price,
+//     quantity: raw.quantity,
+//     images: raw.images || [],
+//     category: raw.category_en || raw.category ||"Прочее",
+//     isNew: raw.isnew,
+//     isSale: raw.issale,
+//     salePrice: raw.saleprice ?? undefined,
+//   };
+// }
 const CATEGORIES = ["All", "Hats", "Scarves", "Combinations"];
 
 const Catalog = () => {

@@ -1,7 +1,4 @@
-// @/lib/mappers/product.ts
-
-import { Product } from "@/types/Product";
-import { RawProduct } from "@/types/RawProduct";
+import { RawProduct, Product } from "@/types/Product";
 
 // Преобразование данных из API (из Supabase) → в форму/клиент
 export function mapProductFromAPI(raw: RawProduct): Product {
@@ -23,12 +20,12 @@ export function mapProductFromAPI(raw: RawProduct): Product {
 export function mapProductToAPI(product: Product): RawProduct {
   return {
     id: product.id,
-    name_en: product.name,
-    description_en: product.description,
+    name: product.name,
+    description: product.description,
     price: product.price,
     quantity: product.quantity,
     images: product.images,
-    category_en: product.category,
+    category: product.category,
     isnew: product.isNew,
     issale: product.isSale,
     saleprice: product.salePrice ?? null,
