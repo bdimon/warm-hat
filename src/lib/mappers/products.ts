@@ -4,15 +4,15 @@ import { RawProduct, Product } from "@/types/Product";
 export function mapProductFromAPI(raw: RawProduct): Product {
   return {
     id: raw.id,
-    name: raw.name_en || raw.name || "Без названия",
-    description: raw.description_en || raw.description || "",
+    name: raw.name || "Без названия",
+    description: raw.description || "",
     price: raw.price,
     quantity: raw.quantity,
     images: raw.images || [],
-    category: raw.category_en || "Прочее",
-    isNew: raw.isnew,
-    isSale: raw.issale,
-    salePrice: raw.saleprice ?? undefined,
+    category: raw.category,
+    isNew: raw.isNew,
+    isSale: raw.isSale,
+    salePrice: raw.salePrice ?? undefined,
   };
 }
 
@@ -26,8 +26,8 @@ export function mapProductToAPI(product: Product): RawProduct {
     quantity: product.quantity,
     images: product.images,
     category: product.category,
-    isnew: product.isNew,
-    issale: product.isSale,
-    saleprice: product.salePrice ?? null,
+    isNew: product.isNew,
+    isSale: product.isSale,
+    salePrice: product.salePrice ?? null,
   };
 }

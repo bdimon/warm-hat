@@ -47,9 +47,9 @@ async function seedProducts() {
       faker.image.url(),
       faker.image.url(),
     ],
-    issale: faker.datatype.boolean(),
-    saleprice: faker.commerce.price({ min: 10, max: 200 }),
-    isnew: faker.datatype.boolean(),
+    isSale: faker.datatype.boolean(),
+    salePrice: faker.commerce.price({ min: 10, max: 200 }),
+    isNew: faker.datatype.boolean(),
     category_en: categories[Math.floor(Math.random() * categories.length)],
     created_at: new Date().toISOString(),
   }));

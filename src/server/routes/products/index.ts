@@ -62,6 +62,8 @@ router.post("/", async (req, res) => {
       description,
       category,
       images,
+      isNew: true,
+      isSale: false,
     },
   ]);
   if (error) return res.status(500).json({ error: error.message });

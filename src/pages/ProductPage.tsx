@@ -1,11 +1,16 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Product } from "@/components/ProductCard";
+import { Product } from "@/types/Product";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart } from "lucide-react";
+import { useCart } from "@/context/CartContext";
+import Header from "@/components/Header";
 
 export default function ProductPage() {
   const { id } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
   const [mainImage, setMainImage] = useState<string>("");
+  const { addToCart } = useCart();
 
   useEffect(() => {
     fetch(`http://localhost:3010/api/products/${id}`)
@@ -20,7 +25,8 @@ export default function ProductPage() {
   if (!product) return <div className="p-4 text-center">Загрузка...</div>;
 
   return (
-    <section className="container mx-auto px-4 py-8">
+    <section className="container mx-auto my-12 px-4 py-8">
+      <Header />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Галерея */}
         <div>
@@ -61,6 +67,13 @@ export default function ProductPage() {
               {product.price} ₽
             </p>
           )}
+          <Button
+            onClick={() => addToCart(product)} 
+            className="bg-shop-blue-dark text-white hover:bg-shop-blue-dark/90 rounded-full p-2 h-20 w-20"
+            aria-label="Добавить в корзину"
+          >
+            <ShoppingCart className="h-30 w-30" />
+          </Button>
         </div>
       </div>
     </section>

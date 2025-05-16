@@ -6,34 +6,6 @@ import { Link } from 'react-router-dom'; // or 'next/link';
 import { useCart } from "@/context/CartContext";
 import { Product } from "@/types/Product";
 
-// interface ProductCardProps {
-//   product: Product;
-// }
-
-
-
-// export interface Product {
-//   id: string;
-//   name: string;
-//   name_ru?: string;
-//   name_ua?: string;
-//   name_pl?: string;
-//   price: number;
-//   quantity: number;
-//   images: string[];
-//   category: string;
-//   category_ru?: string;
-//   category_ua?: string;
-//   category_pl?: string;
-//   isNew?: boolean;
-//   isSale?: boolean;
-//   salePrice?: number;
-//   description: string;
-//   description_ru?: string;
-//   description_ua?: string;
-//   description_pl?: string;
-// }
-
 interface ProductCardProps {
   product: Product;
 }

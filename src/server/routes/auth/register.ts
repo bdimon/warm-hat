@@ -1,5 +1,5 @@
 import express from "express";
-import { supabase } from "../../lib/supabase";
+import { supabase } from "@/lib/supabase";
 import "dotenv/config";
 
 const router = express.Router();

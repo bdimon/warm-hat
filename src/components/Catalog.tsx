@@ -2,117 +2,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ProductCard  from './ProductCard';
 import { Button } from '@/components/ui/button';
-// import { v4 as uuidv4 } from "uuid";// from "uuid";
-import { RawProduct, Product } from '@/types/Product';
+import { Product } from '@/types/Product';
 import { mapProductFromAPI } from "@/lib/mappers/products";
 
-
-// Mock products data
-// const PRODUCTS: Product[] = [
-//   {
-//     id: uuidv4(),
-//     name_en: "Шапка с логотипом",
-//     price: 12990,
-//     description_en: "Описание продукта",
-//     images: ["/hamed-darzi-6dILIIipKHk-unsplash.jpg", "/hamed-darzi-6dILIIipKHk-unsplash.jpg", "/hamed-darzi-6dILIIipKHk-unsplash.jpg"],
-//     category: ["Шапки", "Все"],
-//     isnew: true
-//   },
-//   {
-//     id: uuidv4,
-//     name_en: "Шапка теплая",
-//     price: 8990,
-//     description_en: "Описание продукта",
-//     images: ["/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg", "/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg", "/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg"],
-//     category: ["Шапки", "Все"],
-//     issale: true,
-//     saleprice: 7490
-//   },
-//   {
-//     id: 3,
-//     name_en: "Шапка бини",
-//     price: 5990,
-//     description_en: "Описание продукта",
-//     images: ["/erik-mclean-CSlBUY-R6dY-unsplash.jpg", "/erik-mclean-CSlBUY-R6dY-unsplash.jpg", "/erik-mclean-CSlBUY-R6dY-unsplash.jpg"],
-//     category: ["Шапки", "Все"],
-//   },
-//   {
-//     id: 4,
-//     name_en: "Шарфы вязаные",
-//     price: 18990,
-//     description_en: "Описание продукта",
-//     images: ["/kelly-sikkema-scarfs-unsplash.jpg", "/kelly-sikkema-scarfs-unsplash.jpg", "/kelly-sikkema-scarfs-unsplash.jpg"],
-//     category: ["Шарфы и снуды", "Все"], // "Шарфы и снуды"
-//   },
-//   {
-//     id: 5,
-//     name_en: "Комплект 1",
-//     price: 21990,
-//     description_en: "Описание продукта",
-//     images: ["/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg", "/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg", "/abdur-ahmanus-ZKxxR7fCiWQ-unsplash.jpg"],
-//     category: ["Комплекты", "Все"], // "Комплекты",
-//     isnew: true
-//   },
-//   {
-//     id: 6,
-//     name_en: "Шарф вязаный",
-//     price: 4990,
-//     description_en: "Описание продукта",
-//     images: ["/hamed-darzi-6dILIIipKHk-unsplash.jpg", "/hamed-darzi-6dILIIipKHk-unsplash.jpg", "/hamed-darzi-6dILIIipKHk-unsplash.jpg"],
-//     category: ["Шарфы и снуды", "Все"],
-//     issale: true,
-//     saleprice: 3990
-//   },
-//   {
-//     id: 7,
-//     name_en: "Комплект шапочка и шарф",
-//     price: 3490,
-//     description_en: "Описание продукта",
-//     images: ["/maria-kovalets-e0mkwiV22Mk-unsplash.jpg", "/maria-kovalets-e0mkwiV22Mk-unsplash.jpg", "/maria-kovalets-e0mkwiV22Mk-unsplash.jpg"],
-//     category: ["Комплекты", "Все"], // "Комплекты"
-//   },
-//   {
-//     id: 8,
-//     name_en: "Комплект бини и снуд",
-//     price: 2990,
-//     description_en: "Описание продукта",
-//     images: ["/kerim-ayar-WWpJViNdatc-unsplash.jpg", "/kerim-ayar-WWpJViNdatc-unsplash.jpg", "/kerim-ayar-WWpJViNdatc-unsplash.jpg"],
-//     category: ["Комплекты", "Все"], // "Комплекты"
-//   }
-// ];
-
-// Filter category options
-// type RawProduct = {
-//   id: string;
-//   name_en?: string;
-//   name?: string;
-//   description_en?: string;
-//   description?: string;
-//   price: number;
-//   quantity: number;
-//   images: string[];
-//   category_en: string;
-//   category: string;
-//   isnew: boolean;
-//   issale: boolean;
-//   saleprice: number | null;
-// };
-
-
-// function mapProductFromAPI(raw: RawProduct): Product {
-//   return {
-//     id: raw.id,
-//     name: raw.name_en || raw.name || "Без названия",
-//     description: raw.description_en || raw.description || "",
-//     price: raw.price,
-//     quantity: raw.quantity,
-//     images: raw.images || [],
-//     category: raw.category_en || raw.category ||"Прочее",
-//     isNew: raw.isnew,
-//     isSale: raw.issale,
-//     salePrice: raw.saleprice ?? undefined,
-//   };
-// }
 const CATEGORIES = ["All", "Hats", "Scarves", "Combinations"];
 
 const Catalog = () => {
@@ -155,6 +47,7 @@ const Catalog = () => {
       })
       .then(res => {
         const mapped: Product[] = res.data.map(mapProductFromAPI);
+        console.log(mapped);
         setAllProducts(mapped);
         setDisplayedProducts(mapped);
       })

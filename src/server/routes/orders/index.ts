@@ -1,5 +1,5 @@
 import express from "express";
-import { servbase as supabase } from "../lib/supabase";
+import { servbase as supabase } from "@/lib/supabase";
 
 const router = express.Router();
 
@@ -57,6 +57,7 @@ router.get("/", async (req, res) => {
   res.json(data);
 });
 
+// 🔹 GET /api/orders/:id — получить заказ по ID
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   const { data, error } = await supabase
@@ -64,7 +65,7 @@ router.get("/:id", async (req, res) => {
     .select("*")
     .eq("id", id)
     .single();
-  if (error) return res.status(500).json({ error });
+  if (error) return res.status(404).json({ error: "Заказ не найден" });
   res.json(data);
 });
 
