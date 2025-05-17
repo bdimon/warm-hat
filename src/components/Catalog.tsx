@@ -67,7 +67,7 @@ const Catalog = () => {
 
   return (
     
-    <section id="catalog" className="py-20">
+    <section id="catalog" className="py-2">
       
       <div className="container mx-auto">
         <div className="text-center mb-16">

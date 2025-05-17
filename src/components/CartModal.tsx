@@ -1,5 +1,5 @@
 import { useCart } from "@/context/CartContext";
-import { X, Plus, Minus } from "lucide-react";
+import { X, ArrowUp, ArrowDown } from "lucide-react";
 import OrderFormModal from "./OrderFormModal";
 import { useState } from "react";
 import { useSnackbar } from "@/context/SnackbarContext";
@@ -84,12 +84,12 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                 <h3 className="font-semibold text-sm">{item.name}</h3>
                 <p className="text-sm text-gray-500 mb-1">{item.price} ₽</p>
                 <div className="flex items-center gap-2">
-                  <button onClick={() => decreaseQuantity(item.id)} className="border border-red-300">
-                    <Minus size={16} />
+                  <button onClick={() => decreaseQuantity(item.id)} className="hover:text-shop-blue-dark">
+                    <ArrowDown size={24} />
                   </button>
-                  <span className="px-2">{item.quantity}</span>
-                  <button onClick={() => increaseQuantity(item.id)} className="border border-green-300">
-                    <Plus size={16} />
+                  <span className="px-2 text-md text-blue">{item.quantity}</span>
+                  <button onClick={() => increaseQuantity(item.id)} className="hover:text-shop-blue-dark">
+                    <ArrowUp size={24} />
                   </button>
                 </div>
               </div>

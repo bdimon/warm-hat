@@ -2,11 +2,8 @@ import { createClient } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
 import { faker } from "@faker-js/faker";
 import "dotenv/config";
+import { servbase as supabase } from "@/lib/supabase";
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -37,10 +34,10 @@ async function seedProducts() {
   const categories = ["Hats", "Scarves", "Combinations"];
   const products = Array.from({ length: 10 }, (_, i) => ({
     id: uuidv4(),
-    name_en: faker.commerce.productName(),
+    name: faker.commerce.productName(),
     price: faker.commerce.price({ min: 10, max: 200, dec: 2 }),
     quantity: Math.floor(Math.random() * 20) + 1,
-    description_en: faker.commerce.productDescription(),
+    description: faker.commerce.productDescription(),
     images: [
       faker.image.url(),
       faker.image.url(),
@@ -50,7 +47,7 @@ async function seedProducts() {
     isSale: faker.datatype.boolean(),
     salePrice: faker.commerce.price({ min: 10, max: 200 }),
     isNew: faker.datatype.boolean(),
-    category_en: categories[Math.floor(Math.random() * categories.length)],
+    category: categories[Math.floor(Math.random() * categories.length)],
     created_at: new Date().toISOString(),
   }));
 
