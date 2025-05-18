@@ -1,9 +1,9 @@
 import { useCart } from "@/context/CartContext";
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSnackbar } from "@/context/SnackbarContext";
 import FormField from "./FormField";
-import { supabase } from "@/lib/supabase";
+import { useUser, useUserProfile } from "@/hooks/use-user-profile";
 
 interface OrderFormModalProps {
   isOpen: boolean;
@@ -11,14 +11,15 @@ interface OrderFormModalProps {
   closeCart: () => void;
 }
 
+
+
 export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderFormModalProps) {
   const { cart, clearCart } = useCart();
   const { showSnackbar } = useSnackbar();
 
-  const [userEmail, setUserEmail] = useState("");
-  const [profileId, setProfileId] = useState("");
   const [form, setForm] = useState({
     name: "",
+    email: "",
     address: "",
     phone: "",
     payment: "card",
@@ -26,38 +27,19 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
 
   const [formErrors, setFormErrors] = useState({
     name: "",
+    email: "",
     address: "",
     phone: "",
   });
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      const { data: authData } = await supabase.auth.getUser();
-      const user = authData.user;
-      if (!user) return;
+  const { user } = useUser();       // из Supabase auth
+  const { profile } = useUserProfile(); // из твоего хука
 
-      setUserEmail(user.email || "");
+  if (!user || !profile) {
+    showSnackbar("Вы не вошли в систему", "error");
+    return;
+}
 
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("id, full_name, address, phone")
-        .eq("id", user.id)
-        .single();
-        console.log(profile);
-
-      if (profile) {
-        setProfileId(profile.id);
-        setForm({
-          name: profile.full_name || "",
-          address: profile.address || "",
-          phone: profile.phone || "",
-          payment: "card",
-        });
-      }
-    };
-
-    if (isOpen) fetchProfile();
-  }, [isOpen]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -69,50 +51,72 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
   }, 0);
 
   const handleSubmit = async () => {
+
     const errors = {
       name: form.name.trim() ? "" : "Введите имя",
+      email: "",
       address: form.address.trim() ? "" : "Введите адрес",
-      phone: form.phone && /^\+?\d{10,15}$/.test(form.phone) ? "" : "Введите корректный телефон",
+      phone: "",
     };
-
-    
-
-    setFormErrors(errors);
-
-    const hasErrors = Object.values(errors).some((e) => e);
-    if (hasErrors) return;
-
-    if (cart.length === 0) {
-      showSnackbar("Корзина пуста", "error");
-      return;
+  
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!form.email.trim()) {
+      errors.email = "Введите email";
+    } else if (!emailRegex.test(form.email)) {
+      errors.email = "Некорректный email";
     }
 
+    if (form.phone && !/^\+?\d{10,15}$/.test(form.phone)) {
+      errors.phone = "Введите корректный номер телефона";
+    }
+  
+    setFormErrors(errors);
+  
+    const hasErrors = Object.values(errors).some((e) => e);
+    if (hasErrors) return;
+  
+
+  if (cart.length === 0) {
+    showSnackbar("Корзина пуста", "error");
+    return;
+  }
     const items = cart.map((item) => ({
       id: item.id,
       name: item.name,
       quantity: item.quantity,
       price: item.price,
     }));
+    
+      
 
     try {
-      const { error } = await supabase.from("orders").insert({
-        items,
-        total,
-        profile_id: profileId,
-        payment_method: form.payment,
-        status: "created",
+
+      const res = await fetch("http://localhost:3010/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items,
+          total,
+          profile_id: profile.id,
+          customer_name: form.name,
+          customer_email: form.email,
+          customer_address: form.address,
+          customer_phone: form.phone,
+          payment_method: form.payment,
+          status: "created",
+        }),
       });
 
-      if (error) {
-        console.error(error);
-        showSnackbar("Ошибка сервера", "error");
-        return;
-      }
+      if (!res.ok) {const errText = await res.text();
+      console.error("Ошибка сервера:", errText);
+      showSnackbar("Ошибка сервера", "error");
+      return;}
 
       clearCart();
-      onClose();
-      closeCart();
+      onClose(); 
+      closeCart();     
       showSnackbar("Заказ оформлен успешно!", "success");
+      
     } catch (err) {
       console.error(err);
       showSnackbar("Ошибка оформления заказа", "error");
@@ -122,30 +126,43 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center" onClick={onClose}>
-      <div className="bg-white w-full max-w-lg rounded-lg p-6 relative" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white w-full max-w-lg rounded-lg p-6 relative"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button className="absolute top-3 right-3 text-gray-500" onClick={onClose}>
           <X />
         </button>
         <h2 className="text-xl font-bold mb-4">Оформление заказа</h2>
 
         <div className="space-y-4">
+        <FormField
+          label="Имя и фамилия"
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+          error={formErrors.name}
+          placeholder="Введите имя"
+        />
+          {/* {formErrors.name && <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>} */}
           <FormField
-            label="Имя и фамилия"
-            name="name"
-            value={form.name}
+            label="Email"
+            name="email"
+            type="email"
+            value={form.email}
             onChange={handleChange}
-            error={formErrors.name}
-            placeholder="Введите имя"
+            error={formErrors.email}
+            placeholder="Введите email"
           />
-
-          <div className="text-sm text-gray-500">
-            Email: <span className="font-medium">{userEmail}</span>
-          </div>
-
+          {/* {formErrors.email && <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>} */}
           <FormField
             label="Адрес доставки"
             name="address"
+            type="text"
             value={form.address}
             onChange={handleChange}
             error={formErrors.address}
@@ -160,7 +177,7 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
             error={formErrors.phone}
             placeholder="+7..."
           />
-
+          {/* {formErrors.address && <p className="text-red-500 text-sm mt-1">{formErrors.address}</p>} */}
           <select
             name="payment"
             value={form.payment}
@@ -188,3 +205,4 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
     </div>
   );
 }
+

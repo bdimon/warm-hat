@@ -4,10 +4,12 @@ import { Button } from '@/components/ui/button';
 import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom'; // or 'next/link';
 import { useCart } from "@/context/CartContext";
-import { Product } from "@/types/Product";
+import { ProductInCart } from "@/types/cart";
+import {Product} from "@/types/db";
 
 interface ProductCardProps {
   product: Product;
+  cartProduct: ProductInCart[];
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
@@ -50,7 +52,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             )}
           </div>
           <Button
-            onClick={() => addToCart(product)} 
+            onClick={() => addToCart({...product, quantity: 1})} 
             className="bg-shop-blue-dark text-white hover:bg-shop-blue-dark/90 rounded-full p-2 h-10 w-10"
             aria-label="Добавить в корзину"
           >

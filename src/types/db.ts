@@ -27,5 +27,18 @@ export type Order = {
   status: string | "created" | "pending" | "done" | "canceled";
   total: number;
   items: ProductRaw[];
-  profile: Profile;
+  profile_id: string;
 };
+
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  quantity: number;
+  images: string[];
+  category: string;
+  isNew?: boolean;
+  isSale?: boolean;
+  salePrice?: number;
+}

@@ -4,10 +4,6 @@ import FormField from "./FormField";
 import { supabase } from "@/lib/supabase";
 import { useSnackbar } from "@/context/SnackbarContext";
 
-// const supabase = createClient(
-//   import.meta.env.VITE_SUPABASE_URL!,
-//   import.meta.env.VITE_SUPABASE_ANON_KEY!
-// );
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -52,22 +48,34 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     return !Object.values(errors).some((e) => e);
   };
 
+  async function createProfile(userId: string) {
+    const { data, error } = await supabase.from("profiles").insert({
+      id: userId,
+      full_name: "", // можно подставить имя из формы, если хочешь
+      address: "",
+      phone: "",
+    });
+  
+    if (error) {
+      console.error("Ошибка создания профиля:", error.message);
+    }
+    console.log("Профиль успешно создан", data);
+  }
+  
+
   const handleSubmit = async () => {
     if (!validate()) return;
-    // if (mode === "register" && form.password !== form.confirmPassword) {
-    //     setFormErrors({ ...formErrors, confirmPassword: "Пароли не совпадают" });
-    //     return;
-    //   }
-      
-
+   
     try {
         if (mode === "register") {
-            const { error } = await supabase.auth.signUp({
+            const { data,error } = await supabase.auth.signUp({
               email: form.email,
               password: form.password,
             });
             if (error) throw error;
             showSnackbar("Регистрация успешна. Подтвердите email.", "success");
+            await createProfile(data.user.id);
+
             onClose();
           } else {
             const { error } = await supabase.auth.signInWithPassword({

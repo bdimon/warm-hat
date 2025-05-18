@@ -4,7 +4,24 @@ import { supabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import { Profile } from "@/types/db";
 
+export function useUser() {
+  const [user, setUser] = useState<null | User>(null); // импортируй `User` из `@supabase/supabase-js`
 
+  useEffect(() => {
+    const getUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        console.error("Ошибка получения пользователя:", error.message);
+      } else {
+        setUser(data.user);
+      }
+    };
+
+    getUser();
+  }, []);
+
+  return { user };
+}
 
 export function useUserProfile() {
   const [user, setUser] = useState<User | null>(null);

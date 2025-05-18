@@ -47,7 +47,7 @@ const Catalog = () => {
       })
       .then(res => {
         const mapped: Product[] = res.data.map(mapProductFromAPI);
-        console.log(mapped);
+        // console.log(mapped);
         setAllProducts(mapped);
         setDisplayedProducts(mapped);
       })

@@ -1,54 +1,102 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { Product } from "@/types/Product";
-
-export interface CartItem extends Product {
-  quantity: number;
-}
+import { createContext, useContext, useEffect, useState } from "react";
+import { useUser } from "@/hooks/use-user-profile";
+import { supabase } from "@/lib/supabase";
+import { ProductInCart } from "@/types/cart";
 
 interface CartContextType {
-  cart: CartItem[];
-  addToCart: (product: Product) => void;
+  cart: ProductInCart[];
+  addToCart: (item: ProductInCart) => void;
   removeFromCart: (id: string) => void;
   clearCart: () => void;
+  setCart: (items: ProductInCart[]) => void;
   updateQuantity: (id: string, quantity: number) => void;
+  
 }
 
-const CartContext = createContext<CartContextType | null>(null);
-
-export const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context) throw new Error("CartContext is missing");
-  return context;
-};
-
-
-
+const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const { user } = useUser();
+  const [cart, setCart] = useState<ProductInCart[]>([]);
+
+  // Загрузить корзину из Supabase
+  useEffect(() => {
+    const fetchCart = async () => {
+      if (!user){
+        setCart([]);
+        return
+      };
+
+      const { data, error } = await supabase
+        .from("carts")
+        .select("items")
+        .eq("user_id", user.id)
+        .single();
+
+      if (error) {
+        if (error.code !== "PGRST116") console.error("Ошибка загрузки корзины:", error.message);
+        return;
+      }
+
+      if (data?.items) {
+        setCart(data.items);
+      }
+    };
+    if (!user) {
+        setCart([]);
+      }
+
+    fetchCart();
+  }, [user]);
+
+  // Сохранить корзину в Supabase при изменении
+  useEffect(() => {
+    const saveCart = async () => {
+      if (!user) return;
+
+      const { error } = await supabase
+        .from("carts")
+        .upsert({ user_id: user.id, items: cart }, { onConflict: "user_id" });
+
+      if (error) {
+        console.error("Ошибка сохранения корзины:", error.message);
+      }
+    };
+    if (!user) {
+        setCart([]);
+      }
+
+    if (user) saveCart();
+  }, [cart, user]);
 
   useEffect(() => {
-    const stored = localStorage.getItem("cart");
-    if (stored) setCart(JSON.parse(stored));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
-
-  const addToCart = (product: Product) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      } else {
-        return [...prev, { ...product, quantity: 1 }];
+    const { data: authListener } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_OUT") {
+        setCart([]); // <== очищаем корзину
       }
     });
+  
+    return () => {
+      authListener?.subscription.unsubscribe();
+    };
+  }, []);
+
+
+  const addToCart = (item: ProductInCart) => {
+    const safeQuantity = item.quantity ?? 1;
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((p) => p.id === item.id);
+      if (existingItem) {
+        return prevCart.map((p) =>
+          p.id === item.id ? { ...p, quantity: p.quantity + safeQuantity } : p
+        );
+      }
+      return [...prevCart, { ...item, quantity: safeQuantity }];
+    });
+  };
+
+  const removeFromCart = (id: string) => {
+    setCart((prev) => prev.filter((item) => item.id !== id));
   };
 
   const updateQuantity = (id: string, quantity: number) => {
@@ -58,16 +106,23 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       )
     );
   };
+  
 
-  const removeFromCart = (id: string) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+  const clearCart = () => {
+    setCart([]);
   };
 
-  const clearCart = () => setCart([]);
-
   return (
-    <CartContext.Provider value={{ cart, addToCart, updateQuantity, removeFromCart, clearCart }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, setCart, updateQuantity }}>
       {children}
     </CartContext.Provider>
   );
+};
+
+export const useCart = () => {
+  const context = useContext(CartContext);
+  if (!context) {
+    throw new Error("useCart должен использоваться внутри CartProvider");
+  }
+  return context;
 };

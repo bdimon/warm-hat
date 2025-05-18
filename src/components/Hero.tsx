@@ -1,9 +1,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Set a timeout to allow the component to mount and the animation to happen
@@ -13,6 +15,13 @@ const Hero = () => {
     
     return () => clearTimeout(timer);
   }, []);
+
+  const handleCatalog = () => {
+    navigate('/#catalog')
+  }
+  const handleAbout = () => {
+    navigate('/#contact')
+  }
 
   return (
     <section className="min-h-[90vh] flex items-center bg-gradient-to-br from-shop-blue/40 to-shop-peach/40 pt-24">
@@ -25,12 +34,12 @@ const Hero = () => {
             Более 100 наименований связанных вручную изделий с быстрой доставкой по всей Европе
           </p>
           <div className="flex flex-wrap gap-4">
-            <Button 
+            <Button onClick = {handleCatalog}
               className="bg-shop-blue-dark text-white hover:bg-shop-blue-dark/90 hover:shadow-lg text-lg py-6 px-8 rounded-full"
             >
               В каталог
             </Button>
-            <Button 
+            <Button  onClick = {handleAbout}
               variant="outline" 
               className="text-shop-text border-shop-peach-dark hover:bg-shop-peach/50 text-lg py-6 px-8 rounded-full"
             >
