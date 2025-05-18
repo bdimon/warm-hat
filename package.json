@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "seed": "vite-node src/scripts/seed.ts",
     "dev:api": "vite-node src/server/index.ts",
-    "both": "concurrently \"npm run dev\" \"npm run dev:api\"",
+    "both": "concurrently \"npm run dev:api\" \"npm run dev\"",
     "convert": "vite-node convert-images.ts"
   },
   "dependencies": {

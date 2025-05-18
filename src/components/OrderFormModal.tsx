@@ -14,7 +14,7 @@ interface OrderFormModalProps {
 export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderFormModalProps) {
   const { cart, clearCart } = useCart();
   const { showSnackbar } = useSnackbar();
-
+  const [loading, setLoading] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [profileId, setProfileId] = useState("");
   const [form, setForm] = useState({
@@ -43,7 +43,6 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
         .select("id, full_name, address, phone")
         .eq("id", user.id)
         .single();
-        console.log(profile);
 
       if (profile) {
         setProfileId(profile.id);
@@ -87,12 +86,16 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
       return;
     }
 
+
+
     const items = cart.map((item) => ({
       id: item.id,
       name: item.name,
       quantity: item.quantity,
-      price: item.price,
+      price: item.isSale && item.salePrice ? item.salePrice : item.price,
     }));
+
+    setLoading(true);
 
     try {
       const { error } = await supabase.from("orders").insert({
@@ -117,6 +120,8 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
       console.error(err);
       showSnackbar("Ошибка оформления заказа", "error");
     }
+
+    setLoading(false);
   };
 
   if (!isOpen) return null;
@@ -150,6 +155,7 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
             onChange={handleChange}
             error={formErrors.address}
             placeholder="Введите адрес"
+            textarea
           />
           <FormField
             label="Телефон"
@@ -180,9 +186,10 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
 
         <button
           onClick={handleSubmit}
+          disabled={loading}
           className="mt-6 w-full bg-shop-blue-dark text-white py-2 rounded hover:bg-shop-blue-dark/90"
         >
-          Подтвердить заказ
+           {loading ? "Отправка..." : "Подтвердить заказ"}
         </button>
       </div>
     </div>

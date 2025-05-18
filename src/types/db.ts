@@ -1,3 +1,5 @@
+import { ProductInCart } from "./cart";
+
 // types/db.ts
 export type Profile = {
   id: string;
@@ -26,8 +28,13 @@ export type Order = {
   created_at: string;
   status: string | "created" | "pending" | "done" | "canceled";
   total: number;
-  items: ProductRaw[];
+  items: ProductInCart[];
   profile_id: string;
+  customer_name?: string;
+  customer_email?: string;
+  customer_address?: string;
+  customer_phone?: string;
+  payment_method?: string;
 };
 
 export interface Product {
