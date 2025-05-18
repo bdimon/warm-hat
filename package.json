@@ -11,6 +11,7 @@
     "preview": "vite preview",
     "seed": "vite-node src/scripts/seed.ts",
     "dev:api": "vite-node src/server/index.ts",
+    "both": "concurrently \"npm run dev\" \"npm run dev:api\"",
     "convert": "vite-node convert-images.ts"
   },
   "dependencies": {
@@ -47,6 +48,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
+    "concurrently": "^9.1.2",
     "cors": "^2.8.5",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.3.0",
