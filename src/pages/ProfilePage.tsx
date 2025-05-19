@@ -12,12 +12,13 @@ const { orders, loading } = useUserOrders();
 if (!user) return <p>Пожалуйста, войдите в аккаунт.</p>;
 
   return (
+    <>
     <div className="p-6 space-y-6">
       <h1 className="text-xl font-bold mb-4">Профиль</h1>
       {/* <ProfileForm /> */}
       <AuthSettingsForm />
-      <ProfileOrders />
-      {/* <div>
+      {/* <ProfileOrders /> */}
+      <div>
         <h2 className="text-xl font-semibold mb-2">📦 Мои заказы</h2>
         {loading ? (
           <p>Загрузка...</p>
@@ -34,8 +35,27 @@ if (!user) return <p>Пожалуйста, войдите в аккаунт.</p>
                 <div className="text-sm text-gray-600">
                   📅 {new Date(order.created_at).toLocaleString()}
                 </div>
-                <div>🧾 Товаров: {order.items.length}
-                  <img src={order.items[0].images[0]} alt={order.items[0].name} className="w-16 h-16" />
+                <div className="flex gap-2 mt-2">🧾 Товаров: {order.items.length}
+                  {order.items.length > 1 ? (
+                    order.items.map((item, index) => (
+                        <div key={index}>
+                          <img src={item.images[0]} alt={item.name} className="w-16 h-16" />
+                        </div>
+                    )
+                      )
+                    )
+                   : (
+                     (
+                      <div>
+                      <img src={order.items[0].images[0]} alt={order.items[0].name} className="w-16 h-16" />
+                      </div>
+                    )
+                    // <div>
+                    // <img src={order.items[0].images[0]} alt={order.items[0].name} className="w-16 h-16" />
+                    // </div>
+                  )
+                 }
+                  
                 </div>
                   
                 <div>💰 Сумма: {order.total} ₽</div>
@@ -45,8 +65,10 @@ if (!user) return <p>Пожалуйста, войдите в аккаунт.</p>
             ))}
           </ul>
         )}
-      </div> */}
+      </div>
     </div>
+    </>
+    
 
   );
 }

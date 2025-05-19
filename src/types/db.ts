@@ -28,7 +28,13 @@ export type Order = {
   created_at: string;
   status: string | "created" | "pending" | "done" | "canceled";
   total: number;
-  items: ProductInCart[];
+  items: {
+    id: string;
+    name: string;
+    quantity: number;
+    price: number;
+    images: string[];
+  }[];
   profile_id: string;
   customer_name?: string;
   customer_email?: string;

@@ -7,5 +7,5 @@ export type ProductInCart = {
   quantity: number;
   isSale?: boolean;
   salePrice?: number;
-  images?: string[];
+  images: string[];
 };
