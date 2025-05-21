@@ -9,6 +9,7 @@ import CartModal from "./CartModal";
 import AuthModal from './AuthModal';
 import { supabase } from '@/lib/supabase';
 import { useSnackbar } from "@/context/SnackbarContext";
+// import ProfileModal from './ProfileModal'; // for Modal
 
 interface HeaderProps {
   showBackButton?: boolean;
@@ -25,6 +26,7 @@ const Header : React.FC<HeaderProps> = ({ showBackButton = false, onBackClick })
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const { showSnackbar } = useSnackbar();
+  // const [openProfile, setOpenProfile] = useState(false); for Modal
 
   useEffect(() => {
     const handleScroll = () => {
@@ -125,7 +127,7 @@ const Header : React.FC<HeaderProps> = ({ showBackButton = false, onBackClick })
         </nav>
 
         <div className="flex items-center space-x-4">
-        <button onClick={() => setIsCartOpen(true)} className="relative p-2">
+          <button onClick={() => setIsCartOpen(true)} className="relative p-2">
             <ShoppingCart size={40} color="#33c4f0" />
             {cartItemCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-shop-blue-dark text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -138,10 +140,23 @@ const Header : React.FC<HeaderProps> = ({ showBackButton = false, onBackClick })
               <Button
                 variant="outline"
                 className="hidden md:inline-flex text-shop-blue-dark border-shop-blue-dark hover:bg-shop-blue-dark hover:text-white"
-                onClick={() => navigate('/profile')}
+                // for Modal
+                // onClick={() => {
+                //   console.log('Header:  Profile Button onClick triggered, setting openProfile to true. Current value:', openProfile);
+                //   setOpenProfile(true);
+                // }
+                // }
+                onClick={() => {
+                  navigate('/profile');
+                  setIsOpen(false);
+                }}
               >
-                  Профиль
-              </Button>
+                Профиль
+                {/*  for Modal <ProfileModal open={openProfile} onClose={() => {
+                  console.log('Header: onClose called, setting openProfile to false. Current value:', openProfile);
+                  setOpenProfile(false);
+                }} /> */}
+              </Button >
               <span className="text-sm text-shop-text mb-2">{user.email}</span>
               <Button onClick={handleLogout} className="hidden md:inline-flex bg-shop-blue-dark text-white hover:bg-shop-blue-dark/90">
                 Выйти
@@ -252,4 +267,3 @@ const Header : React.FC<HeaderProps> = ({ showBackButton = false, onBackClick })
 };
 
 export default Header;
-

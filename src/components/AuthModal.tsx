@@ -11,8 +11,9 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
-  const [mode, setMode] = useState<"login" | "register">("login");
+  const [mode, setMode] = useState<"login" | "register" | "forgot-password">("login");
   const [form, setForm] = useState({ email: "", password: "", confirmPassword: "" });
+  const [resetEmail, setResetEmail] = useState("");
   const [formErrors, setFormErrors] = useState({ email: "", password: "", confirmPassword: "" });
   const { showSnackbar } = useSnackbar();
 
@@ -62,6 +63,30 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     console.log("Профиль успешно создан", data);
   }
   
+  const handlePasswordResetRequest = async () => {
+    if (!resetEmail.trim()) {
+      showSnackbar("Введите email для сброса пароля", "info");
+      return;
+    }
+    try {
+      // URL, на который Supabase перенаправит пользователя после клика по ссылке в письме
+      // Убедитесь, что этот URL соответствует пути к вашей UpdatePasswordPage
+      const redirectUrl = `${window.location.origin}/update-password`; 
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: redirectUrl,
+      });
+      if (error) throw error;
+      showSnackbar("Ссылка для сброса пароля отправлена на ваш email.", "success");
+      onClose(); // Закрыть модальное окно после отправки
+    } catch (err: unknown) {
+      showSnackbar("Ошибка при запросе сброса пароля", "error");
+      if (err instanceof Error) {
+        console.error("Password reset request error:", err.message);
+      } else {
+        console.error("Unexpected error:", err);
+      }
+    }
+  };
 
   const handleSubmit = async () => {
     if (!validate()) return;
@@ -111,64 +136,113 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         <button className="absolute top-3 right-3 text-gray-500" onClick={onClose}>
           <X />
         </button>
-        <h2 className="text-xl font-bold mb-4">
-          {mode === "login" ? "Вход" : "Регистрация"}
-        </h2>
+        
+        {/* Основная форма входа/регистрации */}
+        {mode !== "forgot-password" && (
+          <>
+            <h2 className="text-xl font-bold mb-4">
+              {mode === "login" ? "Вход" : "Регистрация"}
+            </h2>
+            <FormField
+              label="Email"
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              error={formErrors.email}
+              placeholder="Введите email"
+            />
+            <FormField
+              label="Пароль"
+              name="password"
+              type="password"
+              value={form.password}
+              onChange={handleChange}
+              error={formErrors.password}
+              placeholder="Введите пароль"
+            />
+            {mode === "register" && (
+              <FormField
+                label="Подтвердите пароль"
+                name="confirmPassword"
+                type="password"
+                value={form.confirmPassword}
+                onChange={handleChange}
+                error={formErrors.confirmPassword}
+                placeholder="Подтвердите пароль"
+              />
+            )}
 
-        <FormField
-          label="Email"
-          name="email"
-          type="email"
-          value={form.email}
-          onChange={handleChange}
-          error={formErrors.email}
-          placeholder="Введите email"
-        />
-        <FormField
-          label="Пароль"
-          name="password"
-          type="password"
-          value={form.password}
-          onChange={handleChange}
-          error={formErrors.password}
-          placeholder="Введите пароль"
-        />
-        {mode === "register" && (
-          <FormField
-            label="Подтвердите пароль"
-            name="confirmPassword"
-            type="password"
-            value={form.confirmPassword}
-            onChange={handleChange}
-            error={formErrors.confirmPassword}
-            placeholder="Подтвердите пароль"
-          />
+            {mode === "login" && (
+              <button 
+                className="mt-2 text-sm text-shop-blue-dark underline text-left w-full"
+                onClick={() => setMode("forgot-password")}
+              >
+                Забыли пароль?
+              </button>
+            )}
+
+            <button
+              onClick={handleSubmit}
+              className="mt-4 w-full bg-shop-blue-dark text-white py-2 rounded hover:bg-shop-blue-dark/90"
+            >
+              {mode === "login" ? "Войти" : "Зарегистрироваться"}
+            </button>
+
+            <div className="mt-4 text-sm text-center">
+              {mode === "login" ? (
+                <>
+                  Нет аккаунта?{" "}
+                  <button className="text-shop-blue-dark underline" onClick={() => setMode("register")}>
+                    Зарегистрируйтесь
+                  </button>
+                </>
+              ) : (
+                <>
+                  Уже есть аккаунт?{" "}
+                  <button className="text-shop-blue-dark underline" onClick={() => setMode("login")}>
+                    Войти
+                  </button>
+                </>
+              )}
+            </div>
+          </>
         )}
 
-        <button
-          onClick={handleSubmit}
-          className="mt-4 w-full bg-shop-blue-dark text-white py-2 rounded hover:bg-shop-blue-dark/90"
-        >
-          {mode === "login" ? "Войти" : "Зарегистрироваться"}
-        </button>
-
-        <div className="mt-4 text-sm text-center">
-          {mode === "login" ? (
-            <>
-              Нет аккаунта?{" "}
-              <button className="text-shop-blue-dark underline" onClick={() => setMode("register")}>
-                Зарегистрируйтесь
+        {/* Форма сброса пароля */}
+        {mode === "forgot-password" && (
+          <>
+            <h2 className="text-xl font-bold mb-4">Сброс пароля</h2>
+            <p className="text-sm text-gray-600 mb-4">
+              Введите ваш email, и мы отправим вам ссылку для сброса пароля.
+            </p>
+          <FormField
+            label="Email"
+            name="resetEmail"
+            type="email"
+            value={resetEmail}
+            onChange={(e) => setResetEmail(e.target.value)}
+            placeholder="Введите email"
+          />
+            <button
+              onClick={handlePasswordResetRequest}
+              className="mt-4 w-full bg-shop-blue-dark text-white py-2 rounded hover:bg-shop-blue-dark/90"
+            >
+              Отправить ссылку для сброса
+            </button>
+            <div className="mt-4 text-sm text-center">
+              <button 
+                className="text-shop-blue-dark underline" 
+                onClick={() => {
+                  setMode("login");
+                  setResetEmail(""); // Очистить поле при возврате
+                }}
+              >
+                Вернуться ко входу
               </button>
-            </>
-          ) : (
-            <>
-              Уже есть аккаунт?{" "}
-              <button className="text-shop-blue-dark underline" onClick={() => setMode("login")}>
-                Войти
-              </button>
-            </>
-          )}
-        </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

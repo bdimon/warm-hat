@@ -3,72 +3,84 @@
 import AuthSettingsForm from "@/components/AuthSettingsForm";
 import { useUserOrders } from "@/hooks/use-user-orders";
 import { useUser } from "@/hooks/use-user-profile";
-import ProfileOrders from "@/components/ProfileOrders";
+import OrderCard from "@/components/ui/order-card";
+import { useMemo, useState } from "react";
 
-export default function AccountPage() {
-const { user } = useUser();
-const { orders, loading } = useUserOrders();
+// interface ProfilePageProps {
+//   open: boolean;
+//   onClose: () => void;
+// }
 
-if (!user) return <p>Пожалуйста, войдите в аккаунт.</p>;
+// export default function AccountPage({ open, onClose }: ProfilePageProps)  {
+export default function AccountPage()  {
+  const { user } = useUser();
+  const { orders, loading } = useUserOrders();
+  const [page, setPage] = useState(1);
 
-  return (
-    <>
-    <div className="p-6 space-y-6">
-      <h1 className="text-xl font-bold mb-4">Профиль</h1>
-      {/* <ProfileForm /> */}
-      <AuthSettingsForm />
-      {/* <ProfileOrders /> */}
-      <div>
-        <h2 className="text-xl font-semibold mb-2">📦 Мои заказы</h2>
-        {loading ? (
-          <p>Загрузка...</p>
-        ) : orders.length === 0 ? (
-          <p>У вас пока нет заказов.</p>
-        ) : (
-          <ul className="space-y-4">
-            {orders.map((order) => (
-              <li
-                key={order.id}
-                className="border p-4 rounded-lg shadow-sm bg-white"
+  const ORDERS_PER_PAGE = 10;
+
+
+  const totalPages = useMemo(
+    () => Math.ceil(orders.length / ORDERS_PER_PAGE),
+    [orders]
+  );
+
+  const paginatedOrders = useMemo(
+    () =>
+      orders.slice(
+        (page - 1) * ORDERS_PER_PAGE,
+        page * ORDERS_PER_PAGE
+      ),
+    [orders, page]
+  );
+
+  if (!user) return <p>Пожалуйста, войдите в аккаунт.</p>;
+
+    return (
+      // Добавляем контейнер для страницы и отступы, как обычно для страниц
+      <div className="container mx-auto py-8 px-4">
+        <h1 className="text-3xl font-bold mb-6">Профиль</h1>
+        <div className="space-y-8"> {/* Увеличим немного отступ между блоками */}
+          <AuthSettingsForm /> {/* onClose не передаем, кнопка "Выйти без сохранения" не будет рендериться */}
+        
+        <div>
+          <h2 className="text-xl font-semibold mb-2">📦 Мои заказы</h2>
+          {loading ? (
+            <p>Загрузка...</p>
+          ) : orders.length === 0 ? (
+            <p>У вас пока нет заказов.</p>
+          ) : (
+           <ul className="space-y-4">
+            {paginatedOrders.map((order) => (
+                <OrderCard key={order.id} order={order} />
+              ))
+              }              
+            <div className="flex items-center justify-center gap-4 mt-4">
+              <button
+                  className="px-3 py-1 border rounded disabled:opacity-50"
+                  onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                  disabled={page === 1}
               >
-                <div className="font-semibold">Заказ #{order.id}</div>
-                <div className="text-sm text-gray-600">
-                  📅 {new Date(order.created_at).toLocaleString()}
-                </div>
-                <div className="flex gap-2 mt-2">🧾 Товаров: {order.items.length}
-                  {order.items.length > 1 ? (
-                    order.items.map((item, index) => (
-                        <div key={index}>
-                          <img src={item.images[0]} alt={item.name} className="w-16 h-16" />
-                        </div>
-                    )
-                      )
-                    )
-                   : (
-                     (
-                      <div>
-                      <img src={order.items[0].images[0]} alt={order.items[0].name} className="w-16 h-16" />
-                      </div>
-                    )
-                    // <div>
-                    // <img src={order.items[0].images[0]} alt={order.items[0].name} className="w-16 h-16" />
-                    // </div>
-                  )
-                 }
-                  
-                </div>
-                  
-                <div>💰 Сумма: {order.total} ₽</div>
-                <div>💳 Оплата: {order.payment_method}</div>
-                <div>📦 Статус: {order.status}</div>
-              </li>
-            ))}
-          </ul>
+                  ⬅ Назад
+              </button>
+              <span>
+                  Страница {page} из {totalPages}
+              </span>
+              <button
+                  className="px-3 py-1 border rounded disabled:opacity-50"
+                  onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+                  disabled={page === totalPages}
+              >
+                  Вперёд ➡
+              </button>
+            </div>
+          </ul>              
         )}
-      </div>
+        </div>
+      
     </div>
-    </>
+    </div>
     
 
-  );
+    );
 }

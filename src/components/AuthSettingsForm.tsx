@@ -11,9 +11,13 @@ type FormState = {
   confirmPassword: string;
 };
 
+interface AuthSettingsFormProps {
+  onClose?: () => void; // Добавляем опциональный проп для закрытия
+}
+
 type FormErrors = Partial<Record<keyof FormState, string>>;
 
-export default function AuthSettingsForm() {
+export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
   const [form, setForm] = useState<FormState>({
     email: "",
     password: "",
@@ -149,14 +153,25 @@ export default function AuthSettingsForm() {
 
       {error && <p className="text-red-500 text-sm">{error}</p>}
       {message && <p className="text-green-600 text-sm">{message}</p>}
-
+      <div className="flex items-center space-x-3 pt-2">        
       <button
         type="submit"
         disabled={loading}
-        className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
+        className="bg-shop-blue-dark text-white px-4 py-2 rounded disabled:opacity-50"
       >
         {loading ? "Сохранение…" : "Сохранить изменения"}
       </button>
+      {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-shop-blue-dark rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-colors duration-150"
+            disabled={loading}
+          >
+            Выйти без сохранения
+          </button>
+        )}
+      </div>
     </form>
   );
 }

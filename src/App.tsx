@@ -12,6 +12,7 @@ import AdminProducts from "./pages/AdminProducts";
 import AdminProductForm from "./pages/AdminProductForm";
 import SignUpForm from "./components/SignupForm";
 import ProfilePage from "./pages/ProfilePage";
+import UpdatePasswordPage from "./pages/UpdatePasswordPage";
 
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
           {/* <Route path="/catalog" element={<CatalogtPage />} /> */}
           <Route path="/signup" element={<SignUpForm />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/update-password" element={<UpdatePasswordPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/admin/products" element={<AdminProducts />} />
           <Route path="/admin/products/new" element={<AdminProductForm />} />
