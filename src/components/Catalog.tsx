@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import ProductCard  from './ProductCard';
 import { Button } from '@/components/ui/button';
@@ -12,6 +11,8 @@ const Catalog = () => {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
   const [isVisible, setIsVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const catalogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -37,6 +38,8 @@ const Catalog = () => {
     };
   }, []);
   useEffect(() => {
+    setLoading(true);
+    setError(null);
     // Подгружаем с бэкенда
     fetch("http://localhost:3010/api/products")
       .then(res => {
@@ -51,7 +54,12 @@ const Catalog = () => {
         setAllProducts(mapped);
         setDisplayedProducts(mapped);
       })
-      .catch(err => console.error("Ошибка загрузки товаров:", err));
+      // .catch(err => console.error("Ошибка загрузки товаров:", err));
+      .catch(err => {
+        console.error("Ошибка загрузки товаров:", err);
+        setError(err.message || "Не удалось загрузить каталог товаров.");
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -93,7 +101,10 @@ const Catalog = () => {
             </Button>
           ))}
         </div>
+        {loading && <div className="text-center py-10">Загрузка товаров...</div>}
+        {error && <div className="text-center py-10 text-red-500">Ошибка: {error}</div>}
 
+        {!loading && !error && (
         <div 
           ref={catalogRef}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8"
@@ -116,7 +127,7 @@ const Catalog = () => {
  
           ))}
         </div>
-
+        )}
         <div className="mt-12 text-center">
           <Button 
             className="bg-shop-peach text-shop-text hover:bg-shop-peach-dark hover:text-white px-8 py-6 text-lg rounded-full"

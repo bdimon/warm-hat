@@ -9,8 +9,7 @@ interface CartContextType {
   removeFromCart: (id: string) => void;
   clearCart: () => void;
   setCart: (items: ProductInCart[]) => void;
-  updateQuantity: (id: string, quantity: number) => void;
-  
+  updateQuantity: (id: string, quantity: number) => void;  
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -23,8 +22,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const fetchCart = async () => {
       if (!user){
-        setCart([]);
-        return
+        // setCart([]);
+        return;
       };
 
       const { data, error } = await supabase
@@ -43,10 +42,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
     if (!user) {
-        setCart([]);
-      }
-
-    fetchCart();
+        setCart([]); // Если пользователя нет, устанавливаем пустую корзину
+    } else {
+      fetchCart(); // Иначе загружаем корзину
+    }
   }, [user]);
 
   // Сохранить корзину в Supabase при изменении
@@ -62,10 +61,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         console.error("Ошибка сохранения корзины:", error.message);
       }
     };
-    if (!user) {
-        setCart([]);
-      }
-
+    // if (user && cart.length > 0) saveCart();
+    // Сохраняем корзину, если пользователь авторизован.
+    // Это включает сохранение пустого состояния корзины в БД,
+    // если пользователь удалил все товары.
     if (user) saveCart();
   }, [cart, user]);
 

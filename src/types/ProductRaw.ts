@@ -1,4 +1,4 @@
-// @/types/ProductRaw.ts
+//  @/types/ProductRaw.ts
 export interface ProductRaw {
   id: string;
   name: string;

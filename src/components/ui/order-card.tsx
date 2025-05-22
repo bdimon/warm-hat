@@ -26,7 +26,7 @@ interface OrderCardProps {
           {order.items.map((item, index) => (
             <img
               key={index}
-              src={item.images[0]}
+              src={item.images && item.images?.length > 0 ? item.images[0] : "/images/placeholder.png"}
               alt={item.name}
               className="w-16 h-16 rounded object-cover"
             />
@@ -35,7 +35,7 @@ interface OrderCardProps {
         <div>💰 Сумма: {order.total} ₽</div>
         <div>💳 Оплата: {order.payment_method}</div>
         <div>📦 Статус: {order.status}</div>
-        <div>📦 Статус: {order.payment_method}</div>
+        <div>📦 Метод оплаты: {order.payment_method}</div>
       </li>
     );
   }

@@ -88,6 +88,28 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/`, // Or any other page you want to redirect to after login
+        },
+      });
+      if (error) throw error;
+      // Supabase handles redirection, so we might not need a success snackbar here immediately
+      // or to close the modal, as the page will redirect.
+      // showSnackbar("Перенаправление на страницу входа Google...", "info");
+    } catch (err: unknown) {
+      showSnackbar("Ошибка входа через Google", "error");
+      if (err instanceof Error) {
+        console.error("Google OAuth error:", err.message);
+      } else {
+        console.error("Unexpected Google OAuth error:", err);
+      }
+    }
+  };
+
   const handleSubmit = async () => {
     if (!validate()) return;
    
@@ -188,6 +210,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             >
               {mode === "login" ? "Войти" : "Зарегистрироваться"}
             </button>
+
+            <div className="my-4 flex items-center">
+              <hr className="flex-grow border-t border-gray-300" />
+              <span className="mx-2 text-xs text-gray-500">ИЛИ</span>
+              <hr className="flex-grow border-t border-gray-300" />
+            </div>
+            <button onClick={handleGoogleLogin} className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 flex items-center justify-center gap-2"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.9 8.2,4.73 12.19,4.73C15.29,4.73 17.1,6.7 17.1,6.7L19,4.72C19,4.72 16.56,2 12.19,2C6.42,2 2.03,6.8 2.03,12C2.03,17.05 6.16,22 12.19,22C17.6,22 21.5,18.33 21.5,12.33C21.5,11.76 21.35,11.1 21.35,11.1V11.1Z"></path></svg> Войти через Google </button>
+
 
             <div className="mt-4 text-sm text-center">
               {mode === "login" ? (

@@ -56,7 +56,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
             </button>
           )}
           <button onClick={onClose} className="text-gray-500 hover:text-black-600">
-            <X size={20} />
+            <X size={20} aria-label="Закрыть корзину" />
           </button>
         </div>
   
@@ -76,7 +76,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
           cart.map((item) => (
             <div key={item.id} className="flex gap-4 items-center border-b pb-4">
               <img
-                src={item.images?.[0]}
+                src={item.images?.[0] || "/images/placeholder.png"}
                 alt={item.name}
                 className="w-16 h-16 object-cover rounded"
               />
@@ -84,11 +84,11 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                 <h3 className="font-semibold text-sm">{item.name}</h3>
                 <p className="text-sm text-gray-500 mb-1">{item.price} ₽</p>
                 <div className="flex items-center gap-2">
-                  <button onClick={() => decreaseQuantity(item.id)} className="hover:text-shop-blue-dark">
+                  <button onClick={() => decreaseQuantity(item.id)} className="hover:text-shop-blue-dark" aria-label="Уменьшить количество">
                     <ArrowDown size={24} />
                   </button>
                   <span className="px-2 text-md text-blue">{item.quantity}</span>
-                  <button onClick={() => increaseQuantity(item.id)} className="hover:text-shop-blue-dark">
+                  <button onClick={() => increaseQuantity(item.id)} className="hover:text-shop-blue-dark" aria-label="Увеличить количество">
                     <ArrowUp size={24} />
                   </button>
                 </div>
@@ -129,6 +129,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                Оформить заказ 
               </button>
             {/* // )} */}
+            
             <OrderFormModal 
               isOpen={isOrderFormOpen} 
               onClose={() => setIsOrderFormOpen(false)}

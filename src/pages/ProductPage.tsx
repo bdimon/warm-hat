@@ -4,26 +4,60 @@ import { Product } from "@/types/Product";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { ProductInCart } from '@/types/cart';
 import  Header from "@/components/Header";
 
 export default function ProductPage() {
   const { id } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
   const [mainImage, setMainImage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
   useEffect(() => {
+    setLoading(true);
+    setError(null);
     fetch(`http://localhost:3010/api/products/${id}`)
-      .then((res) => res.json())
+      // .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Ошибка HTTP: ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data) => {
         setProduct(data);
         setMainImage(data.images?.[0] || "/placeholder.png");
       })
-      .catch((err) => console.error("Ошибка загрузки товара:", err));
+      // .catch((err) => console.error("Ошибка загрузки товара:", err));
+      .catch((err) => {
+        console.error("Ошибка загрузки товара:", err);
+        setError(err.message || "Не удалось загрузить информацию о товаре.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [id]);
 
-  if (!product) return <div className="p-4 text-center">Загрузка...</div>;
+  // if (!product) return <div className="p-4 text-center">Загрузка...</div>;
+  const handleAddToCart = () => {
+    if (!product) return;
+    const productToAdd: ProductInCart = {
+      id: product.id, // Убедитесь, что product.id существует и имеет тип string
+      name: product.name,
+      price: product.isSale && product.salePrice ? product.salePrice : product.price,
+      images: product.images && product.images.length > 0 ? product.images : ["/images/placeholder.png"], // Пример, если ProductInCart ожидает одно изображение
+      quantity: 1, // Начальное количество
+    };
+    addToCart(productToAdd);
+  };
+
+  if (loading) return <div className="p-4 text-center">Загрузка...</div>;
+  if (error) return <div className="p-4 text-center text-red-500">Ошибка: {error}</div>;
+  if (!product) return <div className="p-4 text-center">Товар не найден.</div>;
+
 
   return (
     <section className="container mx-auto my-12 px-4 py-8">
@@ -72,7 +106,7 @@ export default function ProductPage() {
             </p>
           )}
           <Button
-            onClick={() => addToCart(product)} 
+            onClick={handleAddToCart} 
             className="bg-shop-blue-dark hover:bg-shop-blue-dark/80 text-white font-bold py-8 px-4 border border-blue-300 rounded rounded-full flex items-center justify-center"
             aria-label="Добавить в корзину"
           >

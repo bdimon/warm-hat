@@ -31,37 +31,89 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
   });
 
   useEffect(() => {
+    let isMounted = true; // Флаг для отслеживания состояния монтирования
+
     const fetchProfile = async () => {
-      const { data: authData } = await supabase.auth.getUser();
-      const user = authData.user;
-      if (!user) return;
+      // const { data: authData } = await supabase.auth.getUser();
+      // const user = authData.user;
+      // if (!user) return;
+      const { data: authData, error: authError } = await supabase.auth.getUser();
+
+      if (!isMounted) return;
+
+      if (authError) {
+        console.error("Ошибка при получении пользователя:", authError.message);
+        showSnackbar("Не удалось загрузить данные пользователя", "error");
+        // Сбрасываем состояния, если пользователя не удалось получить
+        setUserEmail("");
+        setProfileId("");
+        setForm({ name: "", address: "", phone: "", payment: "card" });
+        return;
+      }
+
+      const user = authData?.user;
+
+      if (!user) {
+        // Пользователь не аутентифицирован, сбрасываем состояния
+        setUserEmail("");
+        setProfileId("");
+        setForm({ name: "", address: "", phone: "", payment: "card" });
+        return;
+      }
 
       setUserEmail(user.email || "");
+      // Устанавливаем profileId сразу, т.к. заказ будет связан с этим user.id
+      setProfileId(user.id); 
 
-      const { data: profile } = await supabase
+      // const { data: profile } = await supabase
+      const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("id, full_name, address, phone")
         .eq("id", user.id)
         .single();
 
+      if (!isMounted) return;
+
+      if (profileError && profileError.code !== 'PGRST116') { // PGRST116 - "No rows found", это не ошибка в данном контексте
+        console.error("Ошибка при загрузке профиля:", profileError.message);
+        showSnackbar("Не удалось загрузить данные профиля", "error");
+        // Оставляем email и profileId, но можем сбросить поля формы, если профиль не загрузился
+        setForm(prevForm => ({ ...prevForm, name: "", address: "", phone: "" }));
+        return;
+      }
+
       if (profile) {
         setProfileId(profile.id);
-        setForm({
-          name: profile.full_name || "",
-          address: profile.address || "",
-          phone: profile.phone || "",
-          payment: "card",
-        });
+        // setForm({
+        //   name: profile.full_name || "",
+        //   address: profile.address || "",
+        //   phone: profile.phone || "",
+        //   payment: "card",
+        // });
+        setForm(prevForm => ({
+          ...prevForm, // Сохраняем текущее значение payment
+          name: profile.full_name || prevForm.name, // Используем предыдущее значение, если из профиля пусто
+          address: profile.address || prevForm.address,
+          phone: profile.phone || prevForm.phone,
+        }));
       }
     };
 
-    if (isOpen) fetchProfile();
-  }, [isOpen]);
+  //   if (isOpen) fetchProfile();
+  // }, [isOpen]);
+    if (isOpen) {
+      fetchProfile();
+    }
+
+    return () => {
+      isMounted = false; // Устанавливаем флаг в false при размонтировании или повторном запуске эффекта
+    };
+  }, [isOpen, showSnackbar]); // Добавили showSnackbar в зависимости, если он используется внутри
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
 
+  }
   const total = cart.reduce((sum, item) => {
     const price = item.isSale && item.salePrice ? item.salePrice : item.price;
     return sum + price * item.quantity;
@@ -92,6 +144,7 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
       id: item.id,
       name: item.name,
       quantity: item.quantity,
+      images: item.images,
       price: item.isSale && item.salePrice ? item.salePrice : item.price,
     }));
 
@@ -101,7 +154,7 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
       const { error } = await supabase.from("orders").insert({
         items,
         total,
-        profile_id: profileId,
+        user_id: profileId,
         payment_method: form.payment,
         status: "created",
       });

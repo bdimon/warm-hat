@@ -6,14 +6,26 @@ import { Link } from 'react-router-dom'; // or 'next/link';
 import { useCart } from "@/context/CartContext";
 import { ProductInCart } from "@/types/cart";
 import {Product} from "@/types/db";
-
+ 
 interface ProductCardProps {
   product: Product;
-  cartProduct: ProductInCart[];
+  // cartProduct: ProductInCart[];
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    const productToAdd: ProductInCart = {
+      id: product.id,
+      name: product.name,
+      price: product.isSale && product.salePrice ? product.salePrice : product.price,
+      images: product.images && product.images.length > 0 ? product.images : ["/placeholder.svg"],
+      quantity: 1,
+    };
+    addToCart(productToAdd);
+  };
+
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group">
       <div className="relative h-64 overflow-hidden">
@@ -52,7 +64,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             )}
           </div>
           <Button
-            onClick={() => addToCart({...product, quantity: 1})} 
+            onClick={handleAddToCart} 
             className="bg-shop-blue-dark text-white hover:bg-shop-blue-dark/90 rounded-full p-2 h-10 w-10"
             aria-label="Добавить в корзину"
           >

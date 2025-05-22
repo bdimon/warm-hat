@@ -10,7 +10,7 @@ export interface Product {
   isSale?: boolean;
   salePrice?: number;
 }
-
+ 
 export interface RawProduct {
   id: string;
   name: string;

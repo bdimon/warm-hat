@@ -29,7 +29,7 @@ export type Order = {
   status: string | "created" | "pending" | "done" | "canceled";
   total: number;
   items: ProductInCart[];
-  profile_id: string;
+  user_id: string;
   customer_name?: string;
   customer_email?: string;
   customer_address?: string;
