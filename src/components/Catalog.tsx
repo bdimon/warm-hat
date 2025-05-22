@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ProductCard  from './ProductCard';
 import { Button } from '@/components/ui/button';
 import { Product } from '@/types/Product';
@@ -20,23 +20,31 @@ const Catalog = () => {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          observer.disconnect();
+          observer.disconnect(); // Важно отключать наблюдатель после первого срабатывания
         }
       },
       {
         root: null,
-        threshold: 0.1
+        threshold: 0.1,
       }
     );
 
-    if (catalogRef.current) {
-      observer.observe(catalogRef.current);
+    const currentCatalogRef = catalogRef.current;
+
+    // Начинаем наблюдение только если загрузка завершена и ref существует
+    if (!loading && currentCatalogRef) {
+      observer.observe(currentCatalogRef);
     }
 
     return () => {
-      observer.disconnect();
+      // Очистка: отключаем наблюдатель при размонтировании компонента
+      // или перед повторным запуском эффекта из-за изменения loading
+      if (currentCatalogRef) { // Убедимся, что наблюдатель был применен к элементу
+        observer.disconnect();
+      }
     };
-  }, []);
+  }, [loading]); // Добавляем loading в зависимости, чтобы эффект перезапустился после загрузки
+
   useEffect(() => {
     setLoading(true);
     setError(null);
@@ -50,7 +58,6 @@ const Catalog = () => {
       })
       .then(res => {
         const mapped: Product[] = res.data.map(mapProductFromAPI);
-        // console.log(mapped);
         setAllProducts(mapped);
         setDisplayedProducts(mapped);
       })
@@ -113,18 +120,16 @@ const Catalog = () => {
           {displayedProducts.map((product, index) => (
             <div 
               key={product.id}
-              className={`transition-all duration-500 transform ${
+              className={`transition-all duration-700 transform ${
                 isVisible 
                 ? 'translate-y-0 opacity-100' 
                 : 'translate-y-10 opacity-0'
               }`}
-              style={{ transitionDelay: `${index * 100}ms` }}
+              style={{ transitionDelay: `${index * 150}ms` }}
             >
-              {isVisible || index < 10 ? (
-                <ProductCard product={product} />
-              ) : null}
+              {/* Упрощаем: ProductCard рендерится всегда, анимация контролируется родительским div */}
+              <ProductCard product={product} />
             </div>
- 
           ))}
         </div>
         )}

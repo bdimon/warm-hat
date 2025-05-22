@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Product } from "@/types/Product";
 import { mapProductFromAPI } from "@/lib/mappers/products";
 
-
+ 
 // interface Product {
 //   id: string;
 //   name: string;

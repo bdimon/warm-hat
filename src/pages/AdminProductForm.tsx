@@ -25,7 +25,7 @@ const initialForm: Product = {
     isSale: false,
     salePrice: undefined,
   };
-
+ 
 export default function AdminProductForm() {
   const { id } = useParams(); // если есть, значит редактируем
   const navigate = useNavigate();

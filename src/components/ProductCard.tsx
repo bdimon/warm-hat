@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom'; // or 'next/link';
