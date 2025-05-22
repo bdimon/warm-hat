@@ -82,7 +82,7 @@ const Catalog = () => {
 
   return (
     
-    <section id="catalog" className="py-2">
+    <section id="catalog" className="py-16 scroll-mt-24">
       
       <div className="container mx-auto">
         <div className="text-center mb-16">

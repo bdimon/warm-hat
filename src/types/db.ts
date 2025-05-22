@@ -26,7 +26,7 @@ export type ProductRaw = {
 export type Order = {
   id: string;
   created_at: string;
-  status: string | "created" | "pending" | "done" | "canceled";
+  status: string | "new" | "pending" | "delivered" | "payed";
   total: number;
   items: ProductInCart[];
   user_id: string;

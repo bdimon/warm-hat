@@ -6,7 +6,7 @@ import { ShoppingCart } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { ProductInCart } from '@/types/cart';
 import  Header from "@/components/Header";
-
+ 
 export default function ProductPage() {
   const { id } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
@@ -60,8 +60,14 @@ export default function ProductPage() {
 
 
   return (
-    <section className="container mx-auto my-12 px-4 py-8">
-      < Header showBackButton onBackClick={() => navigate("/#catalog")} />
+    // Если Header имеет фиксированное или "липкое" позиционирование,
+    // секции нужен достаточный верхний отступ (padding-top),
+    // чтобы контент (grid) не перекрывался хедером.
+    // Значение отступа (например, pt-16, pt-20) должно соответствовать высоте хедера.
+    // Пример: если хедер высотой ~4rem (h-16), то pt-16 или больше.
+
+    <section className="container mx-auto px-4 pt20 pb-6 md:pt-24 md:pb-8 my-8 md:my-12">
+      <Header showBackButton onBackClick={() => navigate("/#catalog")} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Галерея */}
         <div>
@@ -70,7 +76,7 @@ export default function ProductPage() {
             alt={product.name}
             className="w-full h-auto object-cover rounded shadow mb-4"
           />
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {product.images?.map((img, idx) => (
               <img
                 key={idx}
@@ -107,10 +113,11 @@ export default function ProductPage() {
           )}
           <Button
             onClick={handleAddToCart} 
-            className="bg-shop-blue-dark hover:bg-shop-blue-dark/80 text-white font-bold py-8 px-4 border border-blue-300 rounded rounded-full flex items-center justify-center"
+            className="w-full sm:w-auto bg-shop-blue-dark hover:bg-shop-blue-dark/80 text-white font-bold py-3 px-6 sm:py-4 sm:px-8 border border-blue-300 rounded-full flex items-center justify-center text-base sm:text-lg"
             aria-label="Добавить в корзину"
           >
-            <ShoppingCart style={{ width: '2rem', height: '2rem',color: 'white'}}/> <span className="text-lg font-bold ml-1">Добавить в корзину</span>
+            <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6 mr-2" color="white" />
+             <span className="text-lg font-bold ml-1">Добавить в корзину</span>
           </Button>
           
         </div>

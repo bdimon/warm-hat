@@ -29,16 +29,17 @@ router.post("/", async (req, res) => {
 //     return res.status(400).json({ error: "Missing order data" });
 //   }
 
-  const { error } = await supabase
-    .from("orders")
-    .insert([{ 
-        items, 
-        total, 
-        customer_address, 
-        customer_email, 
-        customer_name, 
-        payment_method, 
-        status: status || "created"}]);
+  const { error } = await supabase.from("orders").insert([
+    {
+      items,
+      total,
+      customer_address,
+      customer_email,
+      customer_name,
+      payment_method,
+      status: status || "new",
+    },
+  ]);
 
   if (error) {
     return res.status(500).json({ error: error.message });

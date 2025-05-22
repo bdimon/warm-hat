@@ -1,27 +1,28 @@
-
 import React, { useState, useEffect } from 'react';
 import { ShoppingCart, Menu, X, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import {Link, useNavigate } from 'react-router-dom';
 import { useCart } from "@/context/CartContext";
-import CartModal from "./CartModal";
+import CartModal from "./CartModal";// Assuming CartModal is a dialog
 import AuthModal from './AuthModal';
 import { supabase } from '@/lib/supabase';
+import { User } from '@supabase/supabase-js'
 import { useSnackbar } from "@/context/SnackbarContext";
 // import ProfileModal from './ProfileModal'; // for Modal
 
 interface HeaderProps {
   showBackButton?: boolean;
+  // Consider adding a prop to pass the current page's path for active link styling
   onBackClick?: () => void;
 }
 
 const Header : React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  // const [cartItemCount, setCartItemCount] = useState(0);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const navigate = useNavigate();
+  const [user, setUser] = useState<User | null>(null);
   const { cart } = useCart();
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -41,12 +42,15 @@ const Header : React.FC<HeaderProps> = ({ showBackButton = false, onBackClick })
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const [user, setUser] = useState(null);
+ 
 
   useEffect(() => {
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
+      // const { data: { user } } = await supabase.auth.getUser();
+      // Можно также явно указать тип здесь для большей ясности
+      const { data: { user: fetchedUser } } = await supabase.auth.getUser();
+
+      setUser(fetchedUser);
     };
 
     getUser();
@@ -92,7 +96,7 @@ const Header : React.FC<HeaderProps> = ({ showBackButton = false, onBackClick })
         : "bg-transparent py-5"
     )}>
       <div className="container mx-auto flex justify-between items-center">
-        <Link to="/#" className="text-2xl font-bold text-shop-text hover:text-shop-blue-dark transition-colors">
+        <Link to="/" className="text-2xl font-bold text-shop-text hover:text-shop-blue-dark transition-colors">
           Шапка Шоп
         </Link>
 
@@ -107,28 +111,29 @@ const Header : React.FC<HeaderProps> = ({ showBackButton = false, onBackClick })
             </button>
           ) : (
             <>
-              <a href="#" className="text-shop-text hover:text-shop-blue-dark transition-colors">
+              <Link to="/" className="text-shop-text hover:text-shop-blue-dark transition-colors">
                 Главная
-              </a>
-              <a href="#catalog" className="text-shop-text hover:text-shop-blue-dark transition-colors">
+              </Link>
+              <Link to="/#catalog" className="text-shop-text hover:text-shop-blue-dark transition-colors">
                 Каталог
-              </a>
-              <a href="#benefits" className="text-shop-text hover:text-shop-blue-dark transition-colors">
+              </Link> 
+              <Link to="/#benefits" className="text-shop-text hover:text-shop-blue-dark transition-colors">
                 Преимущества
-              </a>
-              <a href="#reviews" className="text-shop-text hover:text-shop-blue-dark transition-colors">
+              </Link> 
+              <Link to="/#reviews" className="text-shop-text hover:text-shop-blue-dark transition-colors">
                 Отзывы
-              </a>
-              <a href="#contact" className="text-shop-text hover:text-shop-blue-dark transition-colors">
+              </Link> 
+              <Link to="/#contact" className="text-shop-text hover:text-shop-blue-dark transition-colors">
                 Контакты
-              </a>
+              </Link> 
             </>
           )}
         </nav>
 
         <div className="flex items-center space-x-4">
-          <button onClick={() => setIsCartOpen(true)} className="relative p-2">
-            <ShoppingCart size={40} color="#33c4f0" />
+          <button onClick={() => setIsCartOpen(true)} className="relative p-2" aria-label="Открыть корзину"
+            aria-haspopup="dialog">
+            <ShoppingCart className="w-8 h-8 md:w-10 md:h-10" color="#33c4f0" />
             {cartItemCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-shop-blue-dark text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                 {cartItemCount}
@@ -172,7 +177,9 @@ const Header : React.FC<HeaderProps> = ({ showBackButton = false, onBackClick })
           <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
           <button 
             className="md:hidden text-shop-text" 
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => setIsOpen(!isOpen)} aria-label={isOpen ? "Закрыть меню навигации" : "Открыть меню навигации"}
+            aria-expanded={isOpen}
+            aria-controls="mobile-menu"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -181,7 +188,7 @@ const Header : React.FC<HeaderProps> = ({ showBackButton = false, onBackClick })
 
       {/* Mobile Navigation */}
       {isOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg py-4 px-6 animate-fade-in">
+        <div id="mobile-menu" className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg py-4 px-6 animate-fade-in" role="navigation">
           <nav className="flex flex-col space-y-4">
             {showBackButton ? (
             <button
@@ -192,38 +199,34 @@ const Header : React.FC<HeaderProps> = ({ showBackButton = false, onBackClick })
             </button>
             ) : (
             <>
-            <a href="#" className="text-shop-text hover:text-shop-blue-dark transition-colors"
+            <Link to="/" className="text-shop-text hover:text-shop-blue-dark transition-colors"
               onClick={() => setIsOpen(false)}
             >
               Главная
-            </a>
-            <a 
-              href="#catalog" className="text-shop-text hover:text-shop-blue-dark transition-colors"
+            </Link>
+            <Link to= "/#catalog" className="text-shop-text hover:text-shop-blue-dark transition-colors"
               onClick={() => setIsOpen(false)}
             >
               Каталог
-            </a>
-            <a 
-              href="#benefits" 
+            </Link> 
+            <Link to= "/#benefits" 
               className="text-shop-text hover:text-shop-blue-dark transition-colors"
               onClick={() => setIsOpen(false)}
             >
               Преимущества
-            </a>
-            <a 
-              href="#reviews" 
+            </Link> 
+            <Link to= "/#reviews" 
               className="text-shop-text hover:text-shop-blue-dark transition-colors"
               onClick={() => setIsOpen(false)}
             >
               Отзывы
-            </a>
-            <a 
-              href="#contact" 
+            </Link> 
+            <Link to= "/#contact" 
               className="text-shop-text hover:text-shop-blue-dark transition-colors"
               onClick={() => setIsOpen(false)}
             >
               Контакты
-            </a>
+            </Link> 
             </>
           )
         }

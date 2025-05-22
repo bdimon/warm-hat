@@ -5,6 +5,10 @@ import { useUserOrders } from "@/hooks/use-user-orders";
 import { useUser } from "@/hooks/use-user-profile";
 import OrderCard from "@/components/ui/order-card";
 import { useMemo, useState } from "react";
+import  Header from "@/components/Header";
+import { useParams, useNavigate } from "react-router-dom";
+
+
 
 // interface ProfilePageProps {
 //   open: boolean;
@@ -16,6 +20,8 @@ export default function AccountPage()  {
   const { user } = useUser();
   const { orders, loading } = useUserOrders();
   const [page, setPage] = useState(1);
+  const navigate = useNavigate();
+
 
   const ORDERS_PER_PAGE = 10;
 
@@ -37,8 +43,14 @@ export default function AccountPage()  {
   if (!user) return <p>Пожалуйста, войдите в аккаунт.</p>;
 
     return (
-      // Добавляем контейнер для страницы и отступы, как обычно для страниц
-      <div className="container mx-auto py-8 px-4">
+      <>
+      <div className="min-h-screen bg-gray-100">
+              <Header showBackButton onBackClick={() => navigate("/")} />
+
+     {/* // Добавляем контейнер для страницы и отступы, как обычно для страниц */}
+      <div className="container mx-auto pt-32 pb-20 px-4">
+              
+
         <h1 className="text-3xl font-bold mb-6">Профиль</h1>
         <div className="space-y-8"> {/* Увеличим немного отступ между блоками */}
           <AuthSettingsForm /> {/* onClose не передаем, кнопка "Выйти без сохранения" не будет рендериться */}
@@ -80,7 +92,9 @@ export default function AccountPage()  {
       
     </div>
     </div>
-    
+    // </div>
 
+    );
+    </>
     );
 }

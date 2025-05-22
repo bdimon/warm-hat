@@ -84,7 +84,7 @@ async function seedOrders() {
         id: uuidv4(),
         user_id: user.id,
         total: Math.floor(Math.random() * 5000) + 1000,
-        status: "created",
+        status: "new",
         items: {
           quantity: Math.floor(Math.random() * 5) + 1,
           price: Math.floor(Math.random() * 3000) + 500,
