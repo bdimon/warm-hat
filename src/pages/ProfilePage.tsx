@@ -1,7 +1,7 @@
 // pages/account.tsx (или /profile)
 // import  ProfileForm  from "@/components/ProfileForm";
-// import AuthSettingsForm from "@/components/AuthSettingsForm"; // Больше не нужен здесь напрямую
-// import { useUserOrders } from "@/hooks/use-user-orders"; // Логика заказов перенесена в OrdersModal
+// import AuthSettingsForm from "@/components/AuthSettingsForm"; Больше не нужен здесь напрямую
+// import { useUserOrders } from "@/hooks/use-user-orders"; Логика заказов перенесена в OrdersModal
 import { useUserProfile } from "@/hooks/use-user-profile";
 import { useState } from 'react';
 import  Header from "@/components/Header";
@@ -18,7 +18,8 @@ import { Button } from '@/components/ui/button';
 
 // export default function AccountPage({ open, onClose }: ProfilePageProps)  {
 export default function AccountPage()  {
-  const { user, loading: userLoading } = useUserProfile(); // Добавим userLoading для индикации загрузки пользователя
+  // Добавим userLoading для индикации загрузки пользователя
+  const { user, loading: userLoading } = useUserProfile();
   const navigate = useNavigate();
 
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
@@ -37,7 +38,7 @@ export default function AccountPage()  {
 
   if (!user) {
     // Можно добавить редирект на главную или страницу логина, если пользователь не авторизован
-    // setTimeout(() => navigate('/'), 100); // Пример редиректа
+    setTimeout(() => navigate('/'), 100);
     return (
       <div className='min-h-screen bg-gray-100 flex flex-col'>
         <Header showBackButton onBackClick={() => navigate('/')} />

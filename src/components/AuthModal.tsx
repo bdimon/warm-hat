@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import FormField from "./FormField";
 import { supabase } from "@/lib/supabase";
 import { useSnackbar } from "@/context/SnackbarContext";
+import { Button } from '@/components/ui/button';
 
 
 interface AuthModalProps {
@@ -148,91 +149,109 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+      className='fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center'
       onClick={onClose}
     >
       <div
-        className="bg-white w-full max-w-sm rounded-lg p-6 relative"
+        className='bg-white w-full max-w-sm rounded-lg p-6 relative'
         onClick={(e) => e.stopPropagation()}
       >
-        <button className="absolute top-3 right-3 text-gray-500" onClick={onClose}>
+        <Button className='absolute top-3 right-3 text-gray-500' onClick={onClose}>
           <X />
-        </button>
-        
+        </Button>
+
         {/* Основная форма входа/регистрации */}
-        {mode !== "forgot-password" && (
+        {mode !== 'forgot-password' && (
           <>
-            <h2 className="text-xl font-bold mb-4">
-              {mode === "login" ? "Вход" : "Регистрация"}
-            </h2>
-            <FormField
-              label="Email"
-              name="email"
-              type="email"
-              value={form.email}
-              onChange={handleChange}
-              error={formErrors.email}
-              placeholder="Введите email"
-            />
-            <FormField
-              label="Пароль"
-              name="password"
-              type="password"
-              value={form.password}
-              onChange={handleChange}
-              error={formErrors.password}
-              placeholder="Введите пароль"
-            />
-            {mode === "register" && (
-              <FormField
-                label="Подтвердите пароль"
-                name="confirmPassword"
-                type="password"
-                value={form.confirmPassword}
+            <h2 className='text-xl font-bold mb-4'>{mode === 'login' ? 'Вход' : 'Регистрация'}</h2>
+            <FormField label='Email'>
+              <input
+                name='email'
+                type='email'
+                value={form.email}
                 onChange={handleChange}
-                error={formErrors.confirmPassword}
-                placeholder="Подтвердите пароль"
+                placeholder='Введите email'
               />
+            </FormField>
+            <FormField label='Пароль'>
+              <input
+                name='password'
+                type='password'
+                value={form.password}
+                onChange={handleChange}
+                placeholder='Введите пароль'
+              />
+            </FormField>
+            {mode === 'register' && (
+              <FormField label='Подтвердите пароль'>
+                <input
+                  name='confirmPassword'
+                  type='password'
+                  value={form.confirmPassword}
+                  onChange={handleChange}
+                  placeholder='Подтвердите пароль'
+                />
+              </FormField>
             )}
 
-            {mode === "login" && (
-              <button 
-                className="mt-2 text-sm text-shop-blue-dark underline text-left w-full"
-                onClick={() => setMode("forgot-password")}
+            {mode === 'login' && (
+              <Button
+                className='mt-2 text-sm text-shop-blue-dark underline text-left w-full'
+                onClick={() => setMode('forgot-password')}
               >
                 Забыли пароль?
-              </button>
+              </Button>
             )}
 
-            <button
+            <Button
               onClick={handleSubmit}
-              className="mt-4 w-full bg-shop-blue-dark text-white py-2 rounded hover:bg-shop-blue-dark/90"
+              className='mt-4 w-full bg-shop-blue-dark text-white py-2 rounded hover:bg-shop-blue-dark/90'
             >
-              {mode === "login" ? "Войти" : "Зарегистрироваться"}
-            </button>
+              {mode === 'login' ? 'Войти' : 'Зарегистрироваться'}
+            </Button>
 
-            <div className="my-4 flex items-center">
-              <hr className="flex-grow border-t border-gray-300" />
-              <span className="mx-2 text-xs text-gray-500">ИЛИ</span>
-              <hr className="flex-grow border-t border-gray-300" />
+            <div className='my-4 flex items-center'>
+              <hr className='flex-grow border-t border-gray-300' />
+              <span className='mx-2 text-xs text-gray-500'>ИЛИ</span>
+              <hr className='flex-grow border-t border-gray-300' />
             </div>
-            <button onClick={handleGoogleLogin} className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 flex items-center justify-center gap-2"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.9 8.2,4.73 12.19,4.73C15.29,4.73 17.1,6.7 17.1,6.7L19,4.72C19,4.72 16.56,2 12.19,2C6.42,2 2.03,6.8 2.03,12C2.03,17.05 6.16,22 12.19,22C17.6,22 21.5,18.33 21.5,12.33C21.5,11.76 21.35,11.1 21.35,11.1V11.1Z"></path></svg> Войти через Google </button>
+            <Button
+              onClick={handleGoogleLogin}
+              className='w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 flex items-center justify-center gap-2'
+            >
+              {' '}
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                width='18'
+                height='18'
+                viewBox='0 0 24 24'
+                fill='currentColor'
+              >
+                <path d='M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.9 8.2,4.73 12.19,4.73C15.29,4.73 17.1,6.7 17.1,6.7L19,4.72C19,4.72 16.56,2 12.19,2C6.42,2 2.03,6.8 2.03,12C2.03,17.05 6.16,22 12.19,22C17.6,22 21.5,18.33 21.5,12.33C21.5,11.76 21.35,11.1 21.35,11.1V11.1Z'></path>
+              </svg>{' '}
+              Войти через Google{' '}
+            </Button>
 
-
-            <div className="mt-4 text-sm text-center">
-              {mode === "login" ? (
+            <div className='mt-4 text-sm text-center'>
+              {mode === 'login' ? (
                 <>
-                  Нет аккаунта?{" "}
-                  <button className="text-shop-blue-dark underline" onClick={() => setMode("register")}>
+                  Нет аккаунта?{' '}
+                  <Button
+                    className='text-shop-blue-dark underline'
+                    onClick={() => setMode('register')}
+                  >
                     Зарегистрируйтесь
-                  </button>
+                  </Button>
                 </>
               ) : (
                 <>
-                  Уже есть аккаунт?{" "}
-                  <button className="text-shop-blue-dark underline" onClick={() => setMode("login")}>
+                  Уже есть аккаунт?{' '}
+                  <Button
+                    className='text-shop-blue-dark underline'
+                    onClick={() => setMode('login')}
+                  >
                     Войти
-                  </button>
+                  </Button>
                 </>
               )}
             </div>
@@ -240,36 +259,37 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         )}
 
         {/* Форма сброса пароля */}
-        {mode === "forgot-password" && (
+        {mode === 'forgot-password' && (
           <>
-            <h2 className="text-xl font-bold mb-4">Сброс пароля</h2>
-            <p className="text-sm text-gray-600 mb-4">
+            <h2 className='text-xl font-bold mb-4'>Сброс пароля</h2>
+            <p className='text-sm text-gray-600 mb-4'>
               Введите ваш email, и мы отправим вам ссылку для сброса пароля.
             </p>
-          <FormField
-            label="Email"
-            name="resetEmail"
-            type="email"
-            value={resetEmail}
-            onChange={(e) => setResetEmail(e.target.value)}
-            placeholder="Введите email"
-          />
-            <button
+            <FormField label='Email'>
+              <input
+                name='resetEmail'
+                type='email'
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+                placeholder='Введите email'
+              />
+            </FormField>
+            <Button
               onClick={handlePasswordResetRequest}
-              className="mt-4 w-full bg-shop-blue-dark text-white py-2 rounded hover:bg-shop-blue-dark/90"
+              className='mt-4 w-full bg-shop-blue-dark text-white py-2 rounded hover:bg-shop-blue-dark/90'
             >
               Отправить ссылку для сброса
-            </button>
-            <div className="mt-4 text-sm text-center">
-              <button 
-                className="text-shop-blue-dark underline" 
+            </Button>
+            <div className='mt-4 text-sm text-center'>
+              <Button
+                className='text-shop-blue-dark underline'
                 onClick={() => {
-                  setMode("login");
-                  setResetEmail(""); // Очистить поле при возврате
+                  setMode('login');
+                  setResetEmail(''); // Очистить поле при возврате
                 }}
               >
                 Вернуться ко входу
-              </button>
+              </Button>
             </div>
           </>
         )}
