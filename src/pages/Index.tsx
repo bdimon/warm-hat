@@ -52,12 +52,12 @@ const Index = () => {
   }, [location.hash, scrollToHash]); // Эффект будет перезапускаться при изменении location.hash или scrollToHash
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className='flex flex-col min-h-screen'>
       <Header />
-      <main>
+      <main className='relative z-0'>
         <Hero />
-        <Catalog />        
-        <Benefits />        
+        <Catalog />
+        <Benefits />
         <Testimonials />
         <Contact />
       </main>

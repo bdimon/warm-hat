@@ -59,7 +59,7 @@ const Catalog = () => {
       .then(res => {
         const mapped: Product[] = res.data.map(mapProductFromAPI);
         setAllProducts(mapped);
-        setDisplayedProducts(mapped);
+        // setDisplayedProducts(mapped); // Удаляем эту строку
       })
       // .catch(err => console.error("Ошибка загрузки товаров:", err));
       .catch(err => {
@@ -71,6 +71,8 @@ const Catalog = () => {
 
   useEffect(() => {
     if (selectedCategory === CATEGORIES[0]) {
+      // Этот блок теперь также обработает начальную установку displayedProducts
+      // после того как allProducts будут загружены.
       setDisplayedProducts(allProducts);
     } else {
       setDisplayedProducts(allProducts.filter(
@@ -100,7 +102,7 @@ const Catalog = () => {
               variant={selectedCategory === category ? "default" : "outline"}
               className={selectedCategory === category 
                 ? "bg-shop-blue-dark hover:bg-shop-blue-dark/90 text-white"
-                : "text-shop-text border-shop-blue hover:bg-shop-blue/10"
+                : "text-shop-text border-shop-blue hover:bg-shop-blue/50 hover:text-shop-blue-dark"
               }
               onClick={() => setSelectedCategory(category)}
             >

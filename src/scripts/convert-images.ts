@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const sourceDir = path.resolve("originals");
-const outputDir = path.resolve("public/images");
+const outputDir = path.resolve("converted/images");
 
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
@@ -11,7 +11,7 @@ if (!fs.existsSync(outputDir)) {
 
 const files = fs
   .readdirSync(sourceDir)
-  .filter((file) => /\.(jpg|jpeg|png)$/i.test(file));
+  .filter((file) => /\.(jpg|jpeg|png|webp|avif)$/i.test(file));
 
 files.forEach((file) => {
   const inputPath = path.join(sourceDir, file);
@@ -19,7 +19,7 @@ files.forEach((file) => {
   const outputPath = path.join(outputDir, outputFileName);
 
   sharp(inputPath)
-    .resize(800, 800, {
+    .resize(null, 800, {
       fit: "cover", // Обрезка по центру
       position: "center",
     })
@@ -27,5 +27,5 @@ files.forEach((file) => {
     .toFile(outputPath)
     .then(() => console.log("✔️", outputFileName))
     .catch((err) => console.error("❌ Ошибка:", err));
-    console.log("Converting", inputPath, "to", outputPath);
+    // console.log("Converting", inputPath, "to", outputPath);
 });

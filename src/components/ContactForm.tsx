@@ -214,19 +214,19 @@ const ContactInfo = () => {
 
 const Contact = () => {
   return (
-    <section id="contact" className="py-16 scroll-mt-24">
-      <div className="container mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-shop-text">Связаться с нами</h2>
-          <div className="w-24 h-1 bg-shop-blue-dark mx-auto mb-6"></div>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+    <section id='contact' className='py-16 scroll-mt-24'>
+      <div className='container mx-auto'>
+        <div className='text-center mb-16'>
+          <h2 className='text-3xl md:text-4xl font-bold mb-4 text-shop-text'>Готовы помочь</h2>
+          <div className='w-24 h-1 bg-shop-blue-dark mx-auto mb-6'></div>
+          <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
             У вас есть вопросы или предложения? Мы всегда на связи и готовы помочь!
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <ContactForm />
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
           <ContactInfo />
+          <ContactForm />
         </div>
       </div>
     </section>

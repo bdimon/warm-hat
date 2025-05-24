@@ -115,57 +115,60 @@ export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
   if (!user) return <p>Загрузка…</p>;
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md space-y-4">
-      <h2 className="text-lg font-semibold">Сменить email / пароль</h2>
-      <p className="text-sm text-gray-600">
-        Текущий email: <span className="font-medium">{user.email}</span>
+    <form onSubmit={handleSubmit} className='max-w-md space-y-4'>
+      <h2 className='text-lg font-semibold'>Сменить email / пароль</h2>
+      <p className='text-sm text-gray-600'>
+        Текущий email: <span className='font-medium'>{user.email}</span>
       </p>
 
-      <FormField
-        label="Новый Email"
-        name="email"
-        type="email"
-        value={form.email}
-        onChange={handleChange}
-        error={errors.email}
-        placeholder="example@mail.com"
-      />
+      <FormField label='Новый email'>
+        <input
+          name='email'
+          type='email'
+          value={form.email}
+          onChange={handleChange}
+          placeholder='example@mail.com'
+          className='w-full border p-2 rounded border-gray-300'
+        />
+      </FormField>
 
-      <FormField
-        label="Новый пароль"
-        name="password"
-        type="password"
-        value={form.password}
-        onChange={handleChange}
-        error={errors.password}
-        placeholder="Не менее 6 символов"
-      />
+      <FormField label='Новый пароль'>
+        <input
+          name='password'
+          type='password'
+          value={form.password}
+          onChange={handleChange}
+          placeholder='Не менее 6 символов'
+          className='w-full border p-2 rounded border-gray-300'
+        />
+      </FormField>
 
-      <FormField
-        label="Повторите пароль"
-        name="confirmPassword"
-        type="password"
-        value={form.confirmPassword}
-        onChange={handleChange}
-        error={errors.confirmPassword}
-        placeholder="Повторите новый пароль"
-      />
+      <FormField label='Повторите пароль'>
+        <input
+          name='confirmPassword'
+          type='password'
+          value={form.confirmPassword}
+          onChange={handleChange}
+          placeholder='Повторите новый пароль'
+          className='w-full border p-2 rounded border-gray-300'
+        />
+      </FormField>
 
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-      {message && <p className="text-green-600 text-sm">{message}</p>}
-      <div className="flex items-center space-x-3 pt-2">        
-      <button
-        type="submit"
-        disabled={loading}
-        className="bg-shop-blue-dark text-white px-4 py-2 rounded disabled:opacity-50"
-      >
-        {loading ? "Сохранение…" : "Сохранить изменения"}
-      </button>
-      {onClose && (
+      {error && <p className='text-red-500 text-sm'>{error}</p>}
+      {message && <p className='text-green-600 text-sm'>{message}</p>}
+      <div className='flex items-center space-x-3 pt-2'>
+        <button
+          type='submit'
+          disabled={loading}
+          className='bg-shop-blue-dark text-white px-4 py-2 rounded disabled:opacity-50'
+        >
+          {loading ? 'Сохранение…' : 'Сохранить изменения'}
+        </button>
+        {onClose && (
           <button
-            type="button"
+            type='button'
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-shop-blue-dark rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-colors duration-150"
+            className='px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-shop-blue-dark rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-colors duration-150'
             disabled={loading}
           >
             Выйти без сохранения

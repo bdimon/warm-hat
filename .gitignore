@@ -9,6 +9,10 @@ lerna-debug.log*
 
 node_modules
 public
+converted
+originals
+public/*.txt
+public/*.md
 dist
 dist-ssr
 *.local

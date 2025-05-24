@@ -99,7 +99,7 @@ export default function EditOrderPage() {
       showSnackbar("Не удалось сохранить", "error");
     } else {
       showSnackbar("Изменения сохранены", "success");
-      navigate("/admin");
+      navigate('/profile-page');
     }
 
     setLoading(false);

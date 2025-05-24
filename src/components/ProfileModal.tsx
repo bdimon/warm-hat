@@ -1,80 +1,29 @@
-import { useUser } from "@/hooks/use-user-profile";
-import { useUserOrders } from "@/hooks/use-user-orders";
-import AuthSettingsForm from "@/components/AuthSettingsForm";
-import CustomModal from "@/components/ui/custom-modal";
-import { useState, useMemo } from "react";
-import OrderCard from "./ui/order-card";
+import React from 'react';
+import AuthSettingsForm from './AuthSettingsForm';
+import { X } from 'lucide-react';
 
 interface ProfileModalProps {
-  open: boolean;
+  isOpen: boolean;
   onClose: () => void;
 }
 
-export default function ProfileModal({ open, onClose }: ProfileModalProps) {
-  const { user } = useUser();
-  const { orders, loading } = useUserOrders();
-  const [page, setPage] = useState(1);
-
-  const ORDERS_PER_PAGE = 10;
-
-  const totalPages = useMemo(
-    () => Math.ceil(orders.length / ORDERS_PER_PAGE),
-    [orders]
-  );
-
-  const paginatedOrders = useMemo(
-    () =>
-      orders.slice(
-        (page - 1) * ORDERS_PER_PAGE,
-        page * ORDERS_PER_PAGE
-      ),
-    [orders, page]
-  );
-
-  if (!user) return null;
+const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
 
   return (
-    <CustomModal open={open} onClose={() => {
-      console.log('Close ProfileModal');
-      onClose();
-    }} title="Профиль"> 
-    <div className="space-y-6">
-        <AuthSettingsForm onClose={onClose}/>
-        <div>
-          <h2 className="text-xl font-semibold mb-2">📦 Мои заказы</h2>
-          {loading ? (
-            <p>Загрузка...</p>
-          ) : orders.length === 0 ? (
-            <p>У вас пока нет заказов.</p>
-          ) : (
-            <ul className="space-y-4">
-              {paginatedOrders.map((order) => (
-                <OrderCard key={order.id} order={order} />
-              ))}
-
-              <div className="flex items-center justify-center gap-4 mt-4">
-                <button
-                  className="px-3 py-1 border rounded disabled:opacity-50"
-                  onClick={() => setPage((p) => Math.max(p - 1, 1))}
-                  disabled={page === 1}
-                >
-                  ⬅ Назад
-                </button>
-                <span>
-                  Страница {page} из {totalPages}
-                </span>
-                <button
-                  className="px-3 py-1 border rounded disabled:opacity-50"
-                  onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-                  disabled={page === totalPages}
-                >
-                  Вперёд ➡
-                </button>
-              </div>
-            </ul>
-          )}
-        </div>
+    <div className='fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[60] p-4 transition-opacity duration-300 ease-in-out'>
+      <div className='bg-white p-6 sm:p-8 rounded-lg shadow-xl max-w-md w-full relative transform transition-all duration-300 ease-in-out scale-95 opacity-0 animate-modal-scale-fade-in'>
+        <button
+          onClick={onClose}
+          className='absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors'
+          aria-label='Закрыть настройки профиля'
+        >
+          <X size={24} />
+        </button>
+        <AuthSettingsForm onClose={onClose} /> {/* Передаем onClose в AuthSettingsForm */}
       </div>
-    </CustomModal>
+    </div>
   );
-}
+};
+
+export default ProfileModal;

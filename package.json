@@ -12,7 +12,7 @@
     "seed": "vite-node src/scripts/seed.ts",
     "dev:api": "vite-node src/server/index.ts",
     "both": "concurrently \"npm run dev:api\" \"npm run dev\"",
-    "convert": "vite-node convert-images.ts"
+    "convert": "vite-node src/scripts/convert-images.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -88,6 +88,7 @@
     "globals": "^15.9.0",
     "lovable-tagger": "^1.1.7",
     "postcss": "^8.4.47",
+    "prettier": "^3.5.3",
     "tailwindcss": "^3.4.11",
     "tsx": "^4.19.4",
     "typescript": "^5.5.3",
