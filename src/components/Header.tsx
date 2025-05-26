@@ -8,7 +8,8 @@ import CartModal from "./CartModal";// Assuming CartModal is a dialog
 import AuthModal from './AuthModal';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js'
-import { useSnackbar } from '@/hooks/use-snackbar';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from './LanguageSwitcher'; // Импортируем переключатель
 // import ProfileModal from './ProfileModal'; // for Modal
 
 interface HeaderProps {
@@ -18,6 +19,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) => {
+  const { t, i18n } = useTranslation(); // Добавляем хук для переводов
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -26,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
   const { cart } = useCart();
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const { showSnackbar } = useSnackbar();
+  // const { showSnackbar } = useSnackbar(); // Если не используется здесь, можно закомментировать
   // const [openProfile, setOpenProfile] = useState(false); for Modal
 
   useEffect(() => {
@@ -67,8 +69,8 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
     await supabase.auth.signOut();
     setUser(null);
     setIsAuthOpen(false);
-    setIsOpen(false);
-    showSnackbar('Вы вышли из аккаунта', 'info');
+    setIsOpen(false); // Закрываем мобильное меню, если было открыто
+    // showSnackbar(t('notifications.loggedOut'), 'info'); // Пример перевода уведомления
     navigate('/');
   };
 
@@ -97,7 +99,7 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
           to='/'
           className='text-2xl font-bold text-shop-text hover:text-shop-blue-dark transition-colors'
         >
-          Шапка Шоп
+          {t('header.shopName')}
         </Link>
 
         {/* Desktop Navigation */}
@@ -107,42 +109,43 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
               onClick={handleBack}
               className='flex items-center text-shop-text hover:text-shop-blue-dark transition-colors'
             >
-              <ArrowLeft className='mr-1' size={20} /> Назад
+              <ArrowLeft className='mr-1' size={20} /> {t('header.back')}
             </button>
           ) : (
             <>
               <Link to='/' className='text-shop-text hover:text-shop-blue-dark transition-colors'>
-                Главная
+                {t('header.main')}
               </Link>
               <Link
                 to='/#catalog'
                 className='text-shop-text hover:text-shop-blue-dark transition-colors'
               >
-                Каталог
+                {t('header.catalog')}
               </Link>
               <Link
                 to='/#benefits'
                 className='text-shop-text hover:text-shop-blue-dark transition-colors'
               >
-                Преимущества
+                {t('header.benefits')}
               </Link>
               <Link
                 to='/#reviews'
                 className='text-shop-text hover:text-shop-blue-dark transition-colors'
               >
-                Отзывы
+                {t('header.reviews')}
               </Link>
               <Link
                 to='/#contact'
                 className='text-shop-text hover:text-shop-blue-dark transition-colors'
               >
-                Контакты
+                {t('header.contact')}
               </Link>
             </>
           )}
         </nav>
 
-        <div className='flex items-center space-x-4'>
+        <div className='flex items-center space-x-2 md:space-x-4'>
+          <LanguageSwitcher /> {/* Добавляем переключатель языка */}
           <button
             onClick={() => setIsCartOpen(true)}
             className='relative p-2'
@@ -172,7 +175,7 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
                   setIsOpen(false);
                 }}
               >
-                Профиль
+                {t('header.profile')}
                 {/*  for Modal <ProfileModal open={openProfile} onClose={() => {
                   console.log('Header: onClose called, setting openProfile to false. Current value:', openProfile);
                   setOpenProfile(false);
@@ -183,7 +186,7 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
                 onClick={handleLogout}
                 className='hidden md:inline-flex bg-shop-blue-dark text-white hover:bg-shop-blue-dark/90'
               >
-                Выйти
+                {t('header.logout')}
               </Button>
             </>
           ) : (
@@ -191,10 +194,9 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
               onClick={handleLogin}
               className='hidden md:inline-flex bg-shop-blue-dark text-white hover:bg-shop-blue-dark/90'
             >
-              Войти
+              {t('header.login')}
             </Button>
           )}
-
           <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
           <Button
             className='md:hidden text-shop-text'
@@ -221,44 +223,54 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
                 onClick={handleBack}
                 className='flex items-center text-shop-text hover:text-shop-blue-dark transition-colors'
               >
-                <ArrowLeft className='mr-1' size={20} /> Назад
+                <ArrowLeft className='mr-1' size={20} /> {t('header.back')}
               </button>
             ) : (
               <>
                 <Link
                   to='/'
                   className='text-shop-text hover:text-shop-blue-dark transition-colors'
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
                 >
-                  Главная
+                  {t('header.main')}
                 </Link>
                 <Link
                   to='/#catalog'
                   className='text-shop-text hover:text-shop-blue-dark transition-colors'
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
                 >
-                  Каталог
+                  {t('header.catalog')}
                 </Link>
                 <Link
                   to='/#benefits'
                   className='text-shop-text hover:text-shop-blue-dark transition-colors'
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
                 >
-                  Преимущества
+                  {t('header.benefits')}
                 </Link>
                 <Link
                   to='/#reviews'
                   className='text-shop-text hover:text-shop-blue-dark transition-colors'
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
                 >
-                  Отзывы
+                  {t('header.reviews')}
                 </Link>
                 <Link
                   to='/#contact'
                   className='text-shop-text hover:text-shop-blue-dark transition-colors'
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
                 >
-                  Контакты
+                  {t('header.contact')}
                 </Link>
               </>
             )}
@@ -273,7 +285,7 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
                     navigate('/profile');
                   }}
                 >
-                  Профиль
+                  {t('header.profile')}
                 </Button>
                 <span className='md:hidden block text-sm text-shop-text text-center mt-2'>
                   {user.email}
@@ -283,7 +295,7 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
                   onClick={handleLogout}
                   className='bg-shop-blue-dark text-white hover:bg-shop-blue-dark/90 w-full'
                 >
-                  Выйти
+                  {t('header.logout')}
                 </Button>
               </>
             ) : (
@@ -292,7 +304,7 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
                 onClick={handleLogin}
                 className='bg-shop-blue-dark text-white hover:bg-shop-blue-dark/90 w-full'
               >
-                Войти
+                {t('header.login')}
               </Button>
             )}
           </nav>

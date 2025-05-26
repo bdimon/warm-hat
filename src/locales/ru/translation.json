@@ -1,0 +1,39 @@
+{
+  "catalogPage": {
+    "title": "Каталог товаров",
+    "description": "Мы предлагаем только качественные товары связанные вручную с быстрой доставкой по всей Европе",
+    "allCategories": "Все",
+    "hatsCategory": "Шапки",
+    "scarvesCategory": "Шарфы",
+    "combinationsCategory": "Комплекты",
+    "loading": "Загрузка товаров...",
+    "error": "Ошибка: {{errorMessage}}",
+    "showMore": "Показать больше товаров"
+  },
+  "hero": {
+    "welcome": "Добро пожаловать в наш <1>теплый магазин</1>",
+    "description": "Более 100 наименований связанных вручную изделий с быстрой доставкой по всей Европе",
+    "toCatalogButton": "В каталог",
+    "aboutUsButton": "О нас",
+    "happyClients": "Счастливых клиентов",
+    "support": "Служба поддержки",
+    "qualityGuarantee": "Гарантия качества",
+    "freeShipping": "Бесплатная доставка",
+    "freeShippingCondition": "При заказе от $30",
+    "fastDelivery": "Быстрая доставка",
+    "fastDeliveryTime": "От 24 часов"
+  },
+  "header": {
+    "shopName": "Шапка Шоп",
+    "main": "Главная",
+    "catalog": "Каталог",
+    "benefits": "Преимущества",
+    "reviews": "Отзывы",
+    "contact": "Контакты",
+    "login": "Войти",
+    "logout": "Выйти",
+    "profile": "Профиль",
+    "cart": "Открыть корзину",
+    "back": "Назад"
+  }
+}

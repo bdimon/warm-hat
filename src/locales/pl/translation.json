@@ -1,0 +1,39 @@
+{
+  "catalogPage": {
+  "title": "Katalog produktów",
+  "description": "Oferujemy wyłącznie wysokiej jakości ręcznie robione wyroby z szybką dostawą w całej Europie",
+  "allCategories": "All",
+  "hatsCategory": "Czapki",
+  "scarvesCategory": "Apaszki",
+  "combinationsCategory": "Kombinacje",
+  "loading": "Ładowanie produktów...",
+  "error": "Błąd: {{errorMessage}}",
+  "showMore": "Pokaż więcej produktów"
+  },
+  "hero": {
+  "welcome": "Witamy w naszym <1>ciepłym sklepie</1>",
+  "description": "Ponad 100 ręcznie robionych wyrobów z szybką dostawą w całej Europie",
+  "toCatalogButton": "Do katalogu",
+  "aboutUsButton": "O nas",
+  "happyClients": "Zadowoleni klienci",
+  "support": "Wsparcie",
+  "qualityGuarantee": "Gwarancja jakości",
+  "freeShipping": "Darmowa wysyłka",
+  "freeShippingCondition": "Zamówienia powyżej 30 USD",
+  "fastDelivery": "Szybka dostawa",
+  "fastDeliveryTime": "Od 24 godzin"
+  },
+  "header": {
+  "shopName": "Sklep z kapeluszami",
+  "main": "Strona główna",
+  "catalog": "Katalog",
+  "benefits": "Korzyści",
+  "reviews": "Recenzje",
+  "contact": "Kontakty",
+  "login": "Zaloguj się",
+  "logout": "Wyloguj się",
+  "profile": "Profil",
+  "cart": "Otwórz koszyk",
+  "back": "Wstecz"
+  }
+  }

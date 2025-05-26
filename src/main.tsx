@@ -4,6 +4,7 @@ import './index.css'
 import { CartProvider } from '@/providers/cart-provider';
 import React from 'react';
 import { SnackbarProvider } from '@/providers/snackbar-provider';
+import '@/lib/i18n';
 
 createRoot(document.getElementById("root")!).render(
 <React.StrictMode>

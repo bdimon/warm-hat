@@ -1,0 +1,39 @@
+{
+  "catalogPage": {
+    "title": "Product Catalog",
+    "description": "We offer only high-quality hand-knitted goods with fast delivery throughout Europe",
+    "allCategories": "All",
+    "hatsCategory": "Hats",
+    "scarvesCategory": "Scarves",
+    "combinationsCategory": "Combinations",
+    "loading": "Loading products...",
+    "error": "Error: {{errorMessage}}",
+    "showMore": "Show more products"
+  },
+  "hero": {
+    "welcome": "Welcome to our <1>warm store</1>",
+    "description": "Over 100 handmade knitted items with fast delivery throughout Europe",
+    "toCatalogButton": "To Catalog",
+    "aboutUsButton": "About Us",
+    "happyClients": "Happy Clients",
+    "support": "Support",
+    "qualityGuarantee": "Quality Guarantee",
+    "freeShipping": "Free shipping",
+    "freeShippingCondition": "On orders over $30",
+    "fastDelivery": "Fast delivery",
+    "fastDeliveryTime": "From 24 hours"
+  },
+  "header": {
+    "shopName": "Hat Shop",
+    "main": "Home",
+    "catalog": "Catalog",
+    "benefits": "Benefits",
+    "reviews": "Reviews",
+    "contact": "Contacts",
+    "login": "Login",
+    "logout": "Logout",
+    "profile": "Profile",
+    "cart": "Open cart",
+    "back": "Back"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "catalogPage": {
+    "title": "Каталог продукції",
+    "description": "Ми пропонуємо лише високоякісні товари ручної в'язки з швидкою доставкою по всій Європі",
+    "allCategories": "Усі",
+    "hatsCategory": "Капелюхи",
+    "scarvesCategory": "Шарфи",
+    "combinationsCategory": "Комбінації",
+    "loading": "Завантаження товарів...",
+    "error": "Помилка: {{errorMessage}}",
+    "showMore": "Показати більше товарів"
+  },
+  "hero": {
+    "welcome": "Ласкаво просимо до нашого <1>теплого магазину</1>",
+    "description": "Понад 100 товарів ручної в'язки з швидкою доставкою по всій Європі",
+    "toCatalogButton": "До каталогу",
+    "aboutUsButton": "Про нас",
+    "happyClients": "Задоволені клієнти",
+    "support": "Підтримка",
+    "qualityGuarantee": "Гарантія якості",
+    "freeShipping": "Безкоштовна доставка",
+    "freeShippingCondition": "Для замовлень понад 30 доларів",
+    "fastDelivery": "Швидка доставка",
+    "fastDeliveryTime": "Від 24 годин"
+  },
+  "header": {
+    "shopName": "Магазин капелюхів",
+    "main": "Головна",
+    "catalog": "Каталог",
+    "benefits": "Переваги",
+    "reviews": "Відгуки",
+    "contact": "Контакти",
+    "login": "Вхід",
+    "logout": "Вийти",
+    "profile": "Профіль",
+    "cart": "Відкрити кошик",
+    "back": "Назад"
+  }
+}
