@@ -1,23 +1,14 @@
 // pages/account.tsx (или /profile)
-// import  ProfileForm  from "@/components/ProfileForm";
-// import AuthSettingsForm from "@/components/AuthSettingsForm"; Больше не нужен здесь напрямую
-// import { useUserOrders } from "@/hooks/use-user-orders"; Логика заказов перенесена в OrdersModal
-import { useUserProfile } from "@/hooks/use-user-profile";
+import { useUserProfile } from '@/hooks/use-user-profile';
 import { useState } from 'react';
-import  Header from "@/components/Header";
+import Header from '@/components/Header';
 import { useNavigate } from 'react-router-dom';
 import ProfileModal from '@/components/ProfileModal';
 import OrdersModal from '@/components/OrdersModal';
 import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 
-
-// interface ProfilePageProps {
-//   open: boolean;
-//   onClose: () => void;
-// }
-
-// export default function AccountPage({ open, onClose }: ProfilePageProps)  {
-export default function AccountPage()  {
+export default function AccountPage() {
   // Добавим userLoading для индикации загрузки пользователя
   const { user, loading: userLoading } = useUserProfile();
   const navigate = useNavigate();
@@ -30,6 +21,7 @@ export default function AccountPage()  {
       <div className='min-h-screen bg-gray-100 flex flex-col'>
         <Header showBackButton onBackClick={() => navigate('/')} />
         <div className='flex-grow flex items-center justify-center'>
+          <Loader2 className='h-8 w-8 animate-spin text-shop-blue-dark' />
           <p className='text-gray-600'>Загрузка данных пользователя...</p>
         </div>
       </div>

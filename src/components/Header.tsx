@@ -3,12 +3,12 @@ import { ShoppingCart, Menu, X, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import {Link, useNavigate } from 'react-router-dom';
-import { useCart } from "@/context/CartContext";
+import { useCart } from '@/hooks/use-cart';
 import CartModal from "./CartModal";// Assuming CartModal is a dialog
 import AuthModal from './AuthModal';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js'
-import { useSnackbar } from "@/context/SnackbarContext";
+import { useSnackbar } from '@/hooks/use-snackbar';
 // import ProfileModal from './ProfileModal'; // for Modal
 
 interface HeaderProps {

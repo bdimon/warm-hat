@@ -4,7 +4,6 @@ import { servbase as supabase } from "@/lib/supabase";
 
 const router = express.Router();
 // 🔁 Получить все товары
-// 🔹 GET /api/products — получить все товары
 router.get("/", async (req, res) => {
   const page = parseInt(req.query.page as string) || 1;
   const pageSize = parseInt(req.query.pageSize as string) || 20;

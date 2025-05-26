@@ -15,39 +15,39 @@ const OrdersModal: React.FC<OrdersModalProps> = ({ isOpen, onClose }) => {
   const { orders, loading, refetchOrders } = useUserOrders();
   const [page, setPage] = useState(1);
 
-  console.log(
-    '[OrdersModal] Rendering. Orders count:',
-    orders.length,
-    'Loading:',
-    loading,
-    'Current Page:',
-    page
-  );
+  // console.log(
+  //   '[OrdersModal] Rendering. Orders count:',
+  //   orders.length,
+  //   'Loading:',
+  //   loading,
+  //   'Current Page:',
+  //   page
+  // );
 
   const totalPages = useMemo(() => {
     const numPages = Math.ceil(orders.length / ORDERS_PER_PAGE);
     const newTotalPages = numPages > 0 ? numPages : 1; // Гарантируем, что totalPages хотя бы 1
-    console.log(
-      '[OrdersModal] Recalculating totalPages. Orders length:',
-      orders.length,
-      'New totalPages:',
-      newTotalPages
-    );
+    //  console.log(
+    //     '[OrdersModal] Recalculating totalPages. Orders length:',
+    //     orders.length,
+    //     'New totalPages:',
+    //     newTotalPages
+    //   );
     return newTotalPages;
   }, [orders]);
 
   // Эффект для корректировки страницы, если она выходит за пределы после изменения списка заказов
   useEffect(() => {
-    console.log(
-      '[OrdersModal] Page adjustment useEffect. Current page:',
-      page,
-      'Total pages:',
-      totalPages,
-      'Orders length:',
-      orders.length
-    );
+    // console.log(
+    //   '[OrdersModal] Page adjustment useEffect. Current page:',
+    //   page,
+    //   'Total pages:',
+    //   totalPages,
+    //   'Orders length:',
+    //   orders.length
+    // );
     if (page > totalPages) {
-      console.log('[OrdersModal] Current page > totalPages. Adjusting page to:', totalPages);
+      // console.log('[OrdersModal] Current page > totalPages. Adjusting page to:', totalPages);
       setPage(totalPages);
     }
   }, [orders.length, totalPages, page]); // Зависим от orders.length для отслеживания изменений списка
@@ -56,23 +56,23 @@ const OrdersModal: React.FC<OrdersModalProps> = ({ isOpen, onClose }) => {
     const start = (page - 1) * ORDERS_PER_PAGE;
     const end = page * ORDERS_PER_PAGE;
     const sliced = orders.slice(start, end);
-    console.log(
-      '[OrdersModal] Recalculating paginatedOrders. Page:',
-      page,
-      'Start:',
-      start,
-      'End:',
-      end,
-      'Sliced count:',
-      sliced.length
-    );
+    // console.log(
+    //   '[OrdersModal] Recalculating paginatedOrders. Page:',
+    //   page,
+    //   'Start:',
+    //   start,
+    //   'End:',
+    //   end,
+    //   'Sliced count:',
+    //   sliced.length
+    // );
     return sliced;
   }, [orders, page]);
 
   if (!isOpen) return null;
 
   const handleOrderDeleted = () => {
-    console.log('[OrdersModal] handleOrderDeleted called. Triggering refetchOrders.');
+    // console.log('[OrdersModal] handleOrderDeleted called. Triggering refetchOrders.');
     refetchOrders();
   };
 

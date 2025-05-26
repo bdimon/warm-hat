@@ -1,9 +1,10 @@
-import { ProductInCart } from "./cart";
+// types/supabase.ts
+import { ProductInCart } from './cart';
 
-// types/db.ts
 export type Profile = {
   id: string;
   full_name: string | null;
+  email: string;
   phone: string | null;
   address: string | null;
   created_at: string;
@@ -23,17 +24,19 @@ export type ProductRaw = {
   salePrice?: number | null;
 };
 
+type OrderStatus = 'new' | 'pending' | 'payed' | 'delivered';
+
 export type Order = {
   id: string;
   created_at: string;
-  status: string | "new" | "pending" | "delivered" | "payed";
+  status: OrderStatus;
   total: number;
   items: ProductInCart[];
   user_id: string;
-  customer_name?: string;
+  name?: string;
   customer_email?: string;
-  customer_address?: string;
-  customer_phone?: string;
+  address?: string;
+  phone?: string;
   payment_method: string;
 };
 

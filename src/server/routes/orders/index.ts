@@ -5,14 +5,8 @@ const router = express.Router();
 
 
 router.post("/", async (req, res) => {
-  const { 
-    items, 
-    total, 
-    customer_address, 
-    customer_email, 
-    customer_name, 
-    payment_method, 
-    status } = req.body;
+  const { items, total, customer_address, customer_email, customer_name, payment_method, status } =
+    req.body;
 
   if (
     !items ||
@@ -22,14 +16,10 @@ router.post("/", async (req, res) => {
     !customer_address ||
     !payment_method
   ) {
-    return res.status(400).json({ error: "Missing required fields" });
+    return res.status(400).json({ error: 'Missing required fields' });
   }
-  
-//   if (!items || !total) {
-//     return res.status(400).json({ error: "Missing order data" });
-//   }
 
-  const { error } = await supabase.from("orders").insert([
+  const { error } = await supabase.from('orders').insert([
     {
       items,
       total,
@@ -37,7 +27,7 @@ router.post("/", async (req, res) => {
       customer_email,
       customer_name,
       payment_method,
-      status: status || "new",
+      status: status || 'new',
     },
   ]);
 
@@ -45,9 +35,9 @@ router.post("/", async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 
-  res.status(201).json({ message: "Order created successfully" });
+  res.status(201).json({ message: 'Order created successfully' });
 });
-// routes/orders.ts
+
 router.get("/", async (req, res) => {
   const { data, error } = await supabase
     .from("orders")

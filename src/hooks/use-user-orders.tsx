@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useUser } from "./use-user-profile";
-import { Order } from "../types/db"; // если ещё нет — создадим
+import { Order } from '../types/supabase'; // если ещё нет — создадим
 
 export function useUserOrders() {
   const { user } = useUser();
@@ -40,13 +40,13 @@ export function useUserOrders() {
 
   // Функция для принудительного обновления
   const refetchOrders = async () => {
-    console.log('[useUserOrders] refetchOrders called. User ID:', user?.id);
+    // console.log('[useUserOrders] refetchOrders called. User ID:', user?.id);
     if (!user) {
-      console.log('[useUserOrders] No user, aborting refetch.');
+      // console.log('[useUserOrders] No user, aborting refetch.');
       return;
     }
     setLoading(true);
-    console.log('[useUserOrders] Fetching orders from Supabase...');
+    // console.log('[useUserOrders] Fetching orders from Supabase...');
     const { data, error } = await supabase
       .from('orders')
       .select('*')
@@ -57,11 +57,11 @@ export function useUserOrders() {
       console.error('[useUserOrders] Error during refetch:', error.message, error);
       // Оставляем существующие заказы при ошибке рефетча, чтобы не очищать список
     } else {
-      console.log('[useUserOrders] Refetch successful. Data received:', data);
+      // console.log('[useUserOrders] Refetch successful. Data received:', data);
       setOrders(data || []);
     }
     setLoading(false);
-    console.log('[useUserOrders] refetchOrders finished.');
+    // console.log('[useUserOrders] refetchOrders finished.');
   };
 
   return { orders, loading, refetchOrders };

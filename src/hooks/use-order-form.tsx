@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { useSnackbar } from "@/context/SnackbarContext";
-import { useCart } from "@/context/CartContext";
+import { useSnackbar } from '@/hooks/use-snackbar';
+import { useCart } from '@/hooks/use-cart';
 
 export interface OrderFormData {
   name: string;
@@ -103,7 +103,7 @@ export function useOrderForm() {
     });
 
     if (error) {
-      showSnackbar("Ошибка оформления", "error");
+      showSnackbar('Ошибка оформления', 'warning');
     } else {
       clearCart();
       showSnackbar("Заказ оформлен!", "success");

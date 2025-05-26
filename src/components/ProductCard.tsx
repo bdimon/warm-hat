@@ -3,9 +3,9 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom'; // or 'next/link';
-import { useCart } from "@/context/CartContext";
+import { useCart } from '@/hooks/use-cart';
 import { ProductInCart } from "@/types/cart";
-import {Product} from "@/types/db";
+import { Product } from '@/types/supabase';
  
 interface ProductCardProps {
   product: Product;

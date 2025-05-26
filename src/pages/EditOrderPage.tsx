@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useSnackbar } from '@/context/SnackbarContext';
+import { useSnackbar } from '@/hooks/use-snackbar';
 import { supabase } from '@/lib/supabase';
 import OrderForm from '@/components/OrderForm';
 // Эти типы используются локально, если они не экспортируются из use-order-form,
@@ -50,12 +50,12 @@ export default function EditOrderPage() {
   const fetchedIdRef = useRef<string | null | undefined>(null);
 
   useEffect(() => {
-    console.log(
-      `[EditOrderPage] useEffect triggered. ID: ${id}, Current isFetching: ${isFetchingRef.current}, Fetched ID: ${fetchedIdRef.current}`
-    );
+    // console.log(
+    //   `[EditOrderPage] useEffect triggered. ID: ${id}, Current isFetching: ${isFetchingRef.current}, Fetched ID: ${fetchedIdRef.current}`
+    // );
 
     if (!id) {
-      console.log('[EditOrderPage] No ID, setting loading to false and returning.');
+      // console.log('[EditOrderPage] No ID, setting loading to false and returning.');
       setLoading(false);
       // Optionally navigate away if an ID is always expected
       // navigate('/some-error-page-or-back');
@@ -65,13 +65,13 @@ export default function EditOrderPage() {
     const fetchOrderData = async () => {
       // Prevent re-entry if already fetching for the *same* id due to rapid effect triggers
       if (isFetchingRef.current && fetchedIdRef.current === id) {
-        console.log(
-          `[EditOrderPage] Fetch already in progress for ID: ${id}. Aborting subsequent call.`
-        );
+        // console.log(
+        //   `[EditOrderPage] Fetch already in progress for ID: ${id}. Aborting subsequent call.`
+        // );
         return;
       }
 
-      console.log(`[EditOrderPage] Starting fetchOrderData for ID: ${id}`);
+      // console.log(`[EditOrderPage] Starting fetchOrderData for ID: ${id}`);
       isFetchingRef.current = true;
       fetchedIdRef.current = id;
       setLoading(true);
@@ -85,12 +85,12 @@ export default function EditOrderPage() {
 
         if (orderError || !orderData) {
           console.error('[EditOrderPage] Error fetching order data or no order data:', orderError);
-          showSnackbarRef.current('Заказ не найден', 'error');
+          showSnackbarRef.current('Заказ не найден', 'warning');
           navigate('/profile');
           return; // Exit after navigation
         }
 
-        console.log('[EditOrderPage] Order data fetched:', orderData);
+        // console.log('[EditOrderPage] Order data fetched:', orderData);
         const {
           total: orderTotalAmount,
           status: orderStatus,
@@ -104,7 +104,7 @@ export default function EditOrderPage() {
         setTotal(orderTotalAmount);
         setEditable(orderStatus === 'new');
 
-        console.log(`[EditOrderPage] Fetching profile data for user_id: ${user_id}`);
+        // console.log(`[EditOrderPage] Fetching profile data for user_id: ${user_id}`);
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('full_name, address, phone, email')
@@ -116,7 +116,7 @@ export default function EditOrderPage() {
             '[EditOrderPage] Error fetching profile data or no profile data:',
             profileError
           );
-          showSnackbarRef.current('Не удалось загрузить данные профиля для заказа.', 'error');
+          showSnackbarRef.current('Не удалось загрузить данные профиля для заказа.', 'warning');
           setForm({
             name: orderSpecificName || '',
             address: orderSpecificAddress || '',
@@ -125,7 +125,7 @@ export default function EditOrderPage() {
           });
           setUserEmail('');
         } else {
-          console.log('[EditOrderPage] Profile data fetched:', profileData);
+          // console.log('[EditOrderPage] Profile data fetched:', profileData);
           setUserEmail(profileData.email || '');
           setForm({
             name: orderSpecificName || profileData.full_name || '',
@@ -141,9 +141,9 @@ export default function EditOrderPage() {
           'error'
         );
       } finally {
-        console.log(
-          `[EditOrderPage] fetchOrderData finished for ID: ${id}. Setting loading to false.`
-        );
+        // console.log(
+        //   `[EditOrderPage] fetchOrderData finished for ID: ${id}. Setting loading to false.`
+        // );
         setLoading(false);
         isFetchingRef.current = false;
       }
@@ -176,7 +176,7 @@ export default function EditOrderPage() {
   };
 
   const handleSubmit = async () => {
-    console.log('[EditOrderPage] handleSubmit', editable.toString());
+    // console.log('[EditOrderPage] handleSubmit', editable.toString());
     if (!editable) return;
 
     const validationErrors = validate();
@@ -199,7 +199,7 @@ export default function EditOrderPage() {
       ) // Опция для получения точного количества измененных строк
       .eq('id', id);
 
-    console.log('[EditOrderPage] Update result - error:', error, 'count:', count);
+    // console.log('[EditOrderPage] Update result - error:', error, 'count:', count);
 
     if (error) {
       showSnackbar('Не удалось сохранить: ' + error.message, 'error');

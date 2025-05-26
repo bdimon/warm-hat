@@ -2,8 +2,8 @@ import { useParams,useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Product } from "@/types/Product";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
-import { useCart } from "@/context/CartContext";
+import { Loader2, ShoppingCart } from 'lucide-react';
+import { useCart } from '@/hooks/use-cart';
 import { ProductInCart } from '@/types/cart';
 import  Header from "@/components/Header";
  
@@ -54,7 +54,13 @@ export default function ProductPage() {
     addToCart(productToAdd);
   };
 
-  if (loading) return <div className="p-4 text-center">Загрузка...</div>;
+  if (loading)
+    return (
+      <div className='p-4 text-center'>
+        <Loader2 className='h-8 w-8 animate-spin text-shop-blue-dark' />
+        <p className=''>Загрузка...</p>
+      </div>
+    );
   if (error) return <div className="p-4 text-center text-red-500">Ошибка: {error}</div>;
   if (!product) return <div className="p-4 text-center">Товар не найден.</div>;
 

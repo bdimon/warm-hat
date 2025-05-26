@@ -1,8 +1,8 @@
 // components/ui/OrderCard.tsx
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-// import { Order } from "@/types/db"; // Order type is inferred from OrderCardProps
-import { useSnackbar } from '@/context/SnackbarContext';
+// import { Order } from "@/types/supabase"; // Order type is inferred from OrderCardProps
+import { useSnackbar } from '@/hooks/use-snackbar';
 import { supabase } from '@/lib/supabase';
 
 interface OrderCardProps {
@@ -26,10 +26,10 @@ export default function OrderCard({ order, onOrderDeleted }: OrderCardProps) {
     switch (status.toLowerCase()) {
       case 'delivered':
         return 'text-green-600 bg-green-100';
-      case 'processing':
+      case 'pending':
       case 'new':
         return 'text-yellow-600 bg-yellow-100';
-      case 'cancelled':
+      case 'payed':
         return 'text-red-600 bg-red-100';
       default:
         return 'text-gray-600 bg-gray-100';
@@ -51,7 +51,7 @@ export default function OrderCard({ order, onOrderDeleted }: OrderCardProps) {
       .from('orders')
       .delete({ count: 'exact' })
       .eq('id', order.id);
-    console.log('[OrderCard]deleted count', count);
+    // console.log('[OrderCard]deleted count', count);
 
     if (error) {
       showSnackbar('Ошибка при удалении заказа', 'error');

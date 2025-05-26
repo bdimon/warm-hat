@@ -2,9 +2,8 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import FormField from "./FormField";
 import { supabase } from "@/lib/supabase";
-import { useSnackbar } from "@/context/SnackbarContext";
+import { useSnackbar } from '@/hooks/use-snackbar';
 import { Button } from '@/components/ui/button';
-
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -12,10 +11,15 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
-  const [mode, setMode] = useState<"login" | "register" | "forgot-password">("login");
-  const [form, setForm] = useState({ email: "", password: "", confirmPassword: "" });
-  const [resetEmail, setResetEmail] = useState("");
-  const [formErrors, setFormErrors] = useState({ email: "", password: "", confirmPassword: "" });
+  const [mode, setMode] = useState<'login' | 'register' | 'forgot-password'>('login');
+  const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [resetEmail, setResetEmail] = useState('');
+  const [formErrors, setFormErrors] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
   const { showSnackbar } = useSnackbar();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,68 +27,71 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   };
 
   const validate = () => {
-    const errors = { email: "", password: "", confirmPassword: "" };
+    const errors = { name: '', email: '', password: '', confirmPassword: '' };
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!form.email.trim()) {
-      errors.email = "Введите email";
+      errors.email = 'Введите email';
     } else if (!emailRegex.test(form.email)) {
-      errors.email = "Некорректный email";
+      errors.email = 'Некорректный email';
     }
 
     if (!form.password.trim()) {
-      errors.password = "Введите пароль";
+      errors.password = 'Введите пароль';
     } else if (form.password.length < 6) {
-      errors.password = "Минимум 6 символов";
+      errors.password = 'Минимум 6 символов';
     }
 
-    if (mode === "register") {
-        if (!form.confirmPassword.trim()) {
-          errors.confirmPassword = "Подтвердите пароль";
-        } else if (form.password !== form.confirmPassword) {
-          errors.confirmPassword = "Пароли не совпадают";
-        }
+    if (mode === 'register') {
+      if (!form.name.trim()) {
+        errors.name = 'Введите ваше имя';
       }
+      if (!form.confirmPassword.trim()) {
+        errors.confirmPassword = 'Подтвердите пароль';
+      } else if (form.password !== form.confirmPassword) {
+        errors.confirmPassword = 'Пароли не совпадают';
+      }
+    }
 
     setFormErrors(errors);
     return !Object.values(errors).some((e) => e);
   };
 
-  async function createProfile(userId: string) {
-    const { data, error } = await supabase.from("profiles").insert({
-      id: userId,
-      full_name: "", // можно подставить имя из формы, если хочешь
-      address: "",
-      phone: "",
-    });
-  
-    if (error) {
-      console.error("Ошибка создания профиля:", error.message);
-    }
-    console.log("Профиль успешно создан", data);
-  }
-  
+  // async function createProfile(userId: string, fullName: string) {
+  //   const { data, error } = await supabase.from('profiles').insert({
+  //     id: userId,
+  //     full_name: fullName,
+  //     address: '',
+  //     phone: '',
+  //   });
+
+  //   if (error) {
+  //     console.error('Ошибка создания профиля:', error.message);
+  //   }
+  //   console.log('Профиль успешно создан', data);
+  // }
+
   const handlePasswordResetRequest = async () => {
     if (!resetEmail.trim()) {
-      showSnackbar("Введите email для сброса пароля", "info");
+      showSnackbar('Введите email для сброса пароля', 'info');
       return;
     }
     try {
       // URL, на который Supabase перенаправит пользователя после клика по ссылке в письме
       // Убедитесь, что этот URL соответствует пути к вашей UpdatePasswordPage
-      const redirectUrl = `${window.location.origin}/update-password`; 
+      const redirectUrl = `${window.location.origin}/update-password`;
       const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
         redirectTo: redirectUrl,
       });
       if (error) throw error;
-      showSnackbar("Ссылка для сброса пароля отправлена на ваш email.", "success");
+      showSnackbar('Ссылка для сброса пароля отправлена на ваш email.', 'info');
       onClose(); // Закрыть модальное окно после отправки
     } catch (err: unknown) {
-      showSnackbar("Ошибка при запросе сброса пароля", "error");
+      showSnackbar('Ошибка при запросе сброса пароля', 'error');
       if (err instanceof Error) {
-        console.error("Password reset request error:", err.message);
+        console.error('Password reset request error:', err.message);
       } else {
-        console.error("Unexpected error:", err);
+        console.error('Unexpected error:', err);
       }
     }
   };
@@ -92,7 +99,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const handleGoogleLogin = async () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
+        provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/`, // Or any other page you want to redirect to after login
         },
@@ -102,47 +109,52 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       // or to close the modal, as the page will redirect.
       // showSnackbar("Перенаправление на страницу входа Google...", "info");
     } catch (err: unknown) {
-      showSnackbar("Ошибка входа через Google", "error");
+      showSnackbar('Ошибка входа через Google', 'error');
       if (err instanceof Error) {
-        console.error("Google OAuth error:", err.message);
+        console.error('Google OAuth error:', err.message);
       } else {
-        console.error("Unexpected Google OAuth error:", err);
+        console.error('Unexpected Google OAuth error:', err);
       }
     }
   };
 
   const handleSubmit = async () => {
     if (!validate()) return;
-   
-    try {
-        if (mode === "register") {
-            const { data,error } = await supabase.auth.signUp({
-              email: form.email,
-              password: form.password,
-            });
-            if (error) throw error;
-            showSnackbar("Регистрация успешна. Подтвердите email.", "success");
-            await createProfile(data.user.id);
 
-            onClose();
-          } else {
-            const { error } = await supabase.auth.signInWithPassword({
-              email: form.email,
-              password: form.password,
-            });
-            if (error) throw error;
-            showSnackbar("Вход выполнен", "success");
-            onClose();
-          }
-        } catch (err: unknown) {
-        showSnackbar("Ошибка авторизации", "error");
-      
-        if (err instanceof Error) {
-          console.error("Auth error:", err.message);
-        } else {
-          console.error("Unexpected error:", err);
-        }
+    try {
+      if (mode === 'register') {
+        const { data, error } = await supabase.auth.signUp({
+          email: form.email,
+          password: form.password,
+          options: {
+            data: {
+              full_name: form.name, // Передаем имя для использования в триггерах или для авто-создания профиля
+            },
+          },
+        });
+        if (error) throw error;
+        showSnackbar('Регистрация успешна. Подтвердите email.', 'success');
+        // if (data.user) await createProfile(data.user.id, form.name);
+
+        onClose();
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({
+          email: form.email,
+          password: form.password,
+        });
+        if (error) throw error;
+        showSnackbar('Вход выполнен', 'success');
+        onClose();
       }
+    } catch (err: unknown) {
+      showSnackbar('Ошибка авторизации', 'error');
+
+      if (err instanceof Error) {
+        console.error('Auth error:', err.message);
+      } else {
+        console.error('Unexpected error:', err);
+      }
+    }
   };
 
   if (!isOpen) return null;
@@ -164,32 +176,67 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         {mode !== 'forgot-password' && (
           <>
             <h2 className='text-xl font-bold mb-4'>{mode === 'login' ? 'Вход' : 'Регистрация'}</h2>
-            <FormField label='Email'>
+            {mode === 'register' && (
+              <FormField label='Имя' error={formErrors.name}>
+                <input
+                  name='name'
+                  type='text'
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder='Введите ваше имя'
+                  className={`rounded border ${
+                    // Базовые стили, включая border
+                    formErrors.name
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
+                      : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе
+                  }`}
+                />
+              </FormField>
+            )}
+            <FormField label='Email' error={formErrors.email}>
               <input
                 name='email'
                 type='email'
                 value={form.email}
                 onChange={handleChange}
                 placeholder='Введите email'
+                className={`rounded border ${
+                  // Базовые стили, включая border
+                  formErrors.email
+                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
+                    : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе
+                }`}
               />
             </FormField>
-            <FormField label='Пароль'>
+            <FormField label='Пароль' error={formErrors.password}>
               <input
                 name='password'
                 type='password'
                 value={form.password}
                 onChange={handleChange}
                 placeholder='Введите пароль'
+                className={`rounded border ${
+                  // Базовые стили, включая border
+                  formErrors.password
+                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
+                    : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе
+                }`}
               />
             </FormField>
             {mode === 'register' && (
-              <FormField label='Подтвердите пароль'>
+              <FormField label='Подтвердите пароль' error={formErrors.confirmPassword}>
                 <input
                   name='confirmPassword'
                   type='password'
                   value={form.confirmPassword}
                   onChange={handleChange}
                   placeholder='Подтвердите пароль'
+                  className={`rounded border ${
+                    // Базовые стили, включая border
+                    formErrors.confirmPassword
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
+                      : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе
+                  }`}
                 />
               </FormField>
             )}

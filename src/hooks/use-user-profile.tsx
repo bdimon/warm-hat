@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
-import { Profile } from "@/types/db";
+import { Profile } from '@/types/supabase';
 
 export function useUser() {
   const [user, setUser] = useState<null | User>(null); // импортируй `User` из `@supabase/supabase-js`
@@ -11,7 +11,7 @@ export function useUser() {
     const getUser = async () => {
       const { data, error } = await supabase.auth.getUser();
       if (error) {
-        console.error("Ошибка получения пользователя:", error.message);
+        console.error('Ошибка получения пользователя:', error.message);
       } else {
         setUser(data.user);
       }
@@ -33,9 +33,9 @@ export function useUserProfile() {
       setLoading(true);
 
       const { data: userData, error: userError } = await supabase.auth.getUser();
-
+      // console.log('[useUserProfileHook]user', userData);
       if (userError || !userData?.user) {
-        console.error("Ошибка при получении пользователя:", userError?.message);
+        console.error('Ошибка при получении пользователя:', userError?.message);
         setLoading(false);
         return;
       }
@@ -43,13 +43,13 @@ export function useUserProfile() {
       setUser(userData.user);
 
       const { data: profileData, error: profileError } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userData.user.id)
+        .from('profiles')
+        .select('*, id, full_name, address, phone, email')
+        .eq('id', userData.user.id)
         .single();
-
+      // console.log('[useUserProfileHook]profile', profileData);
       if (profileError) {
-        console.error("Ошибка при получении профиля:", profileError.message);
+        console.error('Ошибка при получении профиля:', profileError.message);
       } else {
         setProfile(profileData);
       }
