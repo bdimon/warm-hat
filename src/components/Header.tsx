@@ -97,9 +97,11 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
       <div className='container mx-auto flex justify-between items-center'>
         <Link
           to='/'
-          className='text-2xl font-bold text-shop-text hover:text-shop-blue-dark transition-colors'
+          //className='text-shop-text hover:text-shop-blue-dark transition-colors'
+          aria-label={t('header.shopName')} // Для доступности, если внутри только изображение
+          className='flex-shrink-0 hover:opacity-80 transition-opacity' // Простое поведение при наведении
         >
-          {t('header.shopName')}
+          <img src='/images/logo.webp' alt={t('header.shopName')} className='h-10 md:h-12 w-auto' />
         </Link>
 
         {/* Desktop Navigation */}

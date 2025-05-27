@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import facebook from '/images/brands/facebook.png';
 import instagram from '/images/brands/instagram.png';
 import telegram from '/images/brands/telegram.png';
@@ -5,12 +6,13 @@ import whatsapp from '/images/brands/whatsapp.png';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
+  const { t } = useTranslation();
   return (
-    <footer className='bg-shop-text text-white pt-16 pb-8 scroll-mt-24'>
+    <footer className='bg-shop-text text-white py-8 mt-auto'>
       <div className='container mx-auto'>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12'>
           <div className='lg:col-span-2'>
-            <Link to='/'>
+            {/* <Link to='/'>
               <h2 className='text-2xl font-bold mb-6 hover:text-shop-blue-dark transition-colors'>
                 Шапка-Шоп
               </h2>
@@ -18,6 +20,16 @@ const Footer = () => {
                 Интернет-магазин качественных вязанных вручную изделий с быстрой доставкой по всей
                 Европе.
               </p>
+            </Link> */}
+            <Link
+              to='/'
+              aria-label={t('header.shopName')}
+              className='inline-block hover:opacity-80 transition-opacity'
+            >
+              {/* Замените src на путь к вашему реальному файлу логотипа */}
+              <img src='/images/logo.webp' alt={t('header.shopName')} className='h-8 w-auto' />
+              {/* Или если у вас есть компонент Logo: */}
+              {/* <Logo className="h-8 w-auto" /> */}
             </Link>
             <div className='flex space-x-4'>
               <a
@@ -170,7 +182,8 @@ const Footer = () => {
         <div className='border-t border-gray-700 pt-8 mt-8'>
           <div className='flex flex-col md:flex-row justify-between items-center'>
             <p className='text-gray-400 text-sm mb-4 md:mb-0'>
-              © {new Date().getFullYear()} Шапка-Шоп. Все права защищены.
+              &copy; {new Date().getFullYear()} {t('footer.companyName', 'Warm Store')}.{' '}
+              {t('footer.allRightsReserved', 'Все права защищены.')}
             </p>
             <div className='flex space-x-6'>
               <Link

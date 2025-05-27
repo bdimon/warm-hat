@@ -19,13 +19,13 @@ files.forEach((file) => {
   const outputPath = path.join(outputDir, outputFileName);
 
   sharp(inputPath)
-    .resize(null, 800, {
-      fit: "cover", // Обрезка по центру
-      position: "center",
+    .resize(800, 400, {
+      fit: 'cover', // Обрезка по центру
+      position: 'center',
     })
     .webp({ quality: 80 })
     .toFile(outputPath)
-    .then(() => console.log("✔️", outputFileName))
-    .catch((err) => console.error("❌ Ошибка:", err));
+    .then(() => console.log('✔️', outputFileName))
+    .catch((err) => console.error('❌ Ошибка:', err));
     // console.log("Converting", inputPath, "to", outputPath);
 });
