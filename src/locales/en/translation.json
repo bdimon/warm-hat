@@ -143,5 +143,50 @@
     "remove": "Remove",
     "totalLabel": "Total",
     "checkout": "Checkout"
+  },
+  "authModal": {
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "emailPlaceholder": "Enter your email",
+    "authError": "Authentication error",
+    "login": {
+      "title": "Login",
+      "button": "Login",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "No account yet?",
+      "success": "Login successful"
+    },
+    "register": {
+      "title": "Register",
+      "namePlaceholder": "Enter your name",
+      "confirmPasswordPlaceholder": "Confirm your password",
+      "button": "Register",
+      "hasAccount": "Already have an account?",
+      "success": "Registration successful. Please confirm your email."
+    },
+    "forgotPassword": {
+      "title": "Password Reset",
+      "description": "Enter your email and we will send you a link to reset your password.",
+      "enterEmail": "Enter your email to reset your password",
+      "sendResetLink": "Send reset link",
+      "resetLinkSent": "A password reset link has been sent to your email.",
+      "resetError": "Error requesting password reset",
+      "backToLogin": "Back to login"
+    },
+    "googleLogin": {
+      "button": "Login with Google",
+      "error": "Google login error",
+      "redirecting": "Redirecting to Google login page..."
+    },
+    "validation": {
+      "emailRequired": "Please enter your email",
+      "emailInvalid": "Invalid email format",
+      "passwordRequired": "Please enter your password",
+      "passwordTooShort": "Password must be at least 6 characters",
+      "nameRequired": "Please enter your name",
+      "confirmPasswordRequired": "Please confirm your password",
+      "passwordsDoNotMatch": "Passwords do not match"
+    }
   }
 }

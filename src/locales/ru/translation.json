@@ -143,5 +143,50 @@
     "remove": "Удалить",
     "totalLabel": "Всего",
     "checkout": "Оформление заказа"
+  },
+  "authModal": {
+    "emailLabel": "Email",
+    "passwordLabel": "Пароль",
+    "passwordPlaceholder": "Введите пароль",
+    "emailPlaceholder": "Введите адрес электронной почты",
+    "authError": "Ошибка аутентификации",
+    "login": {
+      "title": "Войти",
+      "button": "Войти",
+      "forgotPassword": "Забыли пароль?",
+      "noAccount": "Еще нет учетной записи?",
+      "success": "Вход выполнен успешно"
+    },
+    "register": {
+      "title": "Зарегистрироваться",
+      "namePlaceholder": "Введите свое имя",
+      "confirmPasswordPlaceholder": "Подтвердите свой пароль",
+      "button": "Зарегистрироваться",
+      "hasAccount": "Уже есть учетная запись?",
+      "success": "Регистрация прошла успешно. Подтвердите адрес электронной почты."
+    },
+    "forgotPassword": {
+      "title": "Сброс пароля",
+      "description": "Введите свой адрес электронной почты, и мы отправим вам ссылку для сброса пароля",
+      "enterEmail": "Введите свой адрес электронной почты для сброса пароля",
+      "sendResetLink": "Отправить ссылку для сброса",
+      "resetLinkSent": "Ссылка для сброса пароля была отправлена ​​на ваш адрес электронной почты",
+      "resetError": "Ошибка запроса сброса пароля",
+      "backToLogin": "Вернуться к входу"
+    },
+    "googleLogin": {
+      "button": "Войти через Google",
+      "error": "Ошибка входа в Google",
+      "redirecting": "Перенаправление на страницу входа в Google..."
+    },
+    "validation": {
+      "emailRequired": "Введите email",
+      "emailInvalid": "Некорректный email",
+      "passwordRequired": "Введите пароль",
+      "passwordTooShort": "Пароль должен содержать минимум 6 символов",
+      "nameRequired": "Введите ваше имя",
+      "confirmPasswordRequired": "Подтвердите пароль",
+      "passwordsDoNotMatch": "Пароли не совпадают"
+    }
   }
 }

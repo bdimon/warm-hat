@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import FormField from "./FormField";
 import { supabase } from "@/lib/supabase";
 import { useSnackbar } from '@/hooks/use-snackbar';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 
 interface AuthModalProps {
@@ -11,6 +12,7 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<'login' | 'register' | 'forgot-password'>('login');
   const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [resetEmail, setResetEmail] = useState('');
@@ -31,25 +33,25 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!form.email.trim()) {
-      errors.email = 'Введите email';
+      errors.email = t('authModal.validation.emailRequired');
     } else if (!emailRegex.test(form.email)) {
-      errors.email = 'Некорректный email';
+      errors.email = t('authModal.validation.emailInvalid');
     }
 
     if (!form.password.trim()) {
-      errors.password = 'Введите пароль';
+      errors.password = t('authModal.validation.passwordRequired');
     } else if (form.password.length < 6) {
-      errors.password = 'Минимум 6 символов';
+      errors.password = t('authModal.validation.passwordTooShort');
     }
 
     if (mode === 'register') {
       if (!form.name.trim()) {
-        errors.name = 'Введите ваше имя';
+        errors.name = t('authModal.validation.nameRequired');
       }
       if (!form.confirmPassword.trim()) {
-        errors.confirmPassword = 'Подтвердите пароль';
+        errors.confirmPassword = t('authModal.validation.confirmPasswordRequired');
       } else if (form.password !== form.confirmPassword) {
-        errors.confirmPassword = 'Пароли не совпадают';
+        errors.confirmPassword = t('authModal.validation.passwordsDoNotMatch');
       }
     }
 
@@ -57,23 +59,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     return !Object.values(errors).some((e) => e);
   };
 
-  // async function createProfile(userId: string, fullName: string) {
-  //   const { data, error } = await supabase.from('profiles').insert({
-  //     id: userId,
-  //     full_name: fullName,
-  //     address: '',
-  //     phone: '',
-  //   });
-
-  //   if (error) {
-  //     console.error('Ошибка создания профиля:', error.message);
-  //   }
-  //   console.log('Профиль успешно создан', data);
-  // }
-
   const handlePasswordResetRequest = async () => {
     if (!resetEmail.trim()) {
-      showSnackbar('Введите email для сброса пароля', 'info');
+      showSnackbar(t('authModal.forgotPassword.enterEmail'), 'info');
       return;
     }
     try {
@@ -84,12 +72,12 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         redirectTo: redirectUrl,
       });
       if (error) throw error;
-      showSnackbar('Ссылка для сброса пароля отправлена на ваш email.', 'info');
+      showSnackbar(t('authModal.forgotPassword.resetLinkSent'), 'info');
       onClose(); // Закрыть модальное окно после отправки
     } catch (err: unknown) {
-      showSnackbar('Ошибка при запросе сброса пароля', 'error');
+      showSnackbar(t('authModal.forgotPassword.resetError'), 'error');
       if (err instanceof Error) {
-        console.error('Password reset request error:', err.message);
+        console.error('Password reset request error:', err.message, err);
       } else {
         console.error('Unexpected error:', err);
       }
@@ -105,11 +93,11 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         },
       });
       if (error) throw error;
-      // Supabase handles redirection, so we might not need a success snackbar here immediately
-      // or to close the modal, as the page will redirect.
-      // showSnackbar("Перенаправление на страницу входа Google...", "info");
+      // // Supabase handles redirection, so we might not need a success snackbar here immediately
+      // // or to close the modal, as the page will redirect.
+      // // showSnackbar(t("authModal.googleLogin.redirecting"), "info");
     } catch (err: unknown) {
-      showSnackbar('Ошибка входа через Google', 'error');
+      showSnackbar(t('authModal.googleLogin.error'), 'error');
       if (err instanceof Error) {
         console.error('Google OAuth error:', err.message);
       } else {
@@ -133,7 +121,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           },
         });
         if (error) throw error;
-        showSnackbar('Регистрация успешна. Подтвердите email.', 'success');
+        showSnackbar(t('authModal.register.success'), 'success');
         // if (data.user) await createProfile(data.user.id, form.name);
 
         onClose();
@@ -143,11 +131,11 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           password: form.password,
         });
         if (error) throw error;
-        showSnackbar('Вход выполнен', 'success');
+        showSnackbar(t('authModal.login.success'), 'success');
         onClose();
       }
     } catch (err: unknown) {
-      showSnackbar('Ошибка авторизации', 'error');
+      showSnackbar(t('authModal.authError'), 'error');
 
       if (err instanceof Error) {
         console.error('Auth error:', err.message);
@@ -175,7 +163,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         {/* Основная форма входа/регистрации */}
         {mode !== 'forgot-password' && (
           <>
-            <h2 className='text-xl font-bold mb-4'>{mode === 'login' ? 'Вход' : 'Регистрация'}</h2>
+            <h2 className='text-xl font-bold mb-4'>
+              {t(mode === 'login' ? 'authModal.login.title' : 'authModal.register.title')}
+            </h2>
             {mode === 'register' && (
               <FormField label='Имя' error={formErrors.name}>
                 <input
@@ -183,7 +173,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   type='text'
                   value={form.name}
                   onChange={handleChange}
-                  placeholder='Введите ваше имя'
+                  placeholder={t('authModal.register.namePlaceholder')}
                   className={`rounded border ${
                     // Базовые стили, включая border
                     formErrors.name
@@ -199,7 +189,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 type='email'
                 value={form.email}
                 onChange={handleChange}
-                placeholder='Введите email'
+                placeholder={t('authModal.emailPlaceholder')}
                 className={`rounded border ${
                   // Базовые стили, включая border
                   formErrors.email
@@ -214,7 +204,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 type='password'
                 value={form.password}
                 onChange={handleChange}
-                placeholder='Введите пароль'
+                placeholder={t('authModal.passwordPlaceholder')}
                 className={`rounded border ${
                   // Базовые стили, включая border
                   formErrors.password
@@ -230,7 +220,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   type='password'
                   value={form.confirmPassword}
                   onChange={handleChange}
-                  placeholder='Подтвердите пароль'
+                  placeholder={t('authModal.register.confirmPasswordPlaceholder')}
                   className={`rounded border ${
                     // Базовые стили, включая border
                     formErrors.confirmPassword
@@ -246,7 +236,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 className='mt-2 text-sm text-shop-blue-dark underline text-left w-full'
                 onClick={() => setMode('forgot-password')}
               >
-                Забыли пароль?
+                {t('authModal.login.forgotPassword')}
               </Button>
             )}
 
@@ -254,7 +244,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               onClick={handleSubmit}
               className='mt-4 w-full bg-shop-blue-dark text-white py-2 rounded hover:bg-shop-blue-dark/90'
             >
-              {mode === 'login' ? 'Войти' : 'Зарегистрироваться'}
+              {t(mode === 'login' ? 'authModal.login.button' : 'authModal.register.button')}
             </Button>
 
             <div className='my-4 flex items-center'>
@@ -276,7 +266,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               >
                 <path d='M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.9 8.2,4.73 12.19,4.73C15.29,4.73 17.1,6.7 17.1,6.7L19,4.72C19,4.72 16.56,2 12.19,2C6.42,2 2.03,6.8 2.03,12C2.03,17.05 6.16,22 12.19,22C17.6,22 21.5,18.33 21.5,12.33C21.5,11.76 21.35,11.1 21.35,11.1V11.1Z'></path>
               </svg>{' '}
-              Войти через Google{' '}
+              {t('authModal.googleLogin.button')}
             </Button>
 
             <div className='mt-4 text-sm text-center'>
@@ -287,7 +277,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     className='text-shop-blue-dark underline'
                     onClick={() => setMode('register')}
                   >
-                    Зарегистрируйтесь
+                    {t('authModal.login.noAccount')}
                   </Button>
                 </>
               ) : (
@@ -297,7 +287,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     className='text-shop-blue-dark underline'
                     onClick={() => setMode('login')}
                   >
-                    Войти
+                    {t('authModal.register.hasAccount')}
                   </Button>
                 </>
               )}
@@ -308,24 +298,24 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         {/* Форма сброса пароля */}
         {mode === 'forgot-password' && (
           <>
-            <h2 className='text-xl font-bold mb-4'>Сброс пароля</h2>
+            <h2 className='text-xl font-bold mb-4'>{t('authModal.forgotPassword.title')}</h2>
             <p className='text-sm text-gray-600 mb-4'>
-              Введите ваш email, и мы отправим вам ссылку для сброса пароля.
+              {t('authModal.forgotPassword.description')}
             </p>
-            <FormField label='Email'>
+            <FormField label={t('authModal.emailLabel')}>
               <input
                 name='resetEmail'
                 type='email'
                 value={resetEmail}
                 onChange={(e) => setResetEmail(e.target.value)}
-                placeholder='Введите email'
+                placeholder={t('authModal.emailPlaceholder')}
               />
             </FormField>
             <Button
               onClick={handlePasswordResetRequest}
               className='mt-4 w-full bg-shop-blue-dark text-white py-2 rounded hover:bg-shop-blue-dark/90'
             >
-              Отправить ссылку для сброса
+              {t('authModal.forgotPassword.sendResetLink')}
             </Button>
             <div className='mt-4 text-sm text-center'>
               <Button
@@ -335,7 +325,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   setResetEmail(''); // Очистить поле при возврате
                 }}
               >
-                Вернуться ко входу
+                {t('authModal.forgotPassword.backToLogin')}
               </Button>
             </div>
           </>

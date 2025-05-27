@@ -144,5 +144,49 @@
     "видалити": "Видалити",
     "totalLabel": "Всього",
     "checkout": "Оформити замовлення"
+  },
+  "authModal": {
+    "emailLabel": "Електронна пошта",
+    "passwordLabel": "Пароль",
+    "passwordPlaceholder": "Введіть пароль",
+    "emailPlaceholder": "Ваш email",
+    "authError": "Помилка автентифікації",
+    "login": {
+      "title": "Увійти",
+      "button": "Увійти",
+      "forgotPassword": "Забули пароль?",
+      "noAccount": "Немає облікового запису?"
+    },
+    "register": {
+      "title": "Зареєструватися",
+      "namePlaceholder": "Введіть своє ім'я",
+      "confirmPasswordPlaceholder": "Підтвердьте пароль",
+      "button": "Зареєструватися",
+      "hasAccount": "Маєте обліковий запис?",
+      "success": "Реєстрація успішна. Будь ласка, підтвердьте свою електронну адресу."
+    },
+    "forgotPassword": {
+      "title": "Скидання пароля",
+      "description": "Введіть свій email, і ми надішлемо вам посилання для скидання пароля.",
+      "enterEmail": "Введіть свій email, щоб скинути пароль",
+      "sendResetLink": "Надіслати посилання для скидання пароля",
+      "resetLinkSent": "Посилання для скидання пароля надіслано на ваш email.",
+      "resetError": "Помилка запиту на скидання пароля",
+      "backToLogin": "Назад до входу"
+    },
+    "googleLogin": {
+      "button": "Увійти за допомогою Google",
+      "error": "Помилка входу в Google",
+      "redirecting": "Переадресація на сторінку входу в Google..."
+    },
+    "validation": {
+      "emailRequired": "Будь ласка, введіть свій email",
+      "emailInvalid": "Недійсний формат email",
+      "passwordRequired": "Будь ласка, введіть пароль",
+      "passwordTooShort": "Пароль має містити щонайменше 6 символів",
+      "nameRequired": "Будь ласка, введіть своє ім'я",
+      "confirmPasswordRequired": "Будь ласка, підтвердіть свій пароль",
+      "passwordsDoNotMatch": "Паролі не збігаються"
+    }
   }
 }

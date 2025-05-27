@@ -143,5 +143,50 @@
     "remove": "Usuń",
     "totalLabel": "Suma",
     "checkout": "Do kasy"
+  },
+  "authModal": {
+    "emailLabel": "E-mail",
+    "passwordLabel": "Hasło",
+    "passwordPlaceholder": "Wprowadź hasło",
+    "emailPlaceholder": "Wprowadź adres e-mail",
+    "authError": "Błąd uwierzytelniania",
+    "login": {
+      "title": "Logowanie",
+      "button": "Logowanie",
+      "forgotPassword": "Zapomniałeś hasła?",
+      "noAccount": "Nie masz jeszcze konta?",
+      "success": "Logowanie zakończone sukcesem"
+    },
+    "register": {
+      "title": "Zarejestruj",
+      "namePlaceholder": "Wprowadź swoje imię",
+      "confirmPasswordPlaceholder": "Potwierdź hasło",
+      "button": "Zarejestruj",
+      "hasAccount": "Masz już konto?",
+      "success": "Rejestracja zakończona sukcesem. Potwierdź swój adres e-mail"
+    },
+    "forgotPassword": {
+      "title": "Resetowanie hasła",
+      "description": "Wprowadź swój adres e-mail, a wyślemy Ci link do zresetowania hasła.",
+      "enterEmail": "Wprowadź swój adres e-mail, aby zresetować hasło",
+      "sendResetLink": "Wyślij link do zresetowania hasła",
+      "resetLinkSent": "Link do zresetowania hasła został wysłany na Twój adres e-mail.",
+      "resetError": "Błąd podczas żądania zresetowania hasła",
+      "backToLogin": "Powrót do logowania"
+    },
+    "googleLogin": {
+      "button": "Zaloguj się za pomocą Google",
+      "error": "Błąd logowania Google",
+      "redirecting": "Przekierowanie na stronę logowania Google..."
+    },
+    "validation": {
+      "emailRequired": "Wprowadź swój e-mail",
+      "emailInvalid": "Nieprawidłowy format e-mail",
+      "passwordRequired": "Wprowadź swoje hasło",
+      "passwordTooShort": "Hasło musi mieć co najmniej 6 znaków",
+      "nameRequired": "Wprowadź swoje imię",
+      "confirmPasswordRequired": "Potwierdź swoje hasło",
+      "passwordsDoNotMatch": "Hasła nie są takie same"
+    }
   }
 }
