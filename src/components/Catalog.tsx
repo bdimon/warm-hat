@@ -4,13 +4,23 @@ import { Button } from '@/components/ui/button';
 import { Product } from '@/types/Product';
 import { mapProductFromAPI } from "@/lib/mappers/products";
 import { useTranslation } from 'react-i18next';
+import { log } from 'console';
 
-// Ключи для категорий, которые будут использоваться для получения переводов
-const CATEGORY_KEYS = ['allCategories', 'hatsCategory', 'scarvesCategory', 'combinationsCategory'];
+// Конфигурация категорий:
+// filterKey: ключ, который хранится в product.category и используется для фильтрации
+// translationKeySuffix: суффикс ключа для файла переводов (например, catalogPage.allCategories)
+const CATEGORIES_CONFIG = [
+  { filterKey: 'all', translationKeySuffix: 'allCategories' },
+  { filterKey: 'hats', translationKeySuffix: 'hatsCategory' },
+  { filterKey: 'scarves', translationKeySuffix: 'scarvesCategory' },
+  { filterKey: 'combinations', translationKeySuffix: 'combinationsCategory' },
+];
 
 const Catalog = () => {
   const { t } = useTranslation();
-  const [selectedCategoryKey, setSelectedCategoryKey] = useState(CATEGORY_KEYS[0]);
+  const [selectedFilterKey, setSelectedFilterKey] = useState<string>(
+    CATEGORIES_CONFIG[0].filterKey
+  );
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
   const [isVisible, setIsVisible] = useState(false);
@@ -74,21 +84,14 @@ const Catalog = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedCategoryKey === CATEGORY_KEYS[0]) {
-      // "All"
-      // Этот блок теперь также обработает начальную установку displayedProducts
-      // после того как allProducts будут загружены.
+    // Фильтрация на основе selectedFilterKey, который теперь является языконезависимым ключом
+    if (selectedFilterKey === 'all') {
       setDisplayedProducts(allProducts);
     } else {
-      const translatedCategory = t(`catalogPage.${selectedCategoryKey}`);
-      setDisplayedProducts(
-        allProducts.filter(
-          (product) => product.category === translatedCategory // Предполагаем, что product.category хранится на языке по умолчанию или мы его тоже переводим
-        )
-      );
+      setDisplayedProducts(allProducts.filter((product) => product.category === selectedFilterKey));
     }
-  }, [selectedCategoryKey, allProducts, t]);
-
+    // Зависимость от `t` здесь больше не нужна, так как сама фильтрация от перевода не зависит
+  }, [selectedFilterKey, allProducts]);
 
   return (
     <section id='catalog' className='py-16 scroll-mt-24'>
@@ -102,18 +105,18 @@ const Catalog = () => {
         </div>
 
         <div className='flex flex-wrap justify-center gap-3 mb-10'>
-          {CATEGORY_KEYS.map((categoryKey) => (
+          {CATEGORIES_CONFIG.map(({ filterKey, translationKeySuffix }) => (
             <Button
-              key={categoryKey}
-              variant={selectedCategoryKey === categoryKey ? 'default' : 'outline'}
+              key={filterKey}
+              variant={selectedFilterKey === filterKey ? 'default' : 'outline'}
               className={
-                selectedCategoryKey === categoryKey
+                selectedFilterKey === filterKey
                   ? 'bg-shop-blue-dark hover:bg-shop-blue-dark/90 text-white'
                   : 'text-shop-text border-shop-blue hover:bg-shop-blue/50 hover:text-shop-blue-dark'
               }
-              onClick={() => setSelectedCategoryKey(categoryKey)}
+              onClick={() => setSelectedFilterKey(filterKey)}
             >
-              {t(`catalogPage.${categoryKey}`)}
+              {t(`catalogPage.${translationKeySuffix}`)}
             </Button>
           ))}
         </div>
