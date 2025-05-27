@@ -1,39 +1,147 @@
 {
   "catalogPage": {
-  "title": "Katalog produktów",
-  "description": "Oferujemy wyłącznie wysokiej jakości ręcznie robione wyroby z szybką dostawą w całej Europie",
-  "allCategories": "All",
-  "hatsCategory": "Czapki",
-  "scarvesCategory": "Apaszki",
-  "combinationsCategory": "Kombinacje",
-  "loading": "Ładowanie produktów...",
-  "error": "Błąd: {{errorMessage}}",
-  "showMore": "Pokaż więcej produktów"
+    "title": "Katalog produktów",
+    "description": "Oferujemy wyłącznie wysokiej jakości ręcznie robione wyroby z szybką dostawą w całej Europie",
+    "allCategories": "All",
+    "hatsCategory": "Czapki",
+    "scarvesCategory": "Apaszki",
+    "combinationsCategory": "Kombinacje",
+    "loading": "Ładowanie produktów...",
+    "error": "Błąd: {{errorMessage}}",
+    "showMore": "Pokaż więcej produktów"
   },
   "hero": {
-  "welcome": "Witamy w naszym <1>ciepłym sklepie</1>",
-  "description": "Ponad 100 ręcznie robionych wyrobów z szybką dostawą w całej Europie",
-  "toCatalogButton": "Do katalogu",
-  "aboutUsButton": "O nas",
-  "happyClients": "Zadowoleni klienci",
-  "support": "Wsparcie",
-  "qualityGuarantee": "Gwarancja jakości",
-  "freeShipping": "Darmowa wysyłka",
-  "freeShippingCondition": "Zamówienia powyżej 30 USD",
-  "fastDelivery": "Szybka dostawa",
-  "fastDeliveryTime": "Od 24 godzin"
+    "welcome": "Witamy w naszym <1>ciepłym sklepie</1>",
+    "description": "Ponad 100 ręcznie robionych wyrobów z szybką dostawą w całej Europie",
+    "toCatalog": "Do katalogu",
+    "aboutUs": "O nas",
+    "happy": "Zadowoleni klienci",
+    "support": "Wsparcie",
+    "guarantee": "Gwarancja jakości",
+    "freeShipping": "Darmowa wysyłka",
+    "freeShippingCondition": "Zamówienia powyżej 30 USD",
+    "fastDelivery": "Szybka dostawa",
+    "fastDeliveryTime": "Od 24 godzin"
   },
   "header": {
-  "shopName": "Sklep z kapeluszami",
-  "main": "Strona główna",
-  "catalog": "Katalog",
-  "benefits": "Korzyści",
-  "reviews": "Recenzje",
-  "contact": "Kontakty",
-  "login": "Zaloguj się",
-  "logout": "Wyloguj się",
-  "profile": "Profil",
-  "cart": "Otwórz koszyk",
-  "back": "Wstecz"
+    "shopName": "Sklep z kapeluszami",
+    "main": "Strona główna",
+    "catalog": "Katalog",
+    "benefits": "Korzyści",
+    "reviews": "Recenzje",
+    "contact": "Kontakty",
+    "login": "Zaloguj się",
+    "logout": "Wyloguj się",
+    "profile": "Profil",
+    "cart": "Otwórz koszyk",
+    "back": "Wstecz"
+  },
+  "footer": {
+    "navigation": "Nawigacja",
+    "about": "O nas",
+    "delivery": "Płatność i dostawa",
+    "contacts": "Kontakty",
+    "returns": "Zwroty",
+    "warranty": "Gwarancja",
+    "blog": "Blog",
+    "workingHours": "Pn-Pt",
+    "weekendsHours": "So-Nd",
+    "companyName": "Warm Store",
+    "information": "Informacja",
+    "allRightsReserved": "Wszelkie prawa zastrzeżone",
+    "privacy": "Prywatność",
+    "customerAgriment": "Umowa z klientem",
+    "sitemap": "Mapa witryny"
+  },
+  "benefits": {
+    "title": "Nasze korzyści",
+    "description": "Dokładamy wszelkich starań, aby Twoje zakupy były jak najbardziej przyjemne i wygodne.",
+    "item1": "Szeroki asortyment produktów",
+    "item1-description": "Ponad 50 wysokiej jakości ręcznie robionych przedmiotów",
+    "item2": "Szybka dostawa",
+    "item2-description": "Dostarczamy zamówienia w ciągu 24 godzin w mieście i 1-3 dni w całym kraju",
+    "item3": "Wsparcie 24/7",
+    "item3-description": "Nasi specjaliści są zawsze w kontakcie i gotowi pomóc Ci w każdej sprawie."
+  },
+  "testimonials": {
+    "sectionTitle": "Opinie naszych klientów",
+    "sectionDescription": "Prawdziwe opinie klientów o naszym sklepie i produktach",
+    "productLabel": "Produkt",
+    "prevAriaLabel": "Poprzednia recenzja",
+    "nextAriaLabel": "Następna recenzja",
+    "goToAriaLabel": "Przejdź do recenzji {{number}}",
+    "customer1": {
+      "name": "Anna Smirnova",
+      "text": "To już drugie zamówienie w tym sklepie. Jestem bardzo zadowolona z jakości produktów i obsługi. Szybka dostawa, wszystko dotarło bezpiecznie i zdrowo. Polecę znajomym!",
+      "product": "Czapka 'Winter Comfort'"
+    },
+    "customer2": {
+      "name": "Dmitry Petrov",
+      "text": "Zamówiłem szalik, dostarczono go następnego dnia. Jakość odpowiada opis. Ogólnie rzecz biorąc, jestem zadowolony z zakupu.",
+      "product": "Szal 'Alpine Snow'"
+    },
+    "customer3": {
+      "name": "Ekaterina Ivanova",
+      "text": "Przypadkowo znalazłem ten sklep w Internecie i nie żałuję! Zestaw czapka + szalik pasuje idealnie. Szczególne podziękowania dla konsultanta za pomoc w wyborze.",
+      "product": "Zestaw 'Northern Lights'"
+    },
+    "customer4": {
+      "name": "Alexey Sokolov",
+      "text": "Kupiłem ciepłą czapkę, jestem bardzo zadowolony. Materiał jest wysokiej jakości, pasuje idealnie. Cena jest trochę wyższa niż u konkurencji, ale jakość jest tego warta.",
+      "product": "Czapka 'Polar Explorer'"
+    },
+    "customer5": {
+      "name": "Marina Kozlova",
+      "text": "Dobry sklep z dużym wyborem produktów dzianinowych. Szalik jest bardzo miękki i ciepły. Ogólnie rzecz biorąc, Jestem zadowolony z zakupu i obsługi.",
+      "product": "Szal 'Cashmere Tenderness'"
+    }
+  },
+  "contactPage": {
+    "title": "Gotowy pomóc",
+    "description": "Masz jakieś pytania lub sugestie? Jesteśmy zawsze w kontakcie i gotowi pomóc!"
+  },
+  "contactInfo": {
+    "title": "Dane kontaktowe",
+    "phoneTitle": "Telefon",
+    "emailTitle": "E-mail",
+    "addressTitle": "Adres",
+    "workingHours": "pon.-pt.: 9:00 - 20:00, sob.-ndz.: 10:00 - 18:00",
+    "telegramBotTitle": "Nasz bot Telegrama",
+    "telegramBotButton": "Rozpocznij czat z botem"
+  },
+  "contactForm": {
+    "formTitle": "Skontaktuj się z nami",
+    "labels": {
+      "name": "Twoje imię",
+      "e-mail": "E-mail",
+      "phone": "Telefon",
+      "message": "Wiadomość"
+    },
+    "placeholders": {
+      "name": "Iwan Iwanow",
+      "email": "example@mail.com",
+      "phone": "+48 123 456 789",
+      "message": "Twoja wiadomość..."
+    },
+    "buttons": {
+      "sendMessage": "Wyślij wiadomość",
+      "sending": "Wysyłanie..."
+    },
+    "toast": {
+      "successTitle": "Wiadomość wysłana",
+      "successDescription": "Skontaktujemy się z Tobą wkrótce"
+    }
+  },
+  "cartModal": {
+    "title": "Twój koszyk",
+    "clearCart": "Wyczyść koszyk",
+    "closeAriaLabel": "Zamknij koszyk",
+    "emptyCart": "Koszyk jest pusty",
+    "continueShopping": "Kontynuuj zakupy",
+    "decreaseQuantityAriaLabel": "Zmniejsz ilość",
+    "increaseQuantityAriaLabel": "Zwiększ ilość",
+    "remove": "Usuń",
+    "totalLabel": "Suma",
+    "checkout": "Do kasy"
   }
-  }
+}

@@ -42,20 +42,20 @@ const Hero = () => {
               onClick={handleCatalog}
               className='bg-shop-blue-dark text-white hover:bg-shop-blue-dark/90 hover:shadow-lg text-lg py-6 px-8 rounded-full'
             >
-              {t('hero.toCatalogButton')}
+              {t('hero.toCatalog')}
             </Button>
             <Button
               onClick={handleAbout}
               variant='outline'
               className='text-shop-text border-shop-peach-dark hover:bg-shop-peach/50 text-lg py-6 px-8 rounded-full'
             >
-              {t('hero.aboutUsButton')}
+              {t('hero.aboutUs')}
             </Button>
           </div>
           <div className='flex items-center gap-6 mt-8'>
             <div>
               <p className='text-3xl font-bold text-shop-blue-dark'>1,000+</p>
-              <p className='text-sm text-gray-600'>{t('hero.happyClients')}</p>
+              <p className='text-sm text-gray-600'>{t('hero.happy')}</p>
             </div>
             <div className='h-12 w-px bg-gray-200'></div>
             <div>
@@ -65,7 +65,7 @@ const Hero = () => {
             <div className='h-12 w-px bg-gray-200'></div>
             <div>
               <p className='text-3xl font-bold text-shop-blue-dark'>100%</p>
-              <p className='text-sm text-gray-600'>{t('hero.qualityGuarantee')}</p>
+              <p className='text-sm text-gray-600'>{t('hero.guarantee')}</p>
             </div>
           </div>
         </div>

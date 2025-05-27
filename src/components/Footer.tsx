@@ -61,14 +61,14 @@ const Footer = () => {
 
           <div className='space-y-3'>
             <ul className='space-y-2'>
-              <h3 className='text-lg font-semibold mb-6'>Навигация</h3>
+              <h3 className='text-lg font-semibold mb-6'>{t('footer.navigation')}</h3>
               <>
                 <li>
                   <Link
                     to='/'
                     className='text-gray-300 hover:text-shop-blue-dark transition-colors'
                   >
-                    Главная
+                    {t('header.main')}
                   </Link>
                 </li>
                 <li>
@@ -76,7 +76,7 @@ const Footer = () => {
                     to='/#catalog'
                     className='text-gray-300 hover:text-shop-blue-dark transition-colors'
                   >
-                    Каталог
+                    {t('header.catalog')}
                   </Link>
                 </li>
                 <li>
@@ -84,7 +84,7 @@ const Footer = () => {
                     to='/#benefits'
                     className='text-gray-300 hover:text-shop-blue-dark transition-colors'
                   >
-                    Преимущества
+                    {t('header.benefits')}
                   </Link>
                 </li>
                 <li>
@@ -92,7 +92,7 @@ const Footer = () => {
                     to='/#reviews'
                     className='text-gray-300 hover:text-shop-blue-dark transition-colors'
                   >
-                    Отзывы
+                    {t('header.reviews')}
                   </Link>{' '}
                 </li>
                 <li>
@@ -100,7 +100,7 @@ const Footer = () => {
                     to='/#contact'
                     className='text-gray-300 hover:text-shop-blue-dark transition-colors'
                   >
-                    Контакты
+                    {t('header.contact')}
                   </Link>
                 </li>
               </>
@@ -108,14 +108,14 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className='text-lg font-semibold mb-6'>Информация</h3>
+            <h3 className='text-lg font-semibold mb-6'>{t('footer.information')}</h3>
             <ul className='space-y-3'>
               <li>
                 <Link
                   to='/about'
                   className='text-gray-300 hover:text-shop-blue-dark transition-colors'
                 >
-                  О компании
+                  {t('footer.about')}
                 </Link>
               </li>
               <li>
@@ -123,7 +123,7 @@ const Footer = () => {
                   to='/delivery'
                   className='text-gray-300 hover:text-shop-blue-dark transition-colors'
                 >
-                  Доставка и оплата
+                  {t('footer.delivery')}
                 </Link>
               </li>
               <li>
@@ -131,7 +131,7 @@ const Footer = () => {
                   to='/returns'
                   className='text-gray-300 hover:text-shop-blue-dark transition-colors'
                 >
-                  Возврат и обмен
+                  {t('footer.returns')}
                 </Link>
               </li>
               <li>
@@ -139,7 +139,7 @@ const Footer = () => {
                   to='/warranty'
                   className='text-gray-300 hover:text-shop-blue-dark transition-colors'
                 >
-                  Гарантия
+                  {t('footer.warranty')}
                 </Link>
               </li>
               <li>
@@ -147,14 +147,14 @@ const Footer = () => {
                   to='/blog'
                   className='text-gray-300 hover:text-shop-blue-dark transition-colors'
                 >
-                  Блог
+                  {t('footer.blog')}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className='text-lg font-semibold mb-6'>Контакты</h3>
+            <h3 className='text-lg font-semibold mb-6'> {t('header.contact')}</h3>
             <ul className='space-y-3'>
               <li className='text-gray-300'>08-110, Warszawa, Polska, ul. Warszawska 2</li>
               <li>
@@ -173,8 +173,8 @@ const Footer = () => {
                   support@shapkashop.com
                 </a>
               </li>
-              <li className='text-gray-300'>Пн-Пт: 9:00 - 20:00</li>
-              <li className='text-gray-300'>Сб-Вс: 10:00 - 18:00</li>
+              <li className='text-gray-300'>{t('footer.workingHours')}: 9:00 - 20:00</li>
+              <li className='text-gray-300'>{t('footer.weekendsHours')}: 10:00 - 18:00</li>
             </ul>
           </div>
         </div>
@@ -183,26 +183,26 @@ const Footer = () => {
           <div className='flex flex-col md:flex-row justify-between items-center'>
             <p className='text-gray-400 text-sm mb-4 md:mb-0'>
               &copy; {new Date().getFullYear()} {t('footer.companyName', 'Warm Store')}.{' '}
-              {t('footer.allRightsReserved', 'Все права защищены.')}
+              {t('footer.allRightsReserved')}
             </p>
             <div className='flex space-x-6'>
               <Link
                 to='/confident'
                 className='text-gray-400 text-sm hover:text-shop-blue-dark transition-colors'
               >
-                Политика конфиденциальности
+                {t('footer.privacy')}
               </Link>
               <Link
                 to='/useragriment'
                 className='text-gray-400 text-sm hover:text-shop-blue-dark transition-colors'
               >
-                Пользовательское соглашение
+                {t('footer.customerAgriment')}
               </Link>
               <Link
                 to='/sitemap'
                 className='text-gray-400 text-sm hover:text-shop-blue-dark transition-colors'
               >
-                Карта сайта
+                {t('footer.sitemap')}
               </Link>
             </div>
           </div>

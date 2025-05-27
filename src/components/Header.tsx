@@ -101,7 +101,11 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
           aria-label={t('header.shopName')} // Для доступности, если внутри только изображение
           className='flex-shrink-0 hover:opacity-80 transition-opacity' // Простое поведение при наведении
         >
-          <img src='/images/logo.webp' alt={t('header.shopName')} className='h-10 md:h-12 w-auto' />
+          <img
+            src='/images/logo.webp'
+            alt={t('header.shopName')}
+            className='h-10 md:h-12 w-auto rounded-lg'
+          />
         </Link>
 
         {/* Desktop Navigation */}

@@ -1,7 +1,7 @@
 // src/components/LanguageSwitcher.tsx
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/ui/button'; // Предполагая, что у вас есть компонент Button
+// import { Button } from '@/components/ui/button'; // Предполагая, что у вас есть компонент Button
 
 const LanguageSwitcher: React.FC = () => {
   const { i18n } = useTranslation();
@@ -52,7 +52,7 @@ const LanguageSwitcher: React.FC = () => {
       <select
         value={currentLang}
         onChange={changeLanguage}
-        className='bg-transparent border border-gray-400 text-shop-text text-sm rounded-md py-1.5 pl-2 pr-8 focus:outline-none focus:ring-1 focus:ring-shop-blue-dark focus:border-shop-blue-dark appearance-none cursor-pointer'
+        className='bg-white border border-shop-blue text-shop-text text-sm rounded-md py-1.5 pl-2 pr-8 focus:outline-none focus:ring-1 focus:ring-shop-blue-dark focus:border-shop-blue-dark appearance-none cursor-pointer'
         aria-label='Выбрать язык'
       >
         <option value='ru' className='text-black bg-white'>
@@ -60,6 +60,12 @@ const LanguageSwitcher: React.FC = () => {
         </option>
         <option value='en' className='text-black bg-white'>
           EN
+        </option>
+        <option value='ua' className='text-black bg-white'>
+          UA
+        </option>
+        <option value='pl' className='text-black bg-white'>
+          PL
         </option>
       </select>
       <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-shop-text'>
