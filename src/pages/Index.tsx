@@ -37,11 +37,11 @@ const Index = () => {
   useEffect(() => {
     // console.log('[Index.tsx] useEffect for location.hash triggered. Current location.hash:', location.hash);
     if (location.hash) {
-      // Небольшая задержка, чтобы убедиться, что DOM обновлен
+      // !!!Небольшая задержка, чтобы убедиться, что DOM обновлен!!!
       // Этот блок обрабатывает ссылки типа /#catalog, /#benefits и т.д.
       const timer = setTimeout(() => {
         scrollToHash(location.hash);
-      }, 100); // Задержку можно настроить
+      }, 100); // !!!Задержку можно настроить
 
       return () => clearTimeout(timer); // Очистка таймера
     }else {

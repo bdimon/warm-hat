@@ -5,6 +5,8 @@ import { User } from "@supabase/supabase-js";
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
+import {Loader2} from 'lucide-react'
+
 
 
 type FormState = {
@@ -146,7 +148,7 @@ export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
             'rounded border w-full p-2',
             formErrors.email
               ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
-              : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
+              : 'border-gray-300   focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
             // Базовые стили, включая border
           )}
         />
@@ -158,12 +160,12 @@ export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
           type='password'
           value={form.password}
           onChange={handleChange}
-          placeholder={t('authModal.validation.passwordTooShort')}
+          placeholder={t('authModal.passwordPlaceholder')}
           className={cn(
             'rounded border w-full p-2',
             formErrors.password
               ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
-              : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
+              : 'border-gray-300  focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
             // Базовые стили, включая border
           )}
         />
@@ -180,7 +182,7 @@ export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
             'rounded border w-full p-2',
             formErrors.confirmPassword
               ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
-              : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
+              : 'border-gray-300  focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
             // Базовые стили, включая border
           )}
         />
@@ -192,9 +194,16 @@ export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
         <button
           type='submit'
           disabled={loading}
-          className='bg-shop-blue-dark text-white px-4 py-2 rounded disabled:opacity-50'
+          className='flex items-center justify-center bg-shop-blue-dark text-white px-4 py-2 rounded disabled:opacity-50'
         >
-          {loading ? t('authSettings.loading') : t('authSettings.save')}
+          {loading ? (
+            <>
+              <Loader2 className='mr-2 h-5 w-5 animate-spin' />
+              {t('authSettings.loading')}
+            </>
+          ) : (
+            t('authSettings.save')
+          )}
         </button>
         {onClose && (
           <button

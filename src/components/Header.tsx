@@ -11,7 +11,7 @@ import { User } from '@supabase/supabase-js'
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './LanguageSwitcher'; // Импортируем переключатель
 // import ProfileModal from './ProfileModal'; // for Modal
-
+ 
 interface HeaderProps {
   showBackButton?: boolean;
   // Consider adding a prop to pass the current page's path for active link styling
@@ -19,7 +19,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) => {
-  const { t, i18n } = useTranslation(); // Добавляем хук для переводов
+  const { t } = useTranslation(); // Добавляем хук для переводов
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -155,7 +155,7 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
           <button
             onClick={() => setIsCartOpen(true)}
             className='relative p-2'
-            aria-label='Открыть корзину'
+            aria-label={t('header.cart')}
             aria-haspopup='dialog'
           >
             <ShoppingCart className='w-8 h-8 md:w-10 md:h-10' color='#33c4f0' />
@@ -207,7 +207,7 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
           <Button
             className='md:hidden text-shop-text'
             onClick={() => setIsOpen(!isOpen)}
-            aria-label={isOpen ? 'Закрыть меню навигации' : 'Открыть меню навигации'}
+            aria-label= {isOpen ? t('header.closeAriaLabel') : t('header.openAriaLabel')}
             aria-expanded={isOpen}
             aria-controls='mobile-menu'
           >

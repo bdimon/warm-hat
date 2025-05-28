@@ -9,7 +9,7 @@ interface Order {
   created_at: string;
 }
 
-
+ 
 export default function AdminDashboard() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);

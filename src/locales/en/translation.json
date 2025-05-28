@@ -23,9 +23,11 @@
     "fastDelivery": "Fast delivery",
     "fastDeliveryTime": "From 24 hours"
   },
-  "header": {
+  "header": { 
     "shopName": "Hat Shop",
     "main": "Home",
+    "openAriaLabel": "Open navigation menu",
+    "closeAriaLabel": "Close navigation menu",
     "catalog": "Catalog",
     "benefits": "Benefits",
     "reviews": "Reviews",
@@ -212,5 +214,26 @@
     "orders": "My orders",
     "loading": "Loading user data...",
     "warning": "Please log in to your account to view this page."
+  },
+  "orderFormModal": {
+    "title": "Order placement",
+    "name": "Enter your name",
+    "phone": "Enter a valid phone number",
+    "address": "Enter the address",
+    "errorNoUser": "Failed to load user data",
+    "serverError": "Server error",
+    "orderError": "Order placement error",
+    "orderSuccess": "Order successfully placed",
+    "labelName": "First and last name",
+    "labelPhone": "Phone number",
+    "labelAddress": "Delivery address",
+    "labelPayment": "Payment method",
+    "card": "Online card",
+    "cod": "Cash on delivery",
+    "pickup": "Pickup",
+    "total": "Amount:",
+    "loading": "Sending...",
+    "confirm": "Confirm order"
   }
+    
 }

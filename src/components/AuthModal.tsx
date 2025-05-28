@@ -176,10 +176,10 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   onChange={handleChange}
                   placeholder={t('authModal.register.namePlaceholder')}
                   className={cn(
-                    'rounded border w-full p-2',
+                    'w-full border p-2 rounded',
                     formErrors.name
                       ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
-                      : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
+                      : 'border-gray-300 focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
                     // Базовые стили, включая border
                   )}
                 />
@@ -193,10 +193,10 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 onChange={handleChange}
                 placeholder={t('authModal.emailPlaceholder')}
                 className={cn(
-                  'rounded border w-full p-2',
+                  'w-full border p-2 rounded',
                   formErrors.email
                     ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
-                    : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
+                    : 'border-gray-300 focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
                   // Базовые стили, включая border
                 )}
               />
@@ -209,10 +209,10 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 onChange={handleChange}
                 placeholder={t('authModal.passwordPlaceholder')}
                 className={cn(
-                  'rounded border w-full p-2',
+                  'w-full border p-2 rounded',
                   formErrors.password
                     ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
-                    : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
+                    : 'border-gray-300 focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
                   // Базовые стили, включая border
                 )}
               />
@@ -226,10 +226,10 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   onChange={handleChange}
                   placeholder={t('authModal.register.confirmPasswordPlaceholder')}
                   className={cn(
-                    'rounded border w-full p-2',
+                    'w-full border p-2 rounded',
                     formErrors.confirmPassword
                       ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
-                      : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
+                      : 'border-gray-300 focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
                     // Базовые стили, включая border
                   )}
                 />

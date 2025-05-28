@@ -13,41 +13,7 @@ const LanguageSwitcher: React.FC = () => {
   };
   const currentLang = i18n.language.split('-')[0];
   return (
-    // <div className='flex space-x-2'>
-    //   <Button
-    //     variant={i18n.language.startsWith('ru') ? 'default' : 'outline'}
-    //     onClick={() => changeLanguage('ru')}
-    //     size='sm'
-    //     aria-pressed={i18n.language.startsWith('ru')}
-    //   >
-    //     RU
-    //   </Button>
-    //   <Button
-    //     variant={i18n.language.startsWith('en') ? 'default' : 'outline'}
-    //     onClick={() => changeLanguage('en')}
-    //     size='sm'
-    //     aria-pressed={i18n.language.startsWith('en')}
-    //   >
-    //     EN
-    //   </Button>
-    //   <Button
-    //     variant={i18n.language.startsWith('ua') ? 'default' : 'outline'}
-    //     onClick={() => changeLanguage('ua')}
-    //     size='sm'
-    //     aria-pressed={i18n.language.startsWith('ua')}
-    //   >
-    //     UA
-    //   </Button>
-    //   <Button
-    //     variant={i18n.language.startsWith('pl') ? 'default' : 'outline'}
-    //     onClick={() => changeLanguage('pl')}
-    //     size='sm'
-    //     aria-pressed={i18n.language.startsWith('pl')}
-    //   >
-    //     PL
-    //   </Button>
-    //   {/* Добавьте другие языки по аналогии */}
-    // </div>
+  
     <div className='relative'>
       <select
         value={currentLang}
@@ -55,11 +21,11 @@ const LanguageSwitcher: React.FC = () => {
         className='bg-white border border-shop-blue text-shop-text text-sm rounded-md py-1.5 pl-2 pr-8 focus:outline-none focus:ring-1 focus:ring-shop-blue-dark focus:border-shop-blue-dark appearance-none cursor-pointer'
         aria-label='Выбрать язык'
       >
-        <option value='ru' className='text-black bg-white'>
-          RU
-        </option>
         <option value='en' className='text-black bg-white'>
           EN
+        </option>
+        <option value='ru' className='text-black bg-white'>
+          RU
         </option>
         <option value='ua' className='text-black bg-white'>
           UA

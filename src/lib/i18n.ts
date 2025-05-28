@@ -30,8 +30,8 @@ i18n
   .use(initReactI18next) // Передает экземпляр i18n в react-i18next
   .init({
     resources,
-    fallbackLng: 'ru', // Язык по умолчанию, если язык пользователя недоступен
-    lng: 'ru', // Язык по умолчанию (можно также положиться на LanguageDetector)
+    fallbackLng: 'en', // Язык по умолчанию, если язык пользователя недоступен
+    lng: 'en', // Язык по умолчанию (можно также положиться на LanguageDetector)
     debug: process.env.NODE_ENV === 'development', // Включает логи в консоль в режиме разработки
 
     interpolation: {

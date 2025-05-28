@@ -26,6 +26,8 @@
   "header": {
     "shopName": "Sklep z kapeluszami",
     "main": "Strona główna",
+    "openAriaLabel": "Otwórz menu nawigacyjne",
+    "closeAriaLabel": "Zamknij menu nawigacyjne",
     "catalog": "Katalog",
     "benefits": "Korzyści",
     "reviews": "Recenzje",
@@ -212,5 +214,26 @@
     "orders": "Moje zamówienia",
     "loading": "Ładowanie danych użytkownika...",
     "warning": "Zaloguj się na swoje konto, aby wyświetlić tę stronę."
+  },
+  "orderFormModal":{
+    "title": "Składanie zamówienia",
+"name": "Wprowadź swoje imię",
+"phone": "Wprowadź prawidłowy numer telefonu",
+"address": "Wprowadź adres",
+"errorNoUser": "Nie udało się załadować danych użytkownika",
+"serverError": "Błąd serwera",
+"orderError": "Błąd składania zamówienia",
+"orderSuccess": "Zamówienie zostało złożone pomyślnie",
+"labelName": "Imię i nazwisko",
+"labelPhone": "Numer telefonu",
+"labelAddress": "Adres dostawy",
+"labelPayment": "Metoda płatności",
+"card": "Karta online",
+"code": "Płatność przy odbiorze",
+"pickup": "Odbiór",
+"total": "Kwota:",
+"loading": "Wysyłanie...",
+"confirm": "Potwierdź zamówienie"
   }
+  
 }

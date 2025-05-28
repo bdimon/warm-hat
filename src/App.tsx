@@ -14,6 +14,7 @@ import SignUpForm from "./components/SignupForm";
 import ProfilePage from "./pages/ProfilePage";
 import UpdatePasswordPage from "./pages/UpdatePasswordPage";
 import EditOrderPage from "./pages/EditOrderPage";
+import AdminDashboard from "./pages/AdminDashboard";  
 
 
 
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/catalog/:id" element={<ProductPage />} />
           <Route path="/edit-order/:id" element={<EditOrderPage />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
           {/* <Route path="/catalog" element={<CatalogtPage />} /> */}
           <Route path="/signup" element={<SignUpForm />} />
           <Route path="/profile" element={<ProfilePage />} />
