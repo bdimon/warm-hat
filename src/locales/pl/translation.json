@@ -188,5 +188,21 @@
       "confirmPasswordRequired": "Potwierdź swoje hasło",
       "passwordsDoNotMatch": "Hasła nie są takie same"
     }
+  },
+  "authSettings": {
+    "successAll": "Adres e-mail i hasło zaktualizowane. Sprawdź swój adres e-mail, aby potwierdzić.",
+    "successEmail": "Adres e-mail zaktualizowany. Sprawdź swój adres e-mail, aby potwierdzić",
+    "successPassword": "Hasło pomyślnie zaktualizowane",
+    "error": "Błąd",
+    "timeout": "Ładowanie...",
+    "loading": "Zapisywanie...",
+    "title": "Zmień adres e-mail/hasło",
+    "oldEmail": "Bieżący e-mail",
+    "oldPassword": "",
+    "email": "Nowy adres e-mail",
+    "password": "Nowe hasło",
+    "confirm": "Potwierdź hasło",
+    "cancel": "Wyjdź bez zapisywania",
+    "save": "Zapisz zmiany"
   }
 }

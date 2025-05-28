@@ -1,6 +1,6 @@
 // pages/account.tsx (или /profile)
 import { useUserProfile } from '@/hooks/use-user-profile';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import { useNavigate } from 'react-router-dom';
 import ProfileModal from '@/components/ProfileModal';
@@ -12,9 +12,14 @@ export default function AccountPage() {
   // Добавим userLoading для индикации загрузки пользователя
   const { user, loading: userLoading } = useUserProfile();
   const navigate = useNavigate();
-
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isOrdersModalOpen, setIsOrdersModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (!userLoading && !user) {
+      navigate('/');
+    }
+  }, [user, userLoading, navigate]);
 
   if (userLoading) {
     return (
@@ -30,7 +35,7 @@ export default function AccountPage() {
 
   if (!user) {
     // Можно добавить редирект на главную или страницу логина, если пользователь не авторизован
-    setTimeout(() => navigate('/'), 100);
+    // setTimeout(() => navigate('/'), 100);
     return (
       <div className='min-h-screen bg-gray-100 flex flex-col'>
         <Header showBackButton onBackClick={() => navigate('/')} />
@@ -39,9 +44,9 @@ export default function AccountPage() {
             <p className='text-xl text-gray-700 mb-4'>
               Пожалуйста, войдите в аккаунт, чтобы просмотреть эту страницу.
             </p>
-            <Button onClick={() => navigate('/')} className='bg-shop-blue-dark text-white'>
+            {/* <Button onClick={() => navigate('/')} className='bg-shop-blue-dark text-white'>
               На главную
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>

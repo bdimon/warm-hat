@@ -188,5 +188,22 @@
       "confirmPasswordRequired": "Подтвердите пароль",
       "passwordsDoNotMatch": "Пароли не совпадают"
     }
+  },
+  "authSettings": {
+    "successAll": "Email и пароль обновлены. Проверьте email для подтверждения.",
+    "successEmail": "Email обновлен. Проверьте email для подтверждения",
+    "successPassword": "Пароль успешно обновлен",
+    "error": "Ошибка",
+    "timeout": "Загрузка...",
+    "loading": "Сохранение...",
+    "title": "Изменить email/пароль",
+    "oldEmail": "Текущий email",
+    "newEmail": "Current email",
+    "oldPassword": "",
+    "email": "Новый email",
+    "password": "Новый пароль",
+    "confirm": "Подтвердите пароль",
+    "cancel": "Выйти без сохранения",
+    "save": "Сохранить изменения"
   }
 }

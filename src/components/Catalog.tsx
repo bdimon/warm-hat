@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Product } from '@/types/Product';
 import { mapProductFromAPI } from "@/lib/mappers/products";
 import { useTranslation } from 'react-i18next';
-import { log } from 'console';
 
 // Конфигурация категорий:
 // filterKey: ключ, который хранится в product.category и используется для фильтрации
@@ -73,9 +72,7 @@ const Catalog = () => {
       .then((res) => {
         const mapped: Product[] = res.data.map(mapProductFromAPI);
         setAllProducts(mapped);
-        // setDisplayedProducts(mapped); // Удаляем эту строку
       })
-      // .catch(err => console.error("Ошибка загрузки товаров:", err));
       .catch((err) => {
         console.error('Ошибка загрузки товаров:', err);
         setError(err.message || 'Не удалось загрузить каталог товаров.');
@@ -90,7 +87,6 @@ const Catalog = () => {
     } else {
       setDisplayedProducts(allProducts.filter((product) => product.category === selectedFilterKey));
     }
-    // Зависимость от `t` здесь больше не нужна, так как сама фильтрация от перевода не зависит
   }, [selectedFilterKey, allProducts]);
 
   return (

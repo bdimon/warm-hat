@@ -188,5 +188,21 @@
       "confirmPasswordRequired": "Please confirm your password",
       "passwordsDoNotMatch": "Passwords do not match"
     }
+  },
+  "authSettings": {
+    "successAll": "Email and password updated. Check your email to confirm.",
+    "successEmail": "Email updated. Check your email to confirm",
+    "successPassword": "Password updated successfully",
+    "error": "Error",
+    "timeout": "Loading...",
+    "loading": "Saving...",
+    "title": "Change Email/Password",
+    "oldEmail": "Current email",
+    "oldPassword": "",
+    "email": "New email",
+    "password": "New password",
+    "confirm": "Confirm password",
+    "cancel": "Exit without saving",
+    "save": "Save changes"
   }
 }

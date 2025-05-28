@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase";
 import FormField from "@/components/FormField";
 import { User } from "@supabase/supabase-js";
 import { useNavigate } from 'react-router-dom';
-
+import { useTranslation } from 'react-i18next';
 
 type FormState = {
   email: string;
@@ -18,16 +18,22 @@ interface AuthSettingsFormProps {
 type FormErrors = Partial<Record<keyof FormState, string>>;
 
 export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
+  const { t } = useTranslation();
   const [form, setForm] = useState<FormState>({
-    email: "",
-    password: "",
-    confirmPassword: "",
+    email: '',
+    password: '',
+    confirmPassword: '',
   });
   const [user, setUser] = useState<User | null>(null);
-  const [errors, setErrors] = useState<FormErrors>({});
+  // const [errors, setErrors] = useState<FormErrors>({});
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [formErrors, setFormErrors] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
 
   const navigate = useNavigate();
 
@@ -39,32 +45,38 @@ export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
     fetchUser();
   }, []);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const validate = (): boolean => {
-    const nextErrors: FormErrors = {};
+    // const nextErrors: FormErrors = {};
 
-    const { email, password, confirmPassword } = form;
+    const errors = { email: '', password: '', confirmPassword: '' };
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!email.trim() && !password.trim()) {
-      nextErrors.email = "Введите email или пароль";
+    if (!form.email.trim()) {
+      errors.email = t('authModal.validation.emailRequired');
+    } else if (!emailRegex.test(form.email)) {
+      errors.email = t('authModal.validation.emailInvalid');
+    }
+    if (!form.password.trim()) {
+      errors.password = t('authModal.validation.passwordRequired');
+    } else if (form.password.length < 6) {
+      errors.password = t('authModal.validation.passwordTooShort');
     }
 
-    if (password && password.length < 6) {
-      nextErrors.password = "Минимум 6 символов";
+    if (!form.confirmPassword.trim()) {
+      errors.confirmPassword = t('authModal.validation.confirmPasswordRequired');
+    } else if (form.password !== form.confirmPassword) {
+      errors.confirmPassword = t('authModal.validation.passwordsDoNotMatch');
     }
 
-    if (password && password !== confirmPassword) {
-      nextErrors.confirmPassword = "Пароли не совпадают";
-    }
+    setFormErrors(errors);
+    console.log(errors);
 
-    setErrors(nextErrors);
-    return Object.keys(nextErrors).length === 0;
+    return !Object.values(errors).some((e) => e);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -87,70 +99,70 @@ export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
     const { error: updateError } = await supabase.auth.updateUser(updates);
 
     if (updateError) {
-      setError("Ошибка: " + updateError.message);
+      setError("t('authSettings.error')): " + updateError.message);
     } else {
+      let successMsg = t('authSettings.successPassword');
       if (updates.email && updates.password) {
-        setMessage("Email и пароль обновлены. Проверьте почту для подтверждения email.");
+        successMsg = t('authSettings.successAll');
       } else if (updates.email) {
-        setMessage("Email обновлён. Проверьте почту для подтверждения.");
-      } else {
-        setMessage("Пароль успешно обновлён.");
+        successMsg = t('authSettings.successEmail');
       }
+      setMessage(successMsg);
 
       // очищаем только поля пароля
       setForm((prev) => ({
         ...prev,
-        password: "",
-        confirmPassword: "",
+        password: '',
+        confirmPassword: '',
       }));
 
       setTimeout(() => {
-        navigate("/");
+        navigate('/');
       }, 1500);
     }
 
     setLoading(false);
   };
 
-  if (!user) return <p>Загрузка…</p>;
+  if (!user) return <p>{t('authSettings.timeout')}</p>;
 
   return (
     <form onSubmit={handleSubmit} className='max-w-md space-y-4'>
-      <h2 className='text-lg font-semibold'>Сменить email / пароль</h2>
+      <h2 className='text-lg font-semibold'>{t('authSettings.title')}</h2>
       <p className='text-sm text-gray-600'>
-        Текущий email: <span className='font-medium'>{user.email}</span>
+        {t('authSettings.oldEmail')}: <span className='font-medium'>{user.email}</span>
       </p>
 
-      <FormField label='Новый email'>
+      <FormField label={t('authSettings.email')} error={formErrors.email}>
         <input
           name='email'
           type='email'
           value={form.email}
           onChange={handleChange}
           placeholder='example@mail.com'
-          className='w-full border p-2 rounded border-gray-300'
+          className={`w-full border p-2 rounded ${formErrors.email ? 'border-red-500' : 'border-gray-300'}`}
         />
       </FormField>
 
-      <FormField label='Новый пароль'>
+      <FormField label={t('authSettings.password')} error={formErrors.password}>
         <input
           name='password'
           type='password'
           value={form.password}
           onChange={handleChange}
-          placeholder='Не менее 6 символов'
-          className='w-full border p-2 rounded border-gray-300'
+          placeholder={t('authModal.validation.passwordTooShort')}
+          className={`w-full border p-2 rounded ${formErrors.password ? 'border-red-500' : 'border-gray-300'}`}
         />
       </FormField>
 
-      <FormField label='Повторите пароль'>
+      <FormField label={t('authSettings.confirm')} error={formErrors.confirmPassword}>
         <input
           name='confirmPassword'
           type='password'
           value={form.confirmPassword}
           onChange={handleChange}
-          placeholder='Повторите новый пароль'
-          className='w-full border p-2 rounded border-gray-300'
+          placeholder={t('authSettings.confirm')}
+          className={`w-full border p-2 rounded ${formErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'}`}
         />
       </FormField>
 
@@ -162,7 +174,7 @@ export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
           disabled={loading}
           className='bg-shop-blue-dark text-white px-4 py-2 rounded disabled:opacity-50'
         >
-          {loading ? 'Сохранение…' : 'Сохранить изменения'}
+          {loading ? t('authSettings.loading') : t('authSettings.save')}
         </button>
         {onClose && (
           <button
@@ -171,7 +183,7 @@ export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
             className='px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-shop-blue-dark rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-colors duration-150'
             disabled={loading}
           >
-            Выйти без сохранения
+            {t('authSettings.cancel')}
           </button>
         )}
       </div>
