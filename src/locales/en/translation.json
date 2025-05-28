@@ -204,5 +204,13 @@
     "confirm": "Confirm password",
     "cancel": "Exit without saving",
     "save": "Save changes"
+  },
+  "profile": {
+    "title": "Your account",
+    "info": "Information about user",
+    "edit": "Edit profile",
+    "orders": "My orders",
+    "loading": "Loading user data...",
+    "warning": "Please log in to your account to view this page."
   }
 }

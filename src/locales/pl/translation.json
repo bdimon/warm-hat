@@ -204,5 +204,13 @@
     "confirm": "Potwierdź hasło",
     "cancel": "Wyjdź bez zapisywania",
     "save": "Zapisz zmiany"
+  },
+  "profile": {
+    "title": "Twoje konto",
+    "info": "Informacje o użytkowniku",
+    "edit": "Edytuj profil",
+    "orders": "Moje zamówienia",
+    "loading": "Ładowanie danych użytkownika...",
+    "warning": "Zaloguj się na swoje konto, aby wyświetlić tę stronę."
   }
 }

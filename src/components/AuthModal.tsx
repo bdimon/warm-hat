@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { useSnackbar } from '@/hooks/use-snackbar';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -174,12 +175,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   value={form.name}
                   onChange={handleChange}
                   placeholder={t('authModal.register.namePlaceholder')}
-                  className={`rounded border ${
-                    // Базовые стили, включая border
+                  className={cn(
+                    'rounded border w-full p-2',
                     formErrors.name
                       ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
-                      : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе
-                  }`}
+                      : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
+                    // Базовые стили, включая border
+                  )}
                 />
               </FormField>
             )}
@@ -190,12 +192,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 value={form.email}
                 onChange={handleChange}
                 placeholder={t('authModal.emailPlaceholder')}
-                className={`rounded border ${
-                  // Базовые стили, включая border
+                className={cn(
+                  'rounded border w-full p-2',
                   formErrors.email
                     ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
-                    : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе
-                }`}
+                    : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
+                  // Базовые стили, включая border
+                )}
               />
             </FormField>
             <FormField label='Пароль' error={formErrors.password}>
@@ -205,12 +208,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 value={form.password}
                 onChange={handleChange}
                 placeholder={t('authModal.passwordPlaceholder')}
-                className={`rounded border ${
-                  // Базовые стили, включая border
+                className={cn(
+                  'rounded border w-full p-2',
                   formErrors.password
                     ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
-                    : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе
-                }`}
+                    : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
+                  // Базовые стили, включая border
+                )}
               />
             </FormField>
             {mode === 'register' && (
@@ -221,12 +225,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   value={form.confirmPassword}
                   onChange={handleChange}
                   placeholder={t('authModal.register.confirmPasswordPlaceholder')}
-                  className={`rounded border ${
-                    // Базовые стили, включая border
+                  className={cn(
+                    'rounded border w-full p-2',
                     formErrors.confirmPassword
                       ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
-                      : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе
-                  }`}
+                      : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
+                    // Базовые стили, включая border
+                  )}
                 />
               </FormField>
             )}

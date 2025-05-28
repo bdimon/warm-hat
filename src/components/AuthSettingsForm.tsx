@@ -4,6 +4,8 @@ import FormField from "@/components/FormField";
 import { User } from "@supabase/supabase-js";
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { cn } from '@/lib/utils';
+
 
 type FormState = {
   email: string;
@@ -140,7 +142,13 @@ export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
           value={form.email}
           onChange={handleChange}
           placeholder='example@mail.com'
-          className={`w-full border p-2 rounded ${formErrors.email ? 'border-red-500' : 'border-gray-300'}`}
+          className={cn(
+            'rounded border w-full p-2',
+            formErrors.email
+              ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
+              : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
+            // Базовые стили, включая border
+          )}
         />
       </FormField>
 
@@ -151,7 +159,13 @@ export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
           value={form.password}
           onChange={handleChange}
           placeholder={t('authModal.validation.passwordTooShort')}
-          className={`w-full border p-2 rounded ${formErrors.password ? 'border-red-500' : 'border-gray-300'}`}
+          className={cn(
+            'rounded border w-full p-2',
+            formErrors.password
+              ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
+              : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
+            // Базовые стили, включая border
+          )}
         />
       </FormField>
 
@@ -162,7 +176,13 @@ export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
           value={form.confirmPassword}
           onChange={handleChange}
           placeholder={t('authSettings.confirm')}
-          className={`w-full border p-2 rounded ${formErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'}`}
+          className={cn(
+            'rounded border w-full p-2',
+            formErrors.confirmPassword
+              ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
+              : 'border-shop-blue-dark focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
+            // Базовые стили, включая border
+          )}
         />
       </FormField>
 
