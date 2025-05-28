@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import PhoneInput from '@/components/ui/phone-input'; // 1. Импортируем наш PhoneInput
 import { Textarea } from '@/components/ui/textarea';
 import { Phone, Mail, MapPin, Send } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -32,6 +33,11 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // 2. Отдельный обработчик для номера телефона
+  const handlePhoneChange = (phoneNumberE164: string) => {
+    setFormData((prev) => ({ ...prev, phone: phoneNumberE164 }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -101,15 +107,21 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit }) => {
               <label htmlFor='phone' className='block text-sm font-medium text-gray-700 mb-1'>
                 {t('contactForm.labels.phone')}
               </label>
-              <Input
-                id='phone'
-                name='phone'
-                type='tel'
+              <PhoneInput
                 value={formData.phone}
-                onChange={handleChange}
-                required
-                placeholder={t('contactForm.placeholders.phone')}
-                className='w-full'
+                onChange={handlePhoneChange}
+                // id='phone'
+                // name='phone'
+                // type='tel'
+                // value={formData.phone}
+                // onChange={handleChange}
+                // required
+                // placeholder={t('contactForm.placeholders.phone')}
+                // className='w-full'
+                // Плейсхолдер обычно обрабатывается самой библиотекой react-intl-tel-input,
+                // показывая пример номера для выбранной страны.
+                // inputClassName можно передать, если нужны специфичные стили,
+                // но мы уже задали их по умолчанию в PhoneInput.tsx
               />
             </div>
             <div className='md:col-span-2'>

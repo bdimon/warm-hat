@@ -11,23 +11,17 @@ const Footer = () => {
     <footer className='bg-shop-text text-white py-8 mt-auto'>
       <div className='container mx-auto'>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12'>
-          <div className='lg:col-span-2'>
-            {/* <Link to='/'>
-              <h2 className='text-2xl font-bold mb-6 hover:text-shop-blue-dark transition-colors'>
-                Шапка-Шоп
-              </h2>
-              <p className='mb-6 text-gray-300 max-w-md hover:text-shop-blue-dark transition-colors'>
-                Интернет-магазин качественных вязанных вручную изделий с быстрой доставкой по всей
-                Европе.
-              </p>
-            </Link> */}
+          <div className='lg:col-span-2 flex flex-col items-center space-y-6'>
             <Link
               to='/'
               aria-label={t('header.shopName')}
               className='inline-block hover:opacity-80 transition-opacity'
             >
-              {/* Замените src на путь к вашему реальному файлу логотипа */}
-              <img src='/images/logo.webp' alt={t('header.shopName')} className='h-8 w-auto' />
+              <img
+                src='/images/logo.webp'
+                alt={t('header.shopName')}
+                className='h-12 w-auto rounded-lg'
+              />
               {/* Или если у вас есть компонент Logo: */}
               {/* <Logo className="h-8 w-auto" /> */}
             </Link>

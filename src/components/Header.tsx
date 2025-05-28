@@ -104,7 +104,7 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
           <img
             src='/images/logo.webp'
             alt={t('header.shopName')}
-            className='h-10 md:h-12 w-auto rounded-lg'
+            className='h-16 md:h-12 w-auto rounded-lg'
           />
         </Link>
 
