@@ -157,15 +157,18 @@
       "button": "Login",
       "forgotPassword": "Forgot password?",
       "noAccount": "No account yet?",
-      "success": "Login successful"
+      "success": "Login successful",
+      "or": "OR"
     },
     "register": {
       "title": "Register",
+      "nameLabel": "Name",
       "namePlaceholder": "Enter your name",
+      "confirmPasswordLabel": "Confirm password",
       "confirmPasswordPlaceholder": "Confirm your password",
       "button": "Register",
       "hasAccount": "Already have an account?",
-      "success": "Registration successful. Please confirm your email."
+      "success": "Registration was successful. Confirm your email address."
     },
     "forgotPassword": {
       "title": "Password Reset",

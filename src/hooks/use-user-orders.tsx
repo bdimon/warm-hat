@@ -24,6 +24,7 @@ export function useUserOrders() {
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
+        console.log('[useUserOrders] Fetching orders from Supabase...', data);
 
       if (error) {
         console.error('Ошибка загрузки заказов:', error.message);

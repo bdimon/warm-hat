@@ -15,6 +15,8 @@ import ProfilePage from "./pages/ProfilePage";
 import UpdatePasswordPage from "./pages/UpdatePasswordPage";
 import EditOrderPage from "./pages/EditOrderPage";
 import AdminDashboard from "./pages/AdminDashboard";  
+import AdminOrderDetailPage from "./pages/AdminOrderDetailPage";
+import AdminUsersPage from "./pages/AdminUsersPage"; // <-- Добавляем импорт
 
 
 
@@ -39,6 +41,8 @@ const App = () => (
           <Route path="/admin/products" element={<AdminProducts />} />
           <Route path="/admin/products/new" element={<AdminProductForm />} />
           <Route path="/admin/products/edit/:id" element={<AdminProductForm />} />
+          <Route path="/admin/order/edit/:id" element={<AdminOrderDetailPage />} />
+          <Route path="/admin/users" element={<AdminUsersPage />} /> {/* <-- Добавляем роут */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

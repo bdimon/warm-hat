@@ -24,7 +24,7 @@ export type ProductRaw = {
   salePrice?: number | null;
 };
 
-type OrderStatus = 'new' | 'pending' | 'payed' | 'delivered';
+type OrderStatus = 'new' | 'pending' | 'paid' | 'delivered';
 
 export type Order = {
   id: string;

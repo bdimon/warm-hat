@@ -1,8 +1,18 @@
 import express from "express";
-import { servbase as supabase } from "@/lib/supabase";
+import { supabase, supabaseService } from "@/lib/supabase";
+// import { createClient } from '@supabase/supabase-js';
 // import { v4 as uuidv4 } from "uuid";
 
 const router = express.Router();
+// Проверка, что supabaseService был инициализирован (важно, если он опционален в lib/supabase.ts)
+router.use((req, res, next) => {
+  if ((req.method === 'POST' || req.method === 'PATCH' || req.method === 'DELETE') && !supabaseService) {
+    return res.status(503).json({ error: "Service client not available. Check server configuration." });
+  }
+  next();
+});
+
+
 // 🔁 Получить все товары
 router.get("/", async (req, res) => {
   const page = parseInt(req.query.page as string) || 1;
@@ -37,7 +47,7 @@ router.get("/", async (req, res) => {
     },
   });
 });
-
+ 
 // 🔹 GET /api/products/:id — получить товар по id
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
@@ -53,7 +63,7 @@ router.get("/:id", async (req, res) => {
 // 🔹 POST /api/products — создать товар
 router.post("/", async (req, res) => {
   const { name, price, quantity, description, category, images } = req.body;
-  const { error } = await supabase.from("products").insert([
+  const { error } = await supabaseService.from("products").insert([
     {
       name,
       price,
@@ -79,7 +89,7 @@ router.patch("/:id", async (req, res) => {
     return res.status(400).json({ error: "Нет данных для обновления" });
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseService
     .from("products")
     .update(updates)
     .eq("id", id)
@@ -98,7 +108,7 @@ router.patch("/:id", async (req, res) => {
 // 🔹 DELETE /api/products/:id — удалить товар
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
-  const { error } = await supabase.from("products").delete().eq("id", id);
+  const { error } = await supabaseService.from("products").delete().eq("id", id);
   if (error) return res.status(500).json({ error: error.message });
   res.json({ message: "Товар удален" });
 });

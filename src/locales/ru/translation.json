@@ -157,11 +157,14 @@
       "button": "Войти",
       "forgotPassword": "Забыли пароль?",
       "noAccount": "Еще нет учетной записи?",
-      "success": "Вход выполнен успешно"
+      "success": "Вход выполнен успешно",
+      "or": "ИЛИ"
     },
     "register": {
       "title": "Зарегистрироваться",
+      "nameLabel": "Имя",
       "namePlaceholder": "Введите свое имя",
+      "confirmPasswordLabel": "Подтвердите пароль",
       "confirmPasswordPlaceholder": "Подтвердите свой пароль",
       "button": "Зарегистрироваться",
       "hasAccount": "Уже есть учетная запись?",

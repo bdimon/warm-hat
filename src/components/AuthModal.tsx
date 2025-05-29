@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import FormField from "./FormField";
 import { supabase } from "@/lib/supabase";
@@ -6,6 +6,8 @@ import { useSnackbar } from '@/hooks/use-snackbar';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import {Input} from "@/components/ui/input";
+
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -13,7 +15,8 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation(); // Получаем i18n для доступа к текущему языку
+  const currentLanguage = i18n.language.split('-')[0]; // Берем базовый язык, например, 'ru' из 'ru-RU'
   const [mode, setMode] = useState<'login' | 'register' | 'forgot-password'>('login');
   const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [resetEmail, setResetEmail] = useState('');
@@ -24,6 +27,33 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     confirmPassword: '',
   });
   const { showSnackbar } = useSnackbar();
+
+  // Эффект для сброса состояния формы при закрытии модального окна
+  useEffect(() => {
+    // Когда модальное окно закрывается (isOpen становится false),
+    // сбрасываем все внутренние состояния, связанные с формой.
+    // Это гарантирует, что при повторном открытии модального окна (например, после смены языка),
+    // оно начнется с чистого состояния, и любые последующие ошибки валидации
+    // будут использовать текущий язык.
+    if (!isOpen) {
+      setForm({ name: '', email: '', password: '', confirmPassword: '' });
+      setFormErrors({ name: '', email: '', password: '', confirmPassword: '' });
+      setResetEmail('');
+      setMode('login'); // Сброс в режим по умолчанию
+    }
+  }, [isOpen]); // Этот эффект выполняется при изменении пропа `isOpen`.
+
+  // Эффект для сброса ошибок формы при смене режима (логин, регистрация, сброс пароля)
+  useEffect(() => {
+    // Очищаем ошибки формы каждый раз, когда меняется режим.
+    // Это предотвращает отображение нерелевантных ошибок из предыдущего режима.
+    setFormErrors({ name: '', email: '', password: '', confirmPassword: '' });
+
+    // Также очищаем поле resetEmail, если мы не в режиме 'forgot-password'.
+    if (mode !== 'forgot-password') {
+      setResetEmail('');
+    }
+  }, [mode]); // Этот эффект выполняется при изменении состояния `mode`.
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -168,8 +198,8 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               {t(mode === 'login' ? 'authModal.login.title' : 'authModal.register.title')}
             </h2>
             {mode === 'register' && (
-              <FormField label='Имя' error={formErrors.name}>
-                <input
+              <FormField label={t('authModal.register.nameLabel')} error={formErrors.name}>
+                <Input
                   name='name'
                   type='text'
                   value={form.name}
@@ -186,7 +216,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               </FormField>
             )}
             <FormField label='Email' error={formErrors.email}>
-              <input
+              <Input
                 name='email'
                 type='email'
                 value={form.email}
@@ -201,8 +231,8 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 )}
               />
             </FormField>
-            <FormField label='Пароль' error={formErrors.password}>
-              <input
+            <FormField label={t('authModal.passwordLabel')} error={formErrors.password}>
+              <Input
                 name='password'
                 type='password'
                 value={form.password}
@@ -218,8 +248,8 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               />
             </FormField>
             {mode === 'register' && (
-              <FormField label='Подтвердите пароль' error={formErrors.confirmPassword}>
-                <input
+              <FormField label={t('authModal.register.confirmPasswordPlaceholder')} error={formErrors.confirmPassword}>
+                <Input
                   name='confirmPassword'
                   type='password'
                   value={form.confirmPassword}
@@ -254,7 +284,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
             <div className='my-4 flex items-center'>
               <hr className='flex-grow border-t border-gray-300' />
-              <span className='mx-2 text-xs text-gray-500'>ИЛИ</span>
+              <span className='mx-2 text-xs text-gray-500'>{t('authModal.login.or')}</span>
               <hr className='flex-grow border-t border-gray-300' />
             </div>
             <Button
@@ -277,7 +307,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             <div className='mt-4 text-sm text-center'>
               {mode === 'login' ? (
                 <>
-                  Нет аккаунта?{' '}
+                  {' '}
                   <Button
                     className='text-shop-blue-dark underline'
                     onClick={() => setMode('register')}
@@ -287,7 +317,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 </>
               ) : (
                 <>
-                  Уже есть аккаунт?{' '}
+                  {' '}
                   <Button
                     className='text-shop-blue-dark underline'
                     onClick={() => setMode('login')}

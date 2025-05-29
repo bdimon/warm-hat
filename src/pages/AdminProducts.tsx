@@ -12,7 +12,7 @@ import { mapProductFromAPI } from "@/lib/mappers/products";
 //   category: string;
 //   images: string[];
 // }
-
+ 
 export default function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);

@@ -157,15 +157,18 @@
       "button": "Logowanie",
       "forgotPassword": "Zapomniałeś hasła?",
       "noAccount": "Nie masz jeszcze konta?",
-      "success": "Logowanie zakończone sukcesem"
+      "success": "Logowanie zakończone sukcesem",
+      "or": "LUB"
     },
     "register": {
-      "title": "Zarejestruj",
-      "namePlaceholder": "Wprowadź swoje imię",
-      "confirmPasswordPlaceholder": "Potwierdź hasło",
-      "button": "Zarejestruj",
-      "hasAccount": "Masz już konto?",
-      "success": "Rejestracja zakończona sukcesem. Potwierdź swój adres e-mail"
+      "title": "Zarejestruj się",
+"nameLabel": "Nazwa",
+"namePlaceholder": "Wprowadź swoje imię",
+"confirmPasswordLabel": "Potwierdź hasło",
+"confirmPasswordPlaceholder": "Potwierdź swoje hasło",
+"button": "Zarejestruj się",
+"hasAccount": "Masz już konto?",
+"success": "Rejestracja powiodła się. Potwierdź swój adres e-mail."
     },
     "forgotPassword": {
       "title": "Resetowanie hasła",
