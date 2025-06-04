@@ -10,7 +10,7 @@ interface ProductForm {
   name: string;
   price: number;
   quantity: number;
-  description: string;
+  // description?: string;
   category: string;
   images: string[]; // Пути к изображениям, например: ["/images/hat.jpg"]
 }
@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 const initialForm: Product = {
     id: "",
     name: "",
-    description: "",
+    // description: "",
     price: 0,
     quantity: 0,
     category: "",
@@ -113,7 +113,7 @@ setError('Не удалось загрузить товар');      } finally {
           />
         </FormField>
 
-        <FormField label='Описание' error={formErrors.description}>
+        {/* <FormField label='Описание' error={formErrors.description}>
           <Textarea
             name='description'
             value={form.description}
@@ -121,7 +121,7 @@ setError('Не удалось загрузить товар');      } finally {
             placeholder='Описание товара'
             rows={4}
           />
-        </FormField>
+        </FormField> */}
 
         <FormField label='Категория' error={formErrors.category}>
           <Input

@@ -5,7 +5,7 @@ export function mapProductFromAPI(raw: RawProduct): Product {
   return {
     id: raw.id,
     name: raw.name || "Без названия",
-    description: raw.description || "",
+    // description: raw.description || "",
     price: raw.price,
     quantity: raw.quantity,
     images: raw.images || [],
@@ -21,7 +21,7 @@ export function mapProductToAPI(product: Product): RawProduct {
   return {
     id: product.id,
     name: product.name,
-    description: product.description,
+    // description: product.description,
     price: product.price,
     quantity: product.quantity,
     images: product.images,

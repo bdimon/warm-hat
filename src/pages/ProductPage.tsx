@@ -103,7 +103,7 @@ export default function ProductPage() {
         {/* Описание */}
         <div>
           <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
-          <p className="text-gray-500 mb-4">{product.description}</p>
+          {/* <p className="text-gray-500 mb-4">{product.description}</p> */}
 
           {product.isSale && product.salePrice ? (
             <div className="flex items-center gap-2 mb-4">

@@ -50,6 +50,33 @@ npm run dev
 - Click on "New codespace" to launch a new Codespace environment.
 - Edit files directly within the Codespace and commit and push your changes once you're done.
 
+## Локальная разработка с Supabase
+
+Для локальной разработки с Supabase:
+
+1. Установите Supabase CLI:
+   ```bash
+   npm install -g supabase
+   ```
+
+2. Запустите локальный Supabase:
+   ```bash
+   supabase start
+   ```
+
+3. Примените миграции:
+   ```bash
+   supabase db reset
+   ```
+
+4. Откройте Supabase Studio:
+   http://localhost:54323
+
+5. Используйте следующие переменные окружения в `.env.local`:
+   ```
+   VITE_PUBLIC_SUPABASE_LOCAL_URL
+   ```
+
 ## What technologies are used for this project?
 
 This project is built with:

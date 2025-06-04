@@ -1,5 +1,5 @@
 // types/supabase.ts
-import { ProductInCart } from './cart';
+import { ProductInCart } from '@/types/cart';
 
 export type Profile = {
   id: string;
@@ -14,7 +14,7 @@ export type Profile = {
 export type ProductRaw = {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   price: number;
   quantity: number;
   images: string[];
@@ -43,7 +43,7 @@ export type Order = {
 export interface Product {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   price: number;
   quantity: number;
   images: string[];

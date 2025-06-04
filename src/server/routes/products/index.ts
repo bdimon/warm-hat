@@ -62,13 +62,13 @@ router.get("/:id", async (req, res) => {
 // ➕ Добавить товар
 // 🔹 POST /api/products — создать товар
 router.post("/", async (req, res) => {
-  const { name, price, quantity, description, category, images } = req.body;
+  const { name, price, quantity, category, images } = req.body;
   const { error } = await supabaseService.from("products").insert([
     {
       name,
       price,
       quantity,
-      description,
+      // description,
       category,
       images,
       isNew: true,
