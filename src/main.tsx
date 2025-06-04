@@ -5,6 +5,10 @@ import { CartProvider } from '@/providers/cart-provider';
 import React from 'react';
 import { SnackbarProvider } from '@/providers/snackbar-provider';
 import '@/lib/i18n';
+import { checkSupabaseConnection } from '@/lib/supabase-local';
+
+// Проверяем подключение к локальному Supabase
+checkSupabaseConnection();
 
 createRoot(document.getElementById("root")!).render(
 <React.StrictMode>
