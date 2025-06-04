@@ -1,5 +1,5 @@
 import express from "express";
-import { supabase, supabaseService } from "@/lib/supabase"; // Импортируем оба клиента
+import { supabase, supabaseService } from "@/lib/supabase-client"; // Импортируем оба клиента
 import {Order} from "@/types/supabase";
 
   // Определяем тип для обогащенных данных заказа, который будет использоваться и для списка

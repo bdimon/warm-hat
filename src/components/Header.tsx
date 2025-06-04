@@ -6,7 +6,7 @@ import {Link, useNavigate } from 'react-router-dom';
 import { useCart } from '@/hooks/use-cart';
 import CartModal from "./CartModal";// Assuming CartModal is a dialog
 import AuthModal from './AuthModal';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase-client';
 import { User } from '@supabase/supabase-js'
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './LanguageSwitcher'; // Импортируем переключатель

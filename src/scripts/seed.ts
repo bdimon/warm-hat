@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
 import { faker } from "@faker-js/faker";
 import "dotenv/config";
-import { servbase as supabase } from "@/lib/supabase";
+import { supabaseService as supabase } from "@/lib/supabase-client";
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));

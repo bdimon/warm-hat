@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSnackbar } from '@/hooks/use-snackbar';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase-client';
 import OrderForm from '@/components/OrderForm';
 // Эти типы используются локально, если они не экспортируются из use-order-form,
 // то импорт не нужен. Если экспортируются, раскомментируйте:

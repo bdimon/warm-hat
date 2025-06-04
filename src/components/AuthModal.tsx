@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import FormField from "./FormField";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase-client";
 import { useSnackbar } from '@/hooks/use-snackbar';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';

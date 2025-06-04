@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase-client";
 import FormField from "@/components/FormField";
 import { User } from "@supabase/supabase-js";
 import { useNavigate } from 'react-router-dom';

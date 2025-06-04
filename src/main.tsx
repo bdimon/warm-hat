@@ -5,7 +5,7 @@ import { CartProvider } from '@/providers/cart-provider';
 import React from 'react';
 import { SnackbarProvider } from '@/providers/snackbar-provider';
 import '@/lib/i18n';
-import { checkSupabaseConnection } from '@/lib/supabase-local';
+import { checkSupabaseConnection } from '@/lib/supabase-client';
 
 // Проверяем подключение к локальному Supabase
 checkSupabaseConnection();

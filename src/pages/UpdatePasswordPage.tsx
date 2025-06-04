@@ -1,7 +1,7 @@
 // src/pages/UpdatePasswordPage.tsx (пример)
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/lib/supabase'; // Ваш экземпляр supabase
+import { supabase } from '@/lib/supabase-client'; // Ваш экземпляр supabase
 
 export default function UpdatePasswordPage() {
   const [password, setPassword] = useState('');

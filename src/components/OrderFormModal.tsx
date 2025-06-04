@@ -1,6 +1,6 @@
 import { useCart } from '@/hooks/use-cart';
 import { useSnackbar } from '@/hooks/use-snackbar';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase-client';
 import { cn } from '@/lib/utils';
 import { Loader2, X } from 'lucide-react';
 import { useEffect, useState } from 'react';

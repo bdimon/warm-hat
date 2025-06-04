@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 // import { Order } from "@/types/supabase"; // Order type is inferred from OrderCardProps
 import { useSnackbar } from '@/hooks/use-snackbar';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase-client';
 
 interface OrderCardProps {
   order: {
@@ -29,7 +29,7 @@ export default function OrderCard({ order, onOrderDeleted }: OrderCardProps) {
       case 'pending':
       case 'new':
         return 'text-yellow-600 bg-yellow-100';
-      case 'payed':
+      case 'paid':
         return 'text-red-600 bg-red-100';
       default:
         return 'text-gray-600 bg-gray-100';

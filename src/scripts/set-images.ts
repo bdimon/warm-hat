@@ -1,4 +1,4 @@
-import { servbase as supabase } from "@/lib/supabase"; // или "@supabase/supabase-js";
+import { supabaseService as supabase } from "@/lib/supabase-client"; // или "@supabase/supabase-js";
 import fs from "fs";
 import path from "path";
 

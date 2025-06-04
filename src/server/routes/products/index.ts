@@ -1,10 +1,10 @@
 import express from "express";
-import { supabase, supabaseService } from "@/lib/supabase";
+import { supabase, supabaseService } from "@/lib/supabase-client"; // Импортируем оба клиента
 // import { createClient } from '@supabase/supabase-js';
 // import { v4 as uuidv4 } from "uuid";
 
 const router = express.Router();
-// Проверка, что supabaseService был инициализирован (важно, если он опционален в lib/supabase.ts)
+// Проверка, что supabaseService был инициализирован (важно, если он опционален в lib/supabase-client.ts)
 router.use((req, res, next) => {
   if ((req.method === 'POST' || req.method === 'PATCH' || req.method === 'DELETE') && !supabaseService) {
     return res.status(503).json({ error: "Service client not available. Check server configuration." });

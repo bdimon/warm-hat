@@ -1,5 +1,5 @@
 import express from "express";
-import { supabaseService } from "@/lib/supabase"; // Используем supabaseService
+import { supabaseService } from "@/lib/supabase-client"; // Используем supabaseService
 
 const router = express.Router();
 

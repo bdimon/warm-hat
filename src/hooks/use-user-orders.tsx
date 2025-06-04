@@ -1,8 +1,8 @@
 // hooks/use-user-orders.ts
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabase";
-import { useUser } from "./use-user-profile";
-import { Order } from '../types/supabase'; // если ещё нет — создадим
+import { supabase } from "@/lib/supabase-client";
+import { useUser } from "@/hooks/use-user-profile";
+import { Order } from '@/types/supabase'; // если ещё нет — создадим
 
 export function useUserOrders() {
   const { user } = useUser();
