@@ -1,11 +1,13 @@
-import { useParams,useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Product } from "@/types/Product";
+import { Product, SupportedLanguage } from "@/types/Product";
 import { Button } from "@/components/ui/button";
 import { Loader2, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/hooks/use-cart';
 import { ProductInCart } from '@/types/cart';
-import  Header from "@/components/Header";
+import Header from "@/components/Header";
+import { getLocalizedValue } from '@/lib/mappers/products';
+import { useTranslation } from 'react-i18next';
  
 export default function ProductPage() {
   const { id } = useParams();
@@ -15,12 +17,15 @@ export default function ProductPage() {
   const [error, setError] = useState<string | null>(null);
   const { addToCart } = useCart();
   const navigate = useNavigate();
+  const { i18n, t } = useTranslation();
+  
+  // Получаем текущий язык и преобразуем его в SupportedLanguage
+  const currentLang = i18n.language.split('-')[0] as SupportedLanguage;
 
   useEffect(() => {
     setLoading(true);
     setError(null);
     fetch(`http://localhost:3010/api/products/${id}`)
-      // .then((res) => res.json())
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Ошибка HTTP: ${res.status}`);
@@ -31,7 +36,6 @@ export default function ProductPage() {
         setProduct(data);
         setMainImage(data.images?.[0] || "/placeholder.png");
       })
-      // .catch((err) => console.error("Ошибка загрузки товара:", err));
       .catch((err) => {
         console.error("Ошибка загрузки товара:", err);
         setError(err.message || "Не удалось загрузить информацию о товаре.");
@@ -41,7 +45,6 @@ export default function ProductPage() {
       });
   }, [id]);
 
-  // if (!product) return <div className="p-4 text-center">Загрузка...</div>;
   const handleAddToCart = () => {
     if (!product) return;
     const productToAdd: ProductInCart = {
@@ -64,6 +67,12 @@ export default function ProductPage() {
   if (error) return <div className="p-4 text-center text-red-500">Ошибка: {error}</div>;
   if (!product) return <div className="p-4 text-center">Товар не найден.</div>;
 
+  // Получаем локализованные значения
+  const localizedName = getLocalizedValue(product.name, currentLang);
+  const localizedPrice = getLocalizedValue(product.price, currentLang);
+  const localizedSalePrice = product.salePrice 
+    ? getLocalizedValue(product.salePrice, currentLang) 
+    : undefined;
 
   return (
     // Если Header имеет фиксированное или "липкое" позиционирование,
@@ -79,7 +88,7 @@ export default function ProductPage() {
         <div>
           <img
             src={mainImage}
-            alt={product.name}
+            alt={localizedName}
             className="w-full h-auto object-cover rounded shadow mb-4"
           />
           <div className="flex flex-wrap gap-2">
@@ -92,29 +101,26 @@ export default function ProductPage() {
                 className={`h-20 w-20 object-cover cursor-pointer rounded-lg border ${
                   img === mainImage ? "border-blue-500" : "border-transparent"
                 }`}
-                
               />
-            )
-            
-            )}
+            ))}
           </div>
         </div>
 
         {/* Описание */}
         <div>
-          <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
+          <h1 className="text-2xl font-bold mb-2">{localizedName}</h1>
           {/* <p className="text-gray-500 mb-4">{product.description}</p> */}
 
-          {product.isSale && product.salePrice ? (
+          {product.isSale && localizedSalePrice ? (
             <div className="flex items-center gap-2 mb-4">
               <span className="text-2xl font-bold text-red-500">
-                {product.salePrice} ₽
+                {localizedSalePrice} ₽
               </span>
-              <span className="line-through text-gray-400">{product.price} ₽</span>
+              <span className="line-through text-gray-400">{localizedPrice} ₽</span>
             </div>
           ) : (
             <p className="text-2xl font-bold text-shop-text mb-4">
-              {product.price} ₽
+              {localizedPrice} ₽
             </p>
           )}
           <Button
@@ -123,9 +129,8 @@ export default function ProductPage() {
             aria-label="Добавить в корзину"
           >
             <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6 mr-2" color="white" />
-             <span className="text-lg font-bold ml-1">Добавить в корзину</span>
+             <span className="text-lg font-bold ml-1">{t('product.addToCart')}</span>
           </Button>
-          
         </div>
       </div>
     </section>

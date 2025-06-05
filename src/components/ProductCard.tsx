@@ -5,15 +5,27 @@ import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom'; // or 'next/link';
 import { useCart } from '@/hooks/use-cart';
 import { ProductInCart } from "@/types/cart";
-import { Product } from '@/types/supabase';
+import { Product, SupportedLanguage } from '@/types/Product';
+import { getLocalizedValue } from '@/lib/mappers/products';
+import { useTranslation } from 'react-i18next';
  
 interface ProductCardProps {
   product: Product;
-  // cartProduct: ProductInCart[];
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
+  const { i18n } = useTranslation();
+  
+  // Получаем текущий язык и преобразуем его в SupportedLanguage
+  const currentLang = i18n.language.split('-')[0] as SupportedLanguage;
+  
+  // Получаем локализованные значения
+  const localizedName = getLocalizedValue(product.name, currentLang);
+  const localizedPrice = getLocalizedValue(product.price, currentLang);
+  const localizedSalePrice = product.salePrice 
+    ? getLocalizedValue(product.salePrice, currentLang) 
+    : undefined;
 
   const handleAddToCart = () => {
     const productToAdd: ProductInCart = {
@@ -32,7 +44,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <Link to={`/catalog/${product.id}`}>
         <img 
           src={product.images?.[0] || "/placeholder.svg"} 
-          alt={product.name || "Без названия"}
+          alt={localizedName || "Без названия"}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
         </Link >
@@ -50,17 +62,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <div className="p-4">
         <div className="text-sm text-gray-500 mb-1">{product.category || "Категория"}</div>
         <h3 className="text-lg font-semibold mb-2 text-shop-text transition-colors group-hover:text-shop-blue-dark">
-          {product.name}
+          {localizedName}
         </h3>
         <div className="flex justify-between items-center">
           <div>
-            {product.isSale && product.salePrice ? (
+            {product.isSale && localizedSalePrice ? (
               <div className="flex items-center gap-2">
-                <span className="text-xl font-bold text-shop-text">{product.salePrice}₽</span>
-                <span className="text-sm text-gray-500 line-through">{product.price}₽</span>
+                <span className="text-xl font-bold text-shop-text">{localizedSalePrice}₽</span>
+                <span className="text-sm text-gray-500 line-through">{localizedPrice}₽</span>
               </div>
             ) : (
-              <span className="text-xl font-bold text-shop-text">{product.price}₽</span>
+              <span className="text-xl font-bold text-shop-text">{localizedPrice}₽</span>
             )}
           </div>
           <Button

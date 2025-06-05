@@ -3,6 +3,8 @@ import { X, ArrowUp, ArrowDown } from 'lucide-react';
 import OrderFormModal from './OrderFormModal';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { SupportedLanguage } from '@/types/Product';
+import { getLocalizedValue } from '@/lib/mappers/products';
 
 interface CartModalProps {
   isOpen: boolean;
@@ -10,9 +12,12 @@ interface CartModalProps {
 }
 
 export default function CartModal({ isOpen, onClose }: CartModalProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { cart, removeFromCart, clearCart, addToCart, updateQuantity } = useCart();
   const [isOrderFormOpen, setIsOrderFormOpen] = useState(false);
+  
+  // Получаем текущий язык и преобразуем его в SupportedLanguage
+  const currentLang = i18n.language.split('-')[0] as SupportedLanguage;
 
   const decreaseQuantity = (id: string) => {
     const item = cart.find((i) => i.id === id);
@@ -32,8 +37,10 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
   };
 
   const total = cart.reduce((sum, item) => {
-    const price = item.isSale && item.salePrice ? item.salePrice : item.price;
-    return sum + price * item.quantity;
+    const itemPrice = item.isSale && item.salePrice 
+      ? getLocalizedValue(item.salePrice, currentLang)
+      : getLocalizedValue(item.price, currentLang);
+    return sum + itemPrice * item.quantity;
   }, 0);
 
   if (!isOpen) return null;
@@ -72,42 +79,50 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
               </button>
             </div>
           ) : (
-            cart.map((item) => (
-              <div key={item.id} className='flex gap-4 items-center border-b pb-4'>
-                <img
-                  src={item.images?.[0] || '/images/placeholder.png'}
-                  alt={item.name}
-                  className='w-16 h-16 object-cover rounded'
-                />
-                <div className='flex-1'>
-                  <h3 className='font-semibold text-sm'>{item.name}</h3>
-                  <p className='text-sm text-gray-500 mb-1'>{item.price} ₽</p>
-                  <div className='flex items-center gap-2'>
-                    <button
-                      onClick={() => decreaseQuantity(item.id)}
-                      className='hover:text-shop-blue-dark'
-                      aria-label={t('cartModal.decreaseQuantityAriaLabel')}
-                    >
-                      <ArrowDown size={24} />
-                    </button>
-                    <span className='px-2 text-md text-blue'>{item.quantity}</span>
-                    <button
-                      onClick={() => increaseQuantity(item.id)}
-                      className='hover:text-shop-blue-dark'
-                      aria-label={t('cartModal.increaseQuantityAriaLabel')}
-                    >
-                      <ArrowUp size={24} />
-                    </button>
+            cart.map((item) => {
+              const localizedName = getLocalizedValue(item.name, currentLang);
+              const localizedPrice = getLocalizedValue(
+                item.isSale && item.salePrice ? item.salePrice : item.price, 
+                currentLang
+              );
+              
+              return (
+                <div key={item.id} className='flex gap-4 items-center border-b pb-4'>
+                  <img
+                    src={item.images?.[0] || '/images/placeholder.png'}
+                    alt={localizedName}
+                    className='w-16 h-16 object-cover rounded'
+                  />
+                  <div className='flex-1'>
+                    <h3 className='font-semibold text-sm'>{localizedName}</h3>
+                    <p className='text-sm text-gray-500 mb-1'>{localizedPrice} ₽</p>
+                    <div className='flex items-center gap-2'>
+                      <button
+                        onClick={() => decreaseQuantity(item.id)}
+                        className='hover:text-shop-blue-dark'
+                        aria-label={t('cartModal.decreaseQuantityAriaLabel')}
+                      >
+                        <ArrowDown size={24} />
+                      </button>
+                      <span className='px-2 text-md text-blue'>{item.quantity}</span>
+                      <button
+                        onClick={() => increaseQuantity(item.id)}
+                        className='hover:text-shop-blue-dark'
+                        aria-label={t('cartModal.increaseQuantityAriaLabel')}
+                      >
+                        <ArrowUp size={24} />
+                      </button>
+                    </div>
                   </div>
+                  <button
+                    onClick={() => removeFromCart(item.id)}
+                    className='text-red-500 text-xs hover:underline hover:text-red-600 border border-red-500 rounded-md px-2 py-1'
+                  >
+                    {t('cartModal.remove')}
+                  </button>
                 </div>
-                <button
-                  onClick={() => removeFromCart(item.id)}
-                  className='text-red-500 text-xs hover:underline hover:text-red-600 border border-red-500 rounded-md px-2 py-1'
-                >
-                  {t('cartModal.remove')}
-                </button>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
 
@@ -119,20 +134,12 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
               <span className='text-lg font-bold'>{total.toFixed(2)} ₽</span>
             </div>
             <div className='flex justify-center'>
-              {/* <button
-              onClick={clearCart}
-              className="text-sm text-red-500 hover:underline"
-            >
-              Очистить
-            </button> */}
-              {/* {cart.length > 0 && ( */}
               <button
                 onClick={() => setIsOrderFormOpen(true)}
                 className='px-4 py-2 rounded-md bg-shop-blue-dark text-white hover:bg-shop-blue-dark/90'
               >
                 {t('cartModal.checkout')}
               </button>
-              {/* // )} */}
 
               <OrderFormModal
                 isOpen={isOrderFormOpen}

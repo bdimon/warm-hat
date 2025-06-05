@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import ProductCard  from './ProductCard';
+import ProductCard from './ProductCard';
 import { Button } from '@/components/ui/button';
-import { Product } from '@/types/Product';
-import { mapProductFromAPI } from "@/lib/mappers/products";
+import { Product, SupportedLanguage } from '@/types/Product';
+import { mapProductFromAPI, getLocalizedValue } from "@/lib/mappers/products";
 import { useTranslation } from 'react-i18next';
 
 // Конфигурация категорий:
@@ -16,7 +16,7 @@ const CATEGORIES_CONFIG = [
 ];
 
 const Catalog = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [selectedFilterKey, setSelectedFilterKey] = useState<string>(
     CATEGORIES_CONFIG[0].filterKey
   );
@@ -26,6 +26,9 @@ const Catalog = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const catalogRef = useRef<HTMLDivElement>(null);
+  
+  // Получаем текущий язык и преобразуем его в SupportedLanguage
+  const currentLang = i18n.language.split('-')[0] as SupportedLanguage;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
