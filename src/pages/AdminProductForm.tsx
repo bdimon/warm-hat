@@ -1,35 +1,44 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import FormField from "@/components/FormField";
-import { Product } from "@/types/Product"
+import { Product, SupportedLanguage, MultilingualString, RegionalPrice } from "@/types/Product";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { mapProductFromAPI, mapProductToAPI } from "@/lib/mappers/products";
-
-interface ProductForm {
-  name: string;
-  price: number;
-  quantity: number;
-  // description?: string;
-  category: string;
-  images: string[]; // Пути к изображениям, например: ["/images/hat.jpg"]
-}
-
 import { useTranslation } from 'react-i18next';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const initialForm: Product = {
-    id: "",
-    name: "",
-    // description: "",
-    price: 0,
-    quantity: 0,
-    category: "",
-    images: [],
-    isNew: false,
-    isSale: false,
-    salePrice: undefined,
-  };
-  
+  id: "",
+  name: {
+    en: "",
+    ru: "",
+    ua: "",
+    pl: ""
+  } as MultilingualString,
+  // description: "",
+  price: {
+    en: 0,
+    ru: 0,
+    ua: 0,
+    pl: 0
+  } as RegionalPrice,
+  quantity: 0,
+  category: "",
+  images: [],
+  isNew: false,
+  isSale: false,
+  salePrice: undefined,
+};
+
+const supportedLanguages: SupportedLanguage[] = ['en', 'ru', 'ua', 'pl'];
+const languageLabels: Record<SupportedLanguage, string> = {
+  en: 'English',
+  ru: 'Русский',
+  ua: 'Українська',
+  pl: 'Polski'
+};
+
 export default function AdminProductForm() {
   const { id } = useParams(); // если есть, значит редактируем
   const navigate = useNavigate();
@@ -38,6 +47,7 @@ export default function AdminProductForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [formErrors, setFormErrors] = useState<{[key: string]: string}>({});
+  const [activeTab, setActiveTab] = useState<SupportedLanguage>('en');
 
   const isEdit = !!id;
 
@@ -52,7 +62,8 @@ export default function AdminProductForm() {
         const mappedData = mapProductFromAPI(data);
         setForm(mappedData);
       } catch (err) {
-setError('Не удалось загрузить товар');      } finally {
+        setError('Не удалось загрузить товар');
+      } finally {
         setLoading(false);
       }
     };
@@ -61,12 +72,27 @@ setError('Не удалось загрузить товар');      } finally {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const target = e.target;
-  const { name, value, type } = target;
-  const checked = (target as HTMLInputElement).checked; // add type guard
+    const { name, value, type } = target;
+    const checked = (target as HTMLInputElement).checked;
+    
     setForm((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : name === "price" || name === "quantity" ? Number(value) : value,
+      [name]: type === "checkbox" ? checked : name === "quantity" ? Number(value) : value,
     }));
+  };
+
+  const handleMultilingualChange = (field: 'name' | 'price' | 'salePrice', lang: SupportedLanguage, value: string) => {
+    setForm((prev) => {
+      const currentValue = prev[field] || (field === 'name' ? {} : {});
+      const newValue = typeof currentValue === 'object' 
+        ? { ...currentValue, [lang]: field === 'name' ? value : Number(value) } 
+        : { [lang]: field === 'name' ? value : Number(value) };
+      
+      return {
+        ...prev,
+        [field]: newValue
+      };
+    });
   };
 
   const handleSubmit = async () => {
@@ -79,7 +105,6 @@ setError('Не удалось загрузить товар');      } finally {
 
       const payload = mapProductToAPI(form);
       
-
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
@@ -104,25 +129,29 @@ setError('Не удалось загрузить товар');      } finally {
       <h1 className='text-2xl font-bold mb-4'>{isEdit ? 'Редактировать товар' : 'Новый товар'}</h1>
 
       <div className='space-y-4'>
-        <FormField label='Название' error={formErrors.name}>
+        <TabsList className="mb-4">
+          {supportedLanguages.map(lang => (
+            <TabsTrigger 
+              key={lang} 
+              value={lang} 
+              onClick={() => setActiveTab(lang)}
+              className={activeTab === lang ? 'bg-shop-blue text-white' : ''}
+            >
+              {languageLabels[lang]}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+
+        {/* Название товара */}
+        <FormField label={`Название (${languageLabels[activeTab]})`} error={formErrors.name}>
           <Input
-            name='name'
-            value={form.name}
-            onChange={handleChange}
-            placeholder='Название товара'
+            value={typeof form.name === 'object' ? form.name[activeTab] || '' : form.name}
+            onChange={(e) => handleMultilingualChange('name', activeTab, e.target.value)}
+            placeholder={`Название товара на ${languageLabels[activeTab]}`}
           />
         </FormField>
 
-        {/* <FormField label='Описание' error={formErrors.description}>
-          <Textarea
-            name='description'
-            value={form.description}
-            onChange={handleChange}
-            placeholder='Описание товара'
-            rows={4}
-          />
-        </FormField> */}
-
+        {/* Категория */}
         <FormField label='Категория' error={formErrors.category}>
           <Input
             name='category'
@@ -132,16 +161,17 @@ setError('Не удалось загрузить товар');      } finally {
           />
         </FormField>
 
-        <FormField label='Цена' error={formErrors.price}>
+        {/* Цена */}
+        <FormField label={`Цена (${languageLabels[activeTab]})`} error={formErrors.price}>
           <Input
             type='number'
-            name='price'
-            value={form.price}
-            onChange={handleChange}
+            value={typeof form.price === 'object' ? form.price[activeTab] || 0 : form.price}
+            onChange={(e) => handleMultilingualChange('price', activeTab, e.target.value)}
             placeholder='0.00'
           />
         </FormField>
 
+        {/* Количество */}
         <FormField label='Количество' error={formErrors.quantity}>
           <Input
             type='number'
@@ -152,6 +182,7 @@ setError('Не удалось загрузить товар');      } finally {
           />
         </FormField>
 
+        {/* Изображения */}
         <FormField label='Изображения'>
           <Input
             name='images'
@@ -166,7 +197,7 @@ setError('Не удалось загрузить товар');      } finally {
           />
         </FormField>
         
-
+        {/* Новинка */}
         <label className='flex items-center space-x-2'>
           <input
             type='checkbox'
@@ -177,6 +208,7 @@ setError('Не удалось загрузить товар');      } finally {
           <span>Новинка</span>
         </label>
 
+        {/* Скидка */}
         <label className='flex items-center space-x-2'>
           <input
             type='checkbox'
@@ -187,18 +219,19 @@ setError('Не удалось загрузить товар');      } finally {
           <span>Скидка</span>
         </label>
 
+        {/* Цена со скидкой */}
         {form.isSale && (
-          <FormField label='Цена со скидкой'>
+          <FormField label={`Цена со скидкой (${languageLabels[activeTab]})`}>
             <Input
               type='number'
-              name='salePrice'
-              value={form.salePrice?.toString() ?? ''}
-              onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  salePrice: e.target.value === '' ? undefined : Number(e.target.value),
-                }))
+              value={
+                form.salePrice 
+                  ? (typeof form.salePrice === 'object' 
+                    ? form.salePrice[activeTab] || 0 
+                    : form.salePrice) 
+                  : ''
               }
+              onChange={(e) => handleMultilingualChange('salePrice', activeTab, e.target.value)}
               placeholder='0.00'
             />
           </FormField>

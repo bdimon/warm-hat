@@ -8,6 +8,7 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
+    "testconn": "vite-node src/scripts/test-connection.ts",
     "preview": "vite preview",
     "seed": "vite-node src/scripts/seed.ts",
     "dev:api": "vite-node src/server/index.ts",

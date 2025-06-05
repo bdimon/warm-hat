@@ -2402,7 +2402,7 @@ CREATE TABLE public.products (
     images text[],
     "isNew" boolean DEFAULT false,
     "isSale" boolean DEFAULT false,
-    "salePrice" numeric(10,2) DEFAULT NULL::numeric,
+    "salePrice" numeric(10,2),
     created_at timestamp with time zone DEFAULT now(),
     category text
 );

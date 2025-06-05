@@ -1,5 +1,6 @@
 // types/supabase.ts
 import { ProductInCart } from '@/types/cart';
+import { SupportedLanguage, Product, RawProduct } from '@/types/Product';
 
 export type Profile = {
   id: string;
@@ -11,18 +12,8 @@ export type Profile = {
   updated_at: string;
 };
 
-export type ProductRaw = {
-  id: string;
-  name: string;
-  description?: string;
-  price: number;
-  quantity: number;
-  images: string[];
-  category: string;
-  isNew?: boolean;
-  isSale?: boolean;
-  salePrice?: number | null;
-};
+// Используем тип RawProduct из Product.ts
+export type ProductRaw = RawProduct;
 
 type OrderStatus = 'new' | 'pending' | 'paid' | 'delivered';
 
@@ -40,15 +31,5 @@ export type Order = {
   payment_method: string;
 };
 
-export interface Product {
-  id: string;
-  name: string;
-  description?: string;
-  price: number;
-  quantity: number;
-  images: string[];
-  category: string;
-  isNew?: boolean;
-  isSale?: boolean;
-  salePrice?: number;
-}
+// Используем тип Product из Product.ts
+export type { Product };
