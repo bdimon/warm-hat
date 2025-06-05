@@ -1,23 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Product } from "@/types/Product";
+import { Product, SupportedLanguage, MultilingualString, CURRENCY_SYMBOLS } from "@/types/Product";
 import { mapProductFromAPI } from "@/lib/mappers/products";
+import { useTranslation } from "react-i18next";
 
- 
-// interface Product {
-//   id: string;
-//   name: string;
-//   price: number;
-//   quantity: number;
-//   category: string;
-//   images: string[];
-// }
- 
 export default function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { i18n } = useTranslation();
+  const currentLanguage = i18n.language as SupportedLanguage || 'en';
+
+  // Получаем символ валюты для текущего языка
+  const currencySymbol = CURRENCY_SYMBOLS[currentLanguage];
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -26,7 +22,6 @@ export default function AdminProducts() {
         if (!res.ok) throw new Error("Ошибка загрузки товаров");
         const json = await res.json();
         const mappedProducts = json.data.map(mapProductFromAPI);
-        // setProducts(json.data);
         setProducts(mappedProducts);
       } catch (err) {
         if (err instanceof Error) setError(err.message);
@@ -38,6 +33,18 @@ export default function AdminProducts() {
 
     fetchProducts();
   }, []);
+
+  // Функция для получения локализованного значения
+  const getLocalizedName = (name: string | MultilingualString): string => {
+    if (typeof name === 'string') return name;
+    return name[currentLanguage] || name.en || Object.values(name)[0] || '';
+  };
+
+  // Функция для получения локализованной цены
+  const getLocalizedPrice = (price: number | Record<SupportedLanguage, number>): number => {
+    if (typeof price === 'number') return price;
+    return price[currentLanguage] || price.en || Object.values(price)[0] || 0;
+  };
 
   const handleDelete = async (id: string) => {
     const confirm = window.confirm("Удалить этот товар?");
@@ -75,14 +82,16 @@ export default function AdminProducts() {
           <div key={product.id} className="border p-4 rounded shadow-sm space-y-2">
             <img
               src={product.images?.[0] || "/placeholder.jpg"}
-              alt={product.name}
+              alt={getLocalizedName(product.name)}
               className="w-full h-40 object-cover rounded"
             />
-            <h2 className="font-semibold">{product.name}</h2>
+            <h2 className="font-semibold">{getLocalizedName(product.name)}</h2>
             <p>Категория: {product.category}</p>
-            <p>Цена: {product.price.toFixed(2)} ₽</p>
+            <p>Цена: {getLocalizedPrice(product.price).toFixed(2)} {currencySymbol}</p>
             {product.isSale && product.salePrice && (
-              <p className="mt-1 text-red-600 font-semibold">Скидка: ₽ {product.salePrice}</p>
+              <p className="mt-1 text-red-600 font-semibold">
+                Скидка: {getLocalizedPrice(product.salePrice).toFixed(2)} {currencySymbol}
+              </p>
             )}
             <p>В наличии: {product.quantity} шт.</p>
 

@@ -8,6 +8,8 @@ import FormField from './FormField';
 import { useTranslation } from 'react-i18next';
 import { isValidPhoneNumber } from 'react-phone-number-input'; // 1. Импортируем функцию валидации
 import PhoneInput from '@/components/ui/phone-input';
+import { SupportedLanguage, CURRENCY_SYMBOLS } from '@/types/Product';
+import { getLocalizedValue } from '@/lib/mappers/products';
 
 interface OrderFormModalProps {
   isOpen: boolean;
@@ -27,7 +29,13 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
     phone: '',
     payment: 'card',
   });
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  // Получаем текущий язык и преобразуем его в SupportedLanguage
+  const currentLang = i18n.language.split('-')[0] as SupportedLanguage;
+  
+  // Получаем символ валюты для текущего языка
+  const currencySymbol = CURRENCY_SYMBOLS[currentLang];
 
   const [formErrors, setFormErrors] = useState({
     name: '',
@@ -103,7 +111,9 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
   };
 
   const total = cart.reduce((sum, item) => {
-    const price = item.isSale && item.salePrice ? item.salePrice : item.price;
+    const price = item.isSale && item.salePrice 
+      ? getLocalizedValue(item.salePrice, currentLang)
+      : getLocalizedValue(item.price, currentLang);
     return sum + price * item.quantity;
   }, 0);
 
@@ -249,7 +259,7 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
 
         <div className='mt-6 flex justify-between items-center'>
           <span className='font-semibold text-shop-blue-dark'>{t('orderFormModal.total')}</span>
-          <span className='text-lg font-bold'>{total.toFixed(2)} ₽</span>
+          <span className='text-lg font-bold'>{total.toFixed(2)} {currencySymbol}</span>
         </div>
 
         <button

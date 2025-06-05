@@ -7,6 +7,17 @@ export type MultilingualString = Record<SupportedLanguage, string>;
 // Тип для региональных цен
 export type RegionalPrice = Record<SupportedLanguage, number>;
 
+// Добавим тип для валют по регионам
+export type CurrencySymbol = '$' | '₽' | '₴' | 'zł';
+
+// Маппинг языков на символы валют
+export const CURRENCY_SYMBOLS: Record<SupportedLanguage, CurrencySymbol> = {
+  en: '$',
+  ru: '₽',
+  ua: '₴',
+  pl: 'zł'
+};
+
 // Основной интерфейс продукта для использования в приложении
 export interface Product {
   id: string;

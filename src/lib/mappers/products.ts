@@ -1,4 +1,4 @@
-import { RawProduct, Product, SupportedLanguage, MultilingualString, RegionalPrice } from "@/types/Product";
+import { RawProduct, Product, SupportedLanguage, MultilingualString, RegionalPrice, CURRENCY_SYMBOLS } from "@/types/Product";
 
 // Преобразование данных из API (из Supabase) → в форму/клиент
 export function mapProductFromAPI(raw: RawProduct): Product {
@@ -66,6 +66,16 @@ export function mapProductToAPI(product: Product): RawProduct {
   };
 }
 
+// Добавим функцию для получения символа валюты
+export function getCurrencySymbol(language: SupportedLanguage = 'en'): string {
+  return CURRENCY_SYMBOLS[language] || '$';
+}
+
+// Функция для форматирования цены с символом валюты
+export function formatPrice(price: number, language: SupportedLanguage = 'en'): string {
+  return `${price.toFixed(2)} ${getCurrencySymbol(language)}`;
+}
+
 // Вспомогательная функция для получения значения для текущего языка
 export function getLocalizedValue<T>(
   value: T | Record<SupportedLanguage, T>,
@@ -89,6 +99,6 @@ export function getLocalizedValue<T>(
   }
   
   // Если и запасной язык отсутствует, берем первое доступное значение
-  const firstAvailableKey = Object.keys(typedValue)[0] as SupportedLanguage;
-  return typedValue[firstAvailableKey] || ('' as unknown as T);
+  const firstAvailableValue = Object.values(typedValue)[0];
+  return firstAvailableValue !== undefined ? firstAvailableValue : {} as T;
 }

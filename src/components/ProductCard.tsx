@@ -5,8 +5,8 @@ import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom'; // or 'next/link';
 import { useCart } from '@/hooks/use-cart';
 import { ProductInCart } from "@/types/cart";
-import { Product, SupportedLanguage } from '@/types/Product';
-import { getLocalizedValue } from '@/lib/mappers/products';
+import { Product, SupportedLanguage, CURRENCY_SYMBOLS } from '@/types/Product';
+import { getLocalizedValue, formatPrice } from '@/lib/mappers/products';
 import { useTranslation } from 'react-i18next';
  
 interface ProductCardProps {
@@ -26,6 +26,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const localizedSalePrice = product.salePrice 
     ? getLocalizedValue(product.salePrice, currentLang) 
     : undefined;
+  
+  // Получаем символ валюты для текущего языка
+  const currencySymbol = CURRENCY_SYMBOLS[currentLang];
 
   const handleAddToCart = () => {
     const productToAdd: ProductInCart = {
@@ -68,11 +71,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <div>
             {product.isSale && localizedSalePrice ? (
               <div className="flex items-center gap-2">
-                <span className="text-xl font-bold text-shop-text">{localizedSalePrice}₽</span>
-                <span className="text-sm text-gray-500 line-through">{localizedPrice}₽</span>
+                <span className="text-xl font-bold text-shop-text">{localizedSalePrice} {currencySymbol}</span>
+                <span className="text-sm text-gray-500 line-through">{localizedPrice} {currencySymbol}</span>
               </div>
             ) : (
-              <span className="text-xl font-bold text-shop-text">{localizedPrice}₽</span>
+              <span className="text-xl font-bold text-shop-text">{localizedPrice} {currencySymbol}</span>
             )}
           </div>
           <Button

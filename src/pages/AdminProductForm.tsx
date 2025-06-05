@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import FormField from "@/components/FormField";
-import { Product, SupportedLanguage, MultilingualString, RegionalPrice } from "@/types/Product";
+import { Product, SupportedLanguage, MultilingualString, RegionalPrice, CURRENCY_SYMBOLS } from "@/types/Product";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { mapProductFromAPI, mapProductToAPI } from "@/lib/mappers/products";
@@ -103,7 +103,33 @@ export default function AdminProductForm() {
         ? `http://localhost:3010/api/products/${id}`
         : "http://localhost:3010/api/products";
 
-      const payload = mapProductToAPI(form);
+      // Create a clean copy of the form data
+      const cleanForm = { ...form };
+      
+      // Handle salePrice properly - if not on sale, set to undefined
+      if (!cleanForm.isSale) {
+        cleanForm.salePrice = undefined;
+      } else if (cleanForm.salePrice) {
+        // Remove any undefined values from salePrice object
+        if (typeof cleanForm.salePrice === 'object') {
+          Object.keys(cleanForm.salePrice).forEach(key => {
+            const typedKey = key as SupportedLanguage;
+            if (cleanForm.salePrice && 
+                typeof cleanForm.salePrice === 'object' && 
+                cleanForm.salePrice[typedKey] === undefined) {
+              delete cleanForm.salePrice[typedKey];
+            }
+          });
+          
+          // If salePrice object is empty, set it to undefined
+          if (Object.keys(cleanForm.salePrice).length === 0) {
+            cleanForm.salePrice = undefined;
+          }
+        }
+      }
+      
+      const payload = mapProductToAPI(cleanForm);
+      console.log('[AdminProductForm] handleSubmit', payload);
       
       const res = await fetch(url, {
         method,
@@ -111,11 +137,16 @@ export default function AdminProductForm() {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error('Ошибка сохранения');
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        console.error('Server error:', errorData);
+        throw new Error(errorData.error || 'Ошибка сохранения');
+      }
 
       navigate("/admin/products");
     } catch (err) {
-      setError('Не удалось сохранить товар');
+      console.error('Error saving product:', err);
+      setError(err instanceof Error ? err.message : 'Не удалось сохранить товар');
     } finally {
       setLoading(false);
     }
@@ -129,29 +160,62 @@ export default function AdminProductForm() {
       <h1 className='text-2xl font-bold mb-4'>{isEdit ? 'Редактировать товар' : 'Новый товар'}</h1>
 
       <div className='space-y-4'>
-        <TabsList className="mb-4">
+        <Tabs defaultValue={activeTab} onValueChange={(value) => setActiveTab(value as SupportedLanguage)}>
+          <TabsList className="mb-4">
+            {supportedLanguages.map(lang => (
+              <TabsTrigger 
+                key={lang} 
+                value={lang}
+                className={activeTab === lang ? 'bg-shop-blue text-white' : ''}
+              >
+                {languageLabels[lang]}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+
           {supportedLanguages.map(lang => (
-            <TabsTrigger 
-              key={lang} 
-              value={lang} 
-              onClick={() => setActiveTab(lang)}
-              className={activeTab === lang ? 'bg-shop-blue text-white' : ''}
-            >
-              {languageLabels[lang]}
-            </TabsTrigger>
+            <TabsContent key={lang} value={lang}>
+              {/* Название товара */}
+              <FormField label={`Название (${languageLabels[lang]})`} error={formErrors.name}>
+                <Input
+                  value={typeof form.name === 'object' ? form.name[lang] || '' : form.name}
+                  onChange={(e) => handleMultilingualChange('name', lang, e.target.value)}
+                  placeholder={`Название товара на ${languageLabels[lang]}`}
+                />
+              </FormField>
+
+              {/* Цена */}
+              <FormField label={`Цена (${CURRENCY_SYMBOLS[lang]})`} error={formErrors.price}>
+                <Input
+                  type='number'
+                  value={typeof form.price === 'object' ? form.price[lang] || 0 : form.price}
+                  onChange={(e) => handleMultilingualChange('price', lang, e.target.value)}
+                  placeholder={`0.00 ${CURRENCY_SYMBOLS[lang]}`}
+                />
+              </FormField>
+
+              {/* Цена со скидкой - показывается только если включена скидка */}
+              {form.isSale && (
+                <FormField label={`Цена со скидкой (${CURRENCY_SYMBOLS[lang]})`}>
+                  <Input
+                    type='number'
+                    value={
+                      form.salePrice 
+                        ? (typeof form.salePrice === 'object' 
+                          ? form.salePrice[lang] || 0 
+                          : form.salePrice) 
+                        : ''
+                    }
+                    onChange={(e) => handleMultilingualChange('salePrice', lang, e.target.value)}
+                    placeholder={`0.00 ${CURRENCY_SYMBOLS[lang]}`}
+                  />
+                </FormField>
+              )}
+            </TabsContent>
           ))}
-        </TabsList>
+        </Tabs>
 
-        {/* Название товара */}
-        <FormField label={`Название (${languageLabels[activeTab]})`} error={formErrors.name}>
-          <Input
-            value={typeof form.name === 'object' ? form.name[activeTab] || '' : form.name}
-            onChange={(e) => handleMultilingualChange('name', activeTab, e.target.value)}
-            placeholder={`Название товара на ${languageLabels[activeTab]}`}
-          />
-        </FormField>
-
-        {/* Категория */}
+        {/* Категория - общая для всех языков */}
         <FormField label='Категория' error={formErrors.category}>
           <Input
             name='category'
@@ -161,17 +225,7 @@ export default function AdminProductForm() {
           />
         </FormField>
 
-        {/* Цена */}
-        <FormField label={`Цена (${languageLabels[activeTab]})`} error={formErrors.price}>
-          <Input
-            type='number'
-            value={typeof form.price === 'object' ? form.price[activeTab] || 0 : form.price}
-            onChange={(e) => handleMultilingualChange('price', activeTab, e.target.value)}
-            placeholder='0.00'
-          />
-        </FormField>
-
-        {/* Количество */}
+        {/* Количество - общее для всех языков */}
         <FormField label='Количество' error={formErrors.quantity}>
           <Input
             type='number'
@@ -182,7 +236,7 @@ export default function AdminProductForm() {
           />
         </FormField>
 
-        {/* Изображения */}
+        {/* Изображения - общие для всех языков */}
         <FormField label='Изображения'>
           <Input
             name='images'
@@ -218,24 +272,6 @@ export default function AdminProductForm() {
           />
           <span>Скидка</span>
         </label>
-
-        {/* Цена со скидкой */}
-        {form.isSale && (
-          <FormField label={`Цена со скидкой (${languageLabels[activeTab]})`}>
-            <Input
-              type='number'
-              value={
-                form.salePrice 
-                  ? (typeof form.salePrice === 'object' 
-                    ? form.salePrice[activeTab] || 0 
-                    : form.salePrice) 
-                  : ''
-              }
-              onChange={(e) => handleMultilingualChange('salePrice', activeTab, e.target.value)}
-              placeholder='0.00'
-            />
-          </FormField>
-        )}
       </div>
 
       <button

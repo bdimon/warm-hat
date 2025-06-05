@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Product, SupportedLanguage } from "@/types/Product";
+import { Product, SupportedLanguage, CURRENCY_SYMBOLS } from "@/types/Product";
 import { Button } from "@/components/ui/button";
 import { Loader2, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/hooks/use-cart';
@@ -21,6 +21,9 @@ export default function ProductPage() {
   
   // Получаем текущий язык и преобразуем его в SupportedLanguage
   const currentLang = i18n.language.split('-')[0] as SupportedLanguage;
+
+  // Получаем символ валюты для текущего языка
+  const currencySymbol = CURRENCY_SYMBOLS[currentLang];
 
   useEffect(() => {
     setLoading(true);
@@ -114,13 +117,13 @@ export default function ProductPage() {
           {product.isSale && localizedSalePrice ? (
             <div className="flex items-center gap-2 mb-4">
               <span className="text-2xl font-bold text-red-500">
-                {localizedSalePrice} ₽
+                {localizedSalePrice} {currencySymbol}
               </span>
-              <span className="line-through text-gray-400">{localizedPrice} ₽</span>
+              <span className="line-through text-gray-400">{localizedPrice} {currencySymbol}</span>
             </div>
           ) : (
             <p className="text-2xl font-bold text-shop-text mb-4">
-              {localizedPrice} ₽
+              {localizedPrice} {currencySymbol}
             </p>
           )}
           <Button

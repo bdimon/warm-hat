@@ -3,7 +3,7 @@ import { X, ArrowUp, ArrowDown } from 'lucide-react';
 import OrderFormModal from './OrderFormModal';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SupportedLanguage } from '@/types/Product';
+import { SupportedLanguage, CURRENCY_SYMBOLS } from '@/types/Product';
 import { getLocalizedValue } from '@/lib/mappers/products';
 
 interface CartModalProps {
@@ -18,6 +18,9 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
   
   // Получаем текущий язык и преобразуем его в SupportedLanguage
   const currentLang = i18n.language.split('-')[0] as SupportedLanguage;
+  
+  // Получаем символ валюты для текущего языка
+  const currencySymbol = CURRENCY_SYMBOLS[currentLang];
 
   const decreaseQuantity = (id: string) => {
     const item = cart.find((i) => i.id === id);
@@ -95,7 +98,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                   />
                   <div className='flex-1'>
                     <h3 className='font-semibold text-sm'>{localizedName}</h3>
-                    <p className='text-sm text-gray-500 mb-1'>{localizedPrice} ₽</p>
+                    <p className='text-sm text-gray-500 mb-1'>{localizedPrice} {currencySymbol}</p>
                     <div className='flex items-center gap-2'>
                       <button
                         onClick={() => decreaseQuantity(item.id)}
@@ -131,7 +134,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
           <div className='p-4 border-t'>
             <div className='flex justify-between items-center mb-4'>
               <span className='font-semibold'>{t('cartModal.totalLabel')}:</span>
-              <span className='text-lg font-bold'>{total.toFixed(2)} ₽</span>
+              <span className='text-lg font-bold'>{total.toFixed(2)} {currencySymbol}</span>
             </div>
             <div className='flex justify-center'>
               <button
