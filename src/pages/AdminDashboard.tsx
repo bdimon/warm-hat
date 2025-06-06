@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {type Order as SupabaseOrder} from '@/types/supabase'
+import { type Order as SupabaseOrder } from '@/types/supabase';
 import { useSnackbar } from "@/hooks/use-snackbar"; // Импортируем useSnackbar
 import {
   AlertDialog,
@@ -13,7 +13,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from '@/components/ui/button';
 
 // Расширяем тип Order для дашборда, чтобы включить email пользователя из auth схемы и убедиться, что все необходимые поля для отображения присутствуют
 interface DashboardOrder extends SupabaseOrder {
@@ -41,7 +41,7 @@ export default function AdminDashboard() {
         }
 
         const data = await res.json();
-        console.log('[AdminDashboard] Data received from API for orders:', data);
+        // console.log('[AdminDashboard] Data received from API for orders:', data);
         setOrders(data);
       } catch (err) {
         if (err instanceof Error) {

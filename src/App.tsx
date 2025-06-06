@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ProductPage from "./pages/ProductPage";
-// import CatalogtPage from "./pages/CatalogPage";
+// import CatalogPage from "./pages/CatalogPage";
 import CartPage from "./pages/CartPage";
 import AdminProducts from "./pages/AdminProducts";
 import AdminProductForm from "./pages/AdminProductForm";
@@ -33,7 +33,7 @@ const App = () => (
           <Route path="/catalog/:id" element={<ProductPage />} />
           <Route path="/edit-order/:id" element={<EditOrderPage />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          {/* <Route path="/catalog" element={<CatalogtPage />} /> */}
+          {/* <Route path="/catalog" element={<CatalogPage />} /> */}
           <Route path="/signup" element={<SignUpForm />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/update-password" element={<UpdatePasswordPage />} />

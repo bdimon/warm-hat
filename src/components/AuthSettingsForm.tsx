@@ -29,7 +29,6 @@ export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
     confirmPassword: '',
   });
   const [user, setUser] = useState<User | null>(null);
-  // const [errors, setErrors] = useState<FormErrors>({});
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -55,8 +54,6 @@ export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
   };
 
   const validate = (): boolean => {
-    // const nextErrors: FormErrors = {};
-
     const errors = { email: '', password: '', confirmPassword: '' };
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -78,7 +75,6 @@ export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
     }
 
     setFormErrors(errors);
-    console.log(errors);
 
     return !Object.values(errors).some((e) => e);
   };

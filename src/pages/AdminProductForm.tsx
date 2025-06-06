@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import FormField from "@/components/FormField";
-import { Product, SupportedLanguage, MultilingualString, RegionalPrice, CURRENCY_SYMBOLS } from "@/types/Product";
+import { Product, SupportedLanguage, MultilingualString, RegionalPrice, CURRENCY_SYMBOLS } from "@/types/Product"; // 1. Импортируем типы
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { mapProductFromAPI, mapProductToAPI } from "@/lib/mappers/products";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getLocalizedValue } from '@/lib/mappers/products';
 
 const initialForm: Product = {
   id: "",
@@ -46,7 +46,7 @@ export default function AdminProductForm() {
   const [form, setForm] = useState<Product>(initialForm);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [formErrors, setFormErrors] = useState<{[key: string]: string}>({});
+  const [formErrors] = useState<{[key: string]: string}>({});
   const [activeTab, setActiveTab] = useState<SupportedLanguage>('en');
 
   const isEdit = !!id;
@@ -129,7 +129,7 @@ export default function AdminProductForm() {
       }
       
       const payload = mapProductToAPI(cleanForm);
-      console.log('[AdminProductForm] handleSubmit', payload);
+      // console.log('[AdminProductForm] handleSubmit', payload);
       
       const res = await fetch(url, {
         method,
