@@ -312,6 +312,10 @@
     "error": "Błąd: {{errorMessage}}",
     "deleteSuccess": "Zamówienie zostało pomyślnie usunięte",
     "deleteError": "Nie udało się usunąć zamówienia",
-    "orderDeleted": "Zamówienie zostało pomyślnie usunięte"
+    "orderDeleted": "Zamówienie zostało pomyślnie usunięte",
+    "deleteConfirmTitle": "Usuń zamówienie",
+"deleteConfirmDescription": "Czy na pewno chcesz usunąć to zamówienie? Tej czynności nie można cofnąć.",
+"deleteConfirmCancel": "Anuluj",
+"deleteConfirmAction": "Usuń"
   }
 }

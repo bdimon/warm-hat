@@ -312,6 +312,10 @@
     "error": "Помилка: {{errorMessage}}",
     "deleteSuccess": "Замовлення успішно видалено",
     "deleteError": "Не вдалося видалити замовлення",
-    "orderDeleted": "Замовлення успішно видалено"
+    "orderDeleted": "Замовлення успішно видалено",
+    "deleteConfirmTitle": "Видалити замовлення",
+    "deleteConfirmDescription": "Ви впевнені, що хочете видалити це замовлення? Цю дію неможливо скасувати.",
+    "deleteConfirmCancel": "Скасувати",
+    "deleteConfirmAction": "Видалити"
   }
 }

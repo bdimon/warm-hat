@@ -253,7 +253,11 @@
     "loading": "Загрузка заказов...",
     "error": "Ошибка: {{errorMessage}}",
     "deleteSuccess": "Заказ успешно удален",
-    "deleteError": "Не удалось удалить заказ"
+    "deleteError": "Не удалось удалить заказ",
+    "deleteConfirmTitle": "Удалить заказ",
+    "deleteConfirmDescription": "Вы уверены, что хотите удалить этот заказ? Это действие нельзя отменить.",
+    "deleteConfirmCancel": "Отмена",
+    "deleteConfirmAction": "Удалить"
   },
   "adminUsers": {
     "title": "Админка — Пользователи",

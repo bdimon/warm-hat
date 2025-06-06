@@ -98,9 +98,9 @@ export default function AdminUsersPage() {
         <Header showBackButton onBackClick={() => navigate('/admin/dashboard')} />
         <div className="flex-grow flex items-center justify-center">
           <div className="text-center">
-            <p className="text-xl text-red-600 mb-4">Ошибка: {error}</p>
+            <p className="text-xl text-red-600 mb-4">{t('adminUsers.error')}: {error}</p>
             <Button onClick={() => navigate('/admin/dashboard')} className="bg-shop-blue-dark text-white">
-              Вернуться в админ-панель
+              {t('adminUsers.backToAdmin')}
             </Button>
           </div>
         </div>
@@ -109,41 +109,45 @@ export default function AdminUsersPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className='min-h-screen flex flex-col bg-gray-50'>
       <Header showBackButton onBackClick={() => navigate('/admin/dashboard')} />
-      <div className="container mx-auto pt-24 pb-12 px-4">
-        <h1 className="text-3xl font-bold mb-8 text-shop-text">Управление пользователями</h1>
-        
+      <div className='container mx-auto pt-24 pb-12 px-4'>
+        <h1 className='text-3xl font-bold mb-8 text-shop-text'>{t('adminUsers.title')}</h1>
+
         {users.length === 0 ? (
-          <p className="text-center text-gray-500 my-8">Нет пользователей</p>
+          <p className='text-center text-gray-500 my-8'>{t('adminUsers.noUsers')}</p>
         ) : (
-          <div className="overflow-x-auto bg-white rounded-lg shadow">
-            <table className="min-w-full table-auto">
-              <thead className="bg-gray-100">
+          <div className='overflow-x-auto bg-white rounded-lg shadow'>
+            <table className='min-w-full table-auto'>
+              <thead className='bg-gray-100'>
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">ID</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Email</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Роль</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Дата регистрации</th>
-                  <th className="px-4 py-3 text-sm font-medium text-gray-600">Действия</th>
+                  <th className='px-4 py-3 text-left text-sm font-medium text-gray-600'>ID</th>
+                  <th className='px-4 py-3 text-left text-sm font-medium text-gray-600'>Email</th>
+                  <th className='px-4 py-3 text-left text-sm font-medium text-gray-600'>
+                    {t('adminUsers.role')}
+                  </th>
+                  <th className='px-4 py-3 text-left text-sm font-medium text-gray-600'>
+                    {t('adminUsers.date')}
+                  </th>
+                  <th className='px-4 py-3 text-sm font-medium text-gray-600'>
+                    {t('adminUsers.actions')}
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {users.map((user) => (
-                  <tr key={user.id} className="border-t">
-                    <td className="px-4 py-3 font-mono text-xs">{user.id}</td>
-                    <td className="px-4 py-3">{user.email}</td>
-                    <td className="px-4 py-3">{user.app_metadata?.user_role || 'user'}</td>
-                    <td className="px-4 py-3">
-                      {new Date(user.created_at).toLocaleString()}
-                    </td>
-                    <td className="px-4 py-3 text-center">
+                  <tr key={user.id} className='border-t'>
+                    <td className='px-4 py-3 font-mono text-xs'>{user.id}</td>
+                    <td className='px-4 py-3'>{user.email}</td>
+                    <td className='px-4 py-3'>{user.app_metadata?.user_role || 'user'}</td>
+                    <td className='px-4 py-3'>{new Date(user.created_at).toLocaleString()}</td>
+                    <td className='px-4 py-3 text-center'>
                       <Button
-                        variant="link"
-                        className="text-sm text-red-600 hover:underline p-0 h-auto"
+                        variant='link'
+                        className='text-sm text-red-600 hover:underline p-0 h-auto'
                         onClick={() => setUserToDelete(user.id)}
                       >
-                        Удалить
+                        {t('adminUsers.delete')}
                       </Button>
                     </td>
                   </tr>
@@ -153,19 +157,29 @@ export default function AdminUsersPage() {
           </div>
         )}
       </div>
-      
-      <AlertDialog open={!!userToDelete} onOpenChange={(isOpen) => !isOpen && setUserToDelete(null)}>
+
+      <AlertDialog
+        open={!!userToDelete}
+        onOpenChange={(isOpen) => !isOpen && setUserToDelete(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Вы уверены?</AlertDialogTitle>
+            <AlertDialogTitle className='text-red-600 text-xl text-center'>
+              {t('adminUsers.deleteConfirmTitle')}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              Это действие необратимо. Пользователь и все связанные с ним данные (в auth схеме) будут удалены.
+              {t('adminUsers.deleteConfirmDescription')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setUserToDelete(null)}>Отмена</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDeleteUser} className={buttonVariants({ variant: "destructive" })}>
-              Удалить
+            <AlertDialogCancel onClick={() => setUserToDelete(null)}>
+              {t('adminUsers.deleteConfirmCancel')}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeleteUser}
+              className={buttonVariants({ variant: 'destructive' })}
+            >
+              {t('adminUsers.deleteConfirmAction')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
