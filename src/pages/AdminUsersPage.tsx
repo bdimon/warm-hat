@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Header from "@/components/Header";
+import { Loader2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,7 +14,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useSnackbar } from "@/hooks/use-snackbar";
-import { User } from "@supabase/supabase-js"; // Тип пользователя из Supabase
+import { User } from "@supabase/supabase-js";
+import { useTranslation } from "react-i18next";
 
 // Расширим тип User, если хотим отображать кастомные метаданные, например, роль
 interface AppUser extends User {
@@ -25,26 +29,25 @@ export default function AdminUsersPage() {
   const [users, setUsers] = useState<AppUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
   const [userToDelete, setUserToDelete] = useState<string | null>(null);
   const { showSnackbar } = useSnackbar();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchUsers = async () => {
-      setLoading(true);
-      setError("");
       try {
         const res = await fetch("http://localhost:3010/api/users");
         if (!res.ok) {
-          const errorText = await res.text().catch(() => "Could not read error text");
-          throw new Error(`Ошибка загрузки пользователей. Статус: ${res.status}. ${errorText}`);
+          throw new Error(t('adminUsers.error', { errorMessage: res.statusText }));
         }
         const data = await res.json();
-        setUsers(data || []);
+        setUsers(data);
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
         } else {
-          setError("Неизвестная ошибка при загрузке пользователей.");
+          setError(t('adminUsers.error', { errorMessage: 'Unknown error' }));
         }
       } finally {
         setLoading(false);
@@ -52,7 +55,7 @@ export default function AdminUsersPage() {
     };
 
     fetchUsers();
-  }, []);
+  }, [t]);
 
   const confirmDeleteUser = async () => {
     if (!userToDelete) return;
@@ -62,65 +65,95 @@ export default function AdminUsersPage() {
         method: 'DELETE',
       });
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ message: "Ошибка при удалении" }));
-        throw new Error(errorData.message || `Ошибка при удалении пользователя (статус: ${res.status})`);
+        const errorData = await res.json().catch(() => ({ message: t('adminUsers.deleteError') }));
+        throw new Error(errorData.message || t('adminUsers.deleteError'));
       }
       setUsers(prevUsers => prevUsers.filter(user => user.id !== userToDelete));
-      showSnackbar("Пользователь успешно удален", "success");
+      showSnackbar(t('adminUsers.deleteSuccess'), "success");
     } catch (err) {
-      console.error("Ошибка удаления пользователя:", err);
-      const errorMessage = err instanceof Error ? err.message : "Не удалось удалить пользователя";
-      setError(errorMessage); // Можно также отобразить ошибку через setError
+      console.error(t('adminUsers.deleteError'), err);
+      const errorMessage = err instanceof Error ? err.message : t('adminUsers.deleteError');
+      setError(errorMessage);
       showSnackbar(errorMessage, "error");
     } finally {
       setUserToDelete(null);
     }
   };
 
-  if (loading) return <div className="p-6">Загрузка пользователей...</div>;
-  if (error) return <div className="p-6 text-red-600">Ошибка: {error}</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header showBackButton onBackClick={() => navigate('/')} />
+        <div className="flex-grow flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-shop-blue-dark" />
+          <p className="ml-2 text-gray-600">{t('adminUsers.loading')}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header showBackButton onBackClick={() => navigate('/admin/dashboard')} />
+        <div className="flex-grow flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-xl text-red-600 mb-4">Ошибка: {error}</p>
+            <Button onClick={() => navigate('/admin/dashboard')} className="bg-shop-blue-dark text-white">
+              Вернуться в админ-панель
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Админка — Пользователи</h1>
-      {users.length === 0 ? (
-        <p>Нет пользователей</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full table-auto border border-gray-300 rounded">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-4 py-2 text-left">ID</th>
-                <th className="px-4 py-2 text-left">Email</th>
-                <th className="px-4 py-2 text-left">Роль</th>
-                <th className="px-4 py-2 text-left">Дата регистрации</th>
-                <th className="px-4 py-2">Действия</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user.id} className="border-t">
-                  <td className="px-4 py-2 font-mono text-xs">{user.id}</td>
-                  <td className="px-4 py-2">{user.email}</td>
-                  <td className="px-4 py-2">{user.app_metadata?.user_role || 'user'}</td>
-                  <td className="px-4 py-2">
-                    {new Date(user.created_at).toLocaleString()}
-                  </td>
-                  <td className="px-4 py-2 text-center">
-                    <Button
-                      variant="link"
-                      className="text-sm text-red-600 hover:underline p-0 h-auto"
-                      onClick={() => setUserToDelete(user.id)}
-                    >
-                      Удалить
-                    </Button>
-                  </td>
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Header showBackButton onBackClick={() => navigate('/admin/dashboard')} />
+      <div className="container mx-auto pt-24 pb-12 px-4">
+        <h1 className="text-3xl font-bold mb-8 text-shop-text">Управление пользователями</h1>
+        
+        {users.length === 0 ? (
+          <p className="text-center text-gray-500 my-8">Нет пользователей</p>
+        ) : (
+          <div className="overflow-x-auto bg-white rounded-lg shadow">
+            <table className="min-w-full table-auto">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">ID</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Email</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Роль</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Дата регистрации</th>
+                  <th className="px-4 py-3 text-sm font-medium text-gray-600">Действия</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              </thead>
+              <tbody>
+                {users.map((user) => (
+                  <tr key={user.id} className="border-t">
+                    <td className="px-4 py-3 font-mono text-xs">{user.id}</td>
+                    <td className="px-4 py-3">{user.email}</td>
+                    <td className="px-4 py-3">{user.app_metadata?.user_role || 'user'}</td>
+                    <td className="px-4 py-3">
+                      {new Date(user.created_at).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <Button
+                        variant="link"
+                        className="text-sm text-red-600 hover:underline p-0 h-auto"
+                        onClick={() => setUserToDelete(user.id)}
+                      >
+                        Удалить
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+      
       <AlertDialog open={!!userToDelete} onOpenChange={(isOpen) => !isOpen && setUserToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>

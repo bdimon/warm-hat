@@ -1,25 +1,23 @@
 // src/components/LanguageSwitcher.tsx
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-// import { Button } from '@/components/ui/button'; // Предполагая, что у вас есть компонент Button
 
 const LanguageSwitcher: React.FC = () => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
 
-  // const changeLanguage = (lng: string) => {
-  //   i18n.changeLanguage(lng);
   const changeLanguage = (event: React.ChangeEvent<HTMLSelectElement>) => {
     i18n.changeLanguage(event.target.value);
   };
-  const currentLang = i18n.language.split('-')[0];
-  return (
   
+  const currentLang = i18n.language.split('-')[0];
+  
+  return (
     <div className='relative'>
       <select
         value={currentLang}
         onChange={changeLanguage}
         className='bg-white border border-shop-blue text-shop-text text-sm rounded-md py-1.5 pl-2 pr-8 focus:outline-none focus:ring-1 focus:ring-shop-blue-dark focus:border-shop-blue-dark appearance-none cursor-pointer'
-        aria-label='Выбрать язык'
+        aria-label={t('languageSwitcher.selectLanguage')}
       >
         <option value='en' className='text-black bg-white'>
           EN

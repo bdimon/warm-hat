@@ -157,7 +157,9 @@ export default function AdminProductForm() {
 
   return (
     <div className='p-6 max-w-2xl mx-auto'>
-      <h1 className='text-2xl font-bold mb-4'>{isEdit ? 'Редактировать товар' : 'Новый товар'}</h1>
+      <h1 className='text-2xl font-bold mb-4'>
+        {isEdit ? t('adminProductForm.editProduct') : t('adminProductForm.newProduct')}
+      </h1>
 
       <div className='space-y-4'>
         <Tabs defaultValue={activeTab} onValueChange={(value) => setActiveTab(value as SupportedLanguage)}>
@@ -175,12 +177,12 @@ export default function AdminProductForm() {
 
           {supportedLanguages.map(lang => (
             <TabsContent key={lang} value={lang}>
-              {/* Название товара */}
-              <FormField label={`Название (${languageLabels[lang]})`} error={formErrors.name}>
+              {/* Product name */}
+              <FormField label={t('adminProductForm.nameLabel', { language: languageLabels[lang] })} error={formErrors.name}>
                 <Input
                   value={typeof form.name === 'object' ? form.name[lang] || '' : form.name}
                   onChange={(e) => handleMultilingualChange('name', lang, e.target.value)}
-                  placeholder={`Название товара на ${languageLabels[lang]}`}
+                  placeholder={t('adminProductForm.namePlaceholder', { language: languageLabels[lang] })}
                 />
               </FormField>
 

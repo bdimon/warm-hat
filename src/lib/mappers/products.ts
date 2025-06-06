@@ -102,3 +102,14 @@ export function getLocalizedValue<T>(
   const firstAvailableValue = Object.values(typedValue)[0];
   return firstAvailableValue !== undefined ? firstAvailableValue : {} as T;
 }
+
+// Define a minimal interface for i18n
+interface I18n {
+  language: string;
+}
+
+// Replace any with the interface
+export function getCurrentLanguage(i18n: I18n): SupportedLanguage {
+  const lang = i18n.language.split('-')[0] as SupportedLanguage;
+  return Object.keys(CURRENCY_SYMBOLS).includes(lang) ? lang : 'en';
+}

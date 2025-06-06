@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { type Order as SupabaseOrder } from '@/types/supabase';
-import { useSnackbar } from "@/hooks/use-snackbar"; // Импортируем useSnackbar
+import { useSnackbar } from "@/hooks/use-snackbar";
+import { Loader2 } from "lucide-react";
+import Header from "@/components/Header"; // Add Header import
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,13 +16,14 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button, buttonVariants } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 
 // Расширяем тип Order для дашборда, чтобы включить email пользователя из auth схемы и убедиться, что все необходимые поля для отображения присутствуют
 interface DashboardOrder extends SupabaseOrder {
   auth_user_email?: string;
   customer_email?: string; // Email, указанный при оформлении заказа name поле уже должно быть в SupabaseOrder для имени клиента
 }
-  
+
 export default function AdminDashboard() {
   const [orders, setOrders] = useState<DashboardOrder[]>([]);
   const [loading, setLoading] = useState(true);
@@ -28,6 +31,7 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const [orderToDelete, setOrderToDelete] = useState<string | null>(null);
   const { showSnackbar } = useSnackbar(); // Используем useSnackbar
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -37,7 +41,7 @@ export default function AdminDashboard() {
         if (!res.ok) {
           const errorText = await res.text().catch(() => "Could not read error text from response");
           console.error(`[AdminDashboard] Fetch error, response not ok. Status: ${res.status}. Response text: ${errorText}`);
-          throw new Error(`Ошибка при загрузке заказов. Статус: ${res.status}.`);
+          throw new Error(t('adminDashboard.errorLoading'));
         }
 
         const data = await res.json();
@@ -45,18 +49,17 @@ export default function AdminDashboard() {
         setOrders(data);
       } catch (err) {
         if (err instanceof Error) {
-          setError(err.message || 'Ошибка при загрузке заказов');
+          setError(err.message || t('adminDashboard.errorLoading'));
         } else {
-          setError("Неизвестная ошибка");
+          setError(t('adminDashboard.errorUnknown'));
         }
-     } finally {
+      } finally {
         setLoading(false);
       }
-      
     };
- 
+
     fetchOrders();
-  }, []);
+  }, [t]);
 
   const confirmDeleteOrder = async () => {
     if (!orderToDelete) return;
@@ -66,14 +69,14 @@ export default function AdminDashboard() {
         method: 'DELETE',
       });
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ message: "Ошибка при удалении" }));
-        throw new Error(errorData.message || `Ошибка при удалении заказа (статус: ${res.status})`);
+        const errorData = await res.json().catch(() => ({ message: t('adminDashboard.errorDelete') }));
+        throw new Error(errorData.message || t('adminDashboard.errorDelete'));
       }
       setOrders(prevOrders => prevOrders.filter(order => order.id !== orderToDelete));
-      showSnackbar("Заказ успешно удален", "success");
+      showSnackbar(t('adminDashboard.orderDeleted'), "success");
     } catch (err) {
-      console.error("Ошибка удаления заказа:", err);
-      const errorMessage = err instanceof Error ? err.message : "Не удалось удалить заказ";
+      console.error(t('adminDashboard.errorDelete'), err);
+      const errorMessage = err instanceof Error ? err.message : t('adminDashboard.errorDelete');
       setError(errorMessage);
       showSnackbar(errorMessage, "error");
     } finally {
@@ -81,95 +84,116 @@ export default function AdminDashboard() {
     }
   };
 
+  if (loading) return (
+    <div className="min-h-screen flex flex-col">
+      <Header showBackButton onBackClick={() => navigate('/')} />
+      <div className="flex-grow flex items-center justify-center min-h-[300px]">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin text-shop-blue-dark mx-auto mb-2" />
+          <div>{t('adminDashboard.loading')}</div>
+        </div>
+      </div>
+    </div>
+  );
 
-
-  if (loading) return <div className="p-6">Загрузка заказов...</div>;
-  if (error) return <div className="p-6 text-red-600">Ошибка: {error}</div>;
+  if (error) return (
+    <div className="min-h-screen flex flex-col">
+      <Header showBackButton onBackClick={() => navigate('/')} />
+      <div className="flex-grow flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-xl text-red-600 mb-4">{t('adminDashboard.error')}: {error}</p>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Админка — Заказы</h1>
-      {orders.length === 0 ? (
-        <p>Нет заказов</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full table-auto border border-gray-300 rounded">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-4 py-2 text-left">Дата</th>
-                <th className="px-4 py-2 text-left">Имя</th>
-                <th className="px-4 py-2 text-left">Email</th>
-                <th className="px-4 py-2 text-left">Сумма</th>
-                <th className="px-4 py-2 text-left">Статус</th>
-                <th className="px-4 py-2">Действия</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order.id} className="border-t">
-                  <td className="px-4 py-2">
-                    {new Date(order.created_at).toLocaleString()}
-                  </td>
-                  <td className="px-4 py-2">{order.name}</td>
-                  <td className="px-4 py-2 text-sm">
-                    {order.customer_email || order.auth_user_email || '-'}
-                  </td>
-                  <td className="px-4 py-2">{order.total.toFixed(2)} ₽</td>
-                  <td className="px-4 py-2">
-                    <span
-                      className={`px-2 py-1 text-sm rounded ${
-                        order.status === "new"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : order.status === "paid"
-                          ? "bg-green-100 text-green-800"
-                          : order.status === "delivered"
-                          ? "bg-blue-100 text-blue-800"
-                          : order.status === "pending"
-                          ? "bg-orange-200 text-orange-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {order.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-2 text-center">
-                    <button
-                      className="text-sm text-blue-600 hover:underline mr-2"
-                      onClick={() => navigate(`/admin/order/edit/${order.id}`)}
-                    >
-                      Подробнее
-                    </button>
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Header showBackButton onBackClick={() => navigate('/')} />
+      <div className="container mx-auto pt-24 pb-12 px-4">
+        <h1 className="text-3xl font-bold mb-8 text-shop-text">{t('adminDashboard.title')}</h1>
+        {orders.length === 0 ? (
+          <p className="text-center text-gray-500 my-8">{t('adminDashboard.noOrders')}</p>
+        ) : (
+          <div className="overflow-x-auto bg-white rounded-lg shadow">
+            <table className="min-w-full table-auto">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">{t('adminDashboard.date')}</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">{t('adminDashboard.name')}</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">{t('adminDashboard.email')}</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">{t('adminDashboard.amount')}</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">{t('adminDashboard.status')}</th>
+                  <th className="px-4 py-3 text-sm font-medium text-gray-600">{t('adminDashboard.actions')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map((order) => (
+                  <tr key={order.id} className="border-t">
+                    <td className="px-4 py-2">
+                      {new Date(order.created_at).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2">{order.name}</td>
+                    <td className="px-4 py-2 text-sm">
+                      {order.customer_email || order.auth_user_email || '-'}
+                    </td>
+                    <td className="px-4 py-2">{order.total.toFixed(2)} ₽</td>
+                    <td className="px-4 py-2">
+                      <span
+                        className={`px-2 py-1 text-sm rounded ${
+                          order.status === "new"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : order.status === "paid"
+                            ? "bg-green-100 text-green-800"
+                            : order.status === "delivered"
+                            ? "bg-blue-100 text-blue-800"
+                            : order.status === "pending"
+                            ? "bg-orange-200 text-orange-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {order.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2 text-center">
+                      <button
+                        className="text-sm text-blue-600 hover:underline mr-2"
+                        onClick={() => navigate(`/admin/order/edit/${order.id}`)}
+                      >
+                        {t('adminDashboard.details')}
+                      </button>
                       <Button
                         variant="link"
                         className="text-sm text-red-600 hover:underline p-0 h-auto"
                         onClick={() => setOrderToDelete(order.id)}
                       >
-                        Удалить
+                        {t('adminDashboard.delete')}
                       </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-      {/* AlertDialog вынесен за пределы map, чтобы он был один на всю таблицу */}
-      <AlertDialog open={!!orderToDelete} onOpenChange={(isOpen) => !isOpen && setOrderToDelete(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Вы уверены?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Это действие необратимо. Заказ будет удален навсегда.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setOrderToDelete(null)}>Отмена</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDeleteOrder} className={buttonVariants({ variant: "destructive" })}>
-              Удалить
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {/* AlertDialog вынесен за пределы map, чтобы он был один на всю таблицу */}
+        <AlertDialog open={!!orderToDelete} onOpenChange={(isOpen) => !isOpen && setOrderToDelete(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t('adminDashboard.areYouSure')}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {t('adminDashboard.deleteForever')}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setOrderToDelete(null)}>{t('adminDashboard.cancel')}</AlertDialogCancel>
+              <AlertDialogAction onClick={confirmDeleteOrder} className={buttonVariants({ variant: "destructive" })}>
+                {t('adminDashboard.delete')}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
     </div>
   );
 }

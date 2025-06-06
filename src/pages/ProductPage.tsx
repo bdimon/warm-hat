@@ -6,7 +6,7 @@ import { Loader2, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/hooks/use-cart';
 import { ProductInCart } from '@/types/cart';
 import Header from "@/components/Header";
-import { getLocalizedValue } from '@/lib/mappers/products';
+import { getLocalizedValue, formatPrice } from '@/lib/mappers/products';
 import { useTranslation } from 'react-i18next';
  
 export default function ProductPage() {
@@ -117,13 +117,13 @@ export default function ProductPage() {
           {product.isSale && localizedSalePrice ? (
             <div className="flex items-center gap-2 mb-4">
               <span className="text-2xl font-bold text-red-500">
-                {localizedSalePrice} {currencySymbol}
+                {formatPrice(localizedSalePrice, currentLang)}
               </span>
-              <span className="line-through text-gray-400">{localizedPrice} {currencySymbol}</span>
+              <span className="line-through text-gray-400">{formatPrice(localizedPrice, currentLang)}</span>
             </div>
           ) : (
             <p className="text-2xl font-bold text-shop-text mb-4">
-              {localizedPrice} {currencySymbol}
+              {formatPrice(localizedPrice, currentLang)}
             </p>
           )}
           <Button
