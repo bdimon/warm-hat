@@ -4,22 +4,33 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
-  server: {
-    proxy: {
-      "/api": {
-        target: "http://localhost:3010",
-        changeOrigin: true,
-        secure: false,
+export default defineConfig(({ mode }) => {
+  // Vite автоматически загружает переменные окружения из следующих файлов:
+  // .env                # загружается во всех случаях
+  // .env.local          # загружается во всех случаях, игнорируется git
+  // .env.[mode]         # загружается только в указанном режиме (development/production)
+  // .env.[mode].local   # загружается только в указанном режиме, игнорируется git
+  
+  // console.log(`Текущий режим: ${mode}`);
+  // console.log(`Переменные окружения VITE_*: ${Object.keys(process.env).filter(key => key.startsWith('VITE_'))}`);
+  
+  return {
+    server: {
+      proxy: {
+        "/api": {
+          target: "http://localhost:3010",
+          changeOrigin: true,
+          secure: false,
+        },
       },
     },
-  },
-  plugins: [react(), mode === "development" && componentTagger()].filter(
-    Boolean
-  ),
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
+    plugins: [react(), mode === "development" && componentTagger()].filter(
+      Boolean
+    ),
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+      },
     },
-  },
-}));
+  };
+});

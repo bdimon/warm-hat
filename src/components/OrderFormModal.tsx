@@ -1,3 +1,4 @@
+
 import { useCart } from '@/hooks/use-cart';
 import { useSnackbar } from '@/hooks/use-snackbar';
 import { supabase } from '@/lib/supabase-client';
@@ -10,6 +11,34 @@ import { isValidPhoneNumber } from 'react-phone-number-input'; // 1. Импор�
 import PhoneInput from '@/components/ui/phone-input';
 import { SupportedLanguage, CURRENCY_SYMBOLS } from '@/types/Product';
 import { getLocalizedValue } from '@/lib/mappers/products';
+import { loadStripe } from '@stripe/stripe-js';
+
+// Получаем ключ из переменных окружения
+const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+// console.log('[OrderFormModal] Publishable Key:', stripePublishableKey); // Для отладки
+
+// Загружаем Stripe один раз при инициализации приложения
+const stripePromise = loadStripe(stripePublishableKey);
+
+// Добавьте проверку при загрузке компонента
+function CheckStripeKey() {
+  useEffect(() => {
+    if (!stripePublishableKey) {
+      console.error('ОШИБКА: Переменная окружения VITE_STRIPE_PUBLISHABLE_KEY не установлена!');
+    }
+  }, []);
+  return null;
+}
+
+// Функция для преобразования относительных URL в абсолютные
+const getAbsoluteImageUrl = (relativeUrl) => {
+  if (!relativeUrl) return null;
+  if (relativeUrl.startsWith('http://') || relativeUrl.startsWith('https://')) {
+    return relativeUrl;
+  }
+  // Используем базовый URL вашего сайта
+  return `${window.location.origin}${relativeUrl}`;
+};
 
 interface OrderFormModalProps {
   isOpen: boolean;
@@ -118,6 +147,8 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
   }, 0);
 
   const handleSubmit = async () => {
+    // console.log('1. handleSubmit начал выполнение, метод оплаты:', form.payment);
+    
     const errors = {
       name: form.name.trim() ? '' : t('orderFormModal.name'),
       address: form.address.trim() ? '' : t('orderFormModal.address'),
@@ -127,8 +158,11 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
 
     setFormErrors(errors);
     const hasErrors = Object.values(errors).some(Boolean);
+    // console.log('2. Валидация формы:', hasErrors ? 'есть ошибки' : 'форма валидна');
+    
     if (hasErrors || cart.length === 0) {
       if (cart.length === 0) showSnackbar(t('cartModal.emptyCart'), 'warning');
+      // console.log('3. Выход из handleSubmit из-за ошибок или пустой корзины');
       return;
     }
 
@@ -140,32 +174,107 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
       price: item.isSale && item.salePrice ? item.salePrice : item.price,
     }));
 
+    // console.log('4. Подготовленные товары:', items);
+    // console.log('5. Общая сумма:', total);
+
     setLoading(true);
     try {
-      const { error } = await supabase.from('orders').insert({
-        items,
-        total,
-        user_id: profileId,
-        payment_method: form.payment,
-        status: 'new',
-        name: form.name,
-        address: form.address,
-        phone: form.phone,
-      });
+      if (form.payment === 'card') {
+        // console.log('6. Начинаем обработку оплаты картой');
+        
+        // Создаем заказ в Supabase
+        // console.log('7. Создаем заказ в Supabase');
+        const { data: orderData, error } = await supabase.from('orders').insert({
+          items,
+          total,
+          user_id: profileId,
+          payment_method: form.payment,
+          status: 'pending',
+          name: form.name,
+          address: form.address,
+          phone: form.phone,
+        }).select().single();
 
-      if (error) {
-        showSnackbar(t('orderFormModal.serverError'), 'error');
-        return;
+        if (error) {
+          console.error('8. Ошибка при создании заказа:', error);
+          throw error;
+        }
+
+        // console.log('9. Заказ успешно создан:', orderData);
+
+        // Создаем Checkout Session на сервере
+        // console.log('10. Отправляем запрос на создание Checkout Session');
+        const response = await fetch('http://localhost:3010/api/payments/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderId: orderData.id,
+            items: cart.map(item => ({
+              name: item.name,
+              price: item.price,
+              quantity: item.quantity,
+              // Преобразуем относительные URL в абсолютные
+              images: item.images && item.images.length > 0 
+                ? [getAbsoluteImageUrl(item.images[0])]
+                : []
+            }))
+          }),
+        });
+
+        // console.log('11. Получен ответ от сервера:', response.status, response.statusText);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('12. Ошибка ответа сервера:', errorText);
+          throw new Error(`Ошибка сервера: ${response.status} ${response.statusText}`);
+        }
+
+        const responseData = await response.json();
+        // console.log('13. Данные ответа:', responseData);
+        
+        // Перенаправляем на Checkout
+        console.log('14. Загружаем Stripe');
+        const stripe = await stripePromise;
+        console.log('15. Перенаправляем на Checkout с sessionId:', responseData.sessionId);
+        const { error: stripeError } = await stripe.redirectToCheckout({
+          sessionId: responseData.sessionId
+        });
+        
+        if (stripeError) {
+          console.error('16. Ошибка Stripe redirectToCheckout:', stripeError);
+          throw stripeError;
+        }
+      } else {
+        console.log('6. Начинаем обработку другого метода оплаты:', form.payment);
+        // Обработка для других методов оплаты (наличные, самовывоз)
+        const { error } = await supabase.from('orders').insert({
+          items,
+          total,
+          user_id: profileId,
+          payment_method: form.payment,
+          status: 'new',
+          name: form.name,
+          address: form.address,
+          phone: form.phone,
+        });
+
+        if (error) {
+          console.error('7. Ошибка при создании заказа:', error);
+          showSnackbar(t('orderFormModal.serverError'), 'error');
+          return;
+        }
+
+        // console.log('8. Заказ успешно создан, очищаем корзину и закрываем модальное окно');
+        clearCart();
+        onClose();
+        closeCart();
+        showSnackbar(t('orderFormModal.orderSuccess'), 'success');
       }
-
-      clearCart();
-      onClose();
-      closeCart();
-      showSnackbar(t('orderFormModal.orderSuccess'), 'success');
     } catch (err) {
-      console.error(err);
+      console.error('Ошибка при оформлении заказа:', err);
       showSnackbar(t('orderFormModal.orderError'), 'error');
     } finally {
+      // console.log('17. Завершение handleSubmit, устанавливаем loading в false');
       setLoading(false);
     }
   };

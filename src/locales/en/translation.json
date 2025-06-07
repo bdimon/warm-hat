@@ -203,7 +203,7 @@
     "loading": "Saving...",
     "title": "Change Email/Password",
     "oldEmail": "Current email",
-    "oldPassword": "",
+    "oldPassword": "Old password",
     "email": "New email",
     "password": "New password",
     "confirm": "Confirm password",

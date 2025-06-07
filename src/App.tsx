@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ProductPage from "./pages/ProductPage";
@@ -17,8 +17,7 @@ import EditOrderPage from "./pages/EditOrderPage";
 import AdminDashboard from "./pages/AdminDashboard";  
 import AdminOrderDetailPage from "./pages/AdminOrderDetailPage";
 import AdminUsersPage from "./pages/AdminUsersPage"; // <-- Добавляем импорт
-
-
+import PaymentSuccessPage from './pages/PaymentSuccessPage';
 
 const queryClient = new QueryClient();
 
@@ -43,6 +42,8 @@ const App = () => (
           <Route path="/admin/products/edit/:id" element={<AdminProductForm />} />
           <Route path="/admin/order/edit/:id" element={<AdminOrderDetailPage />} />
           <Route path="/admin/users" element={<AdminUsersPage />} /> {/* <-- Добавляем роут */}
+          <Route path="/payment-success" element={<PaymentSuccessPage />} />
+          <Route path="/payment-cancel" element={<Navigate to="/cart" />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
