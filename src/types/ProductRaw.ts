@@ -1,13 +1,6 @@
-//  @/types/ProductRaw.ts
-export interface ProductRaw {
-  id: string;
-  name: string;
-  description?: string;
-  price: number;
-  quantity: number;
-  images: string[];
-  category: string;
-  isNew?: boolean;
-  isSale?: boolean;
-  salePrice?: number | null;
-}
+// Этот файл устарел и должен быть удален.
+// Используйте импорт { RawProduct } из '@/types/Product' вместо этого файла.
+// Перенаправление для обратной совместимости:
+import { RawProduct } from '@/types/Product';
+export type ProductRaw = RawProduct;
+export type { RawProduct as default };

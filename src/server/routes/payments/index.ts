@@ -69,4 +69,71 @@ router.post("/create-checkout-session", async (req, res) => {
   }
 });
 
+// Добавьте маршрут для проверки статуса платежа
+router.get("/check-status", async (req, res) => {
+  const { session_id } = req.query;
+  
+  if (!session_id) {
+    return res.status(400).json({ error: 'Missing session_id parameter' });
+  }
+  
+  try {
+    // Получаем сессию из Stripe
+    const session = await stripe.checkout.sessions.retrieve(session_id as string);
+    
+    // Если платеж успешен, обновляем статус заказа
+    if (session.payment_status === 'paid' && session.metadata?.orderId && supabaseService) {
+      await supabaseService
+        .from('orders')
+        .update({
+          status: 'paid',
+        })
+        .eq('id', session.metadata.orderId);
+    }
+    
+    res.json({ 
+      success: true, 
+      paymentStatus: session.payment_status,
+      orderId: session.metadata?.orderId 
+    });
+  } catch (error) {
+    console.error('Ошибка при проверке статуса платежа:', error);
+    res.status(500).json({ error: error instanceof Error ? error.message : 'Unknown error' });
+  }
+});
+
+// Добавьте обработчик webhook для Stripe
+router.post("/webhook", express.raw({type: 'application/json'}), async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (err) {
+    console.error(`Webhook Error: ${err.message}`);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  // Обработка успешного платежа
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    
+    // Обновляем статус заказа на 'paid'
+    if (supabaseService && session.metadata.orderId) {
+      await supabaseService
+        .from('orders')
+        .update({
+          status: 'paid',
+        })
+        .eq('id', session.metadata.orderId);
+    }
+  }
+
+  res.json({received: true});
+});
+
 export default router;

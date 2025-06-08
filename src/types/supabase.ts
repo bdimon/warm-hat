@@ -1,6 +1,5 @@
 // types/supabase.ts
-import { ProductInCart } from '@/types/cart';
-import { SupportedLanguage, Product, RawProduct } from '@/types/Product';
+import { ProductInCart, SupportedLanguage, Product, RawProduct } from '@/types/Product';
 
 export type Profile = {
   id: string;
@@ -32,4 +31,4 @@ export type Order = {
 };
 
 // Используем тип Product из Product.ts
-export type { Product };
+export type { Product,SupportedLanguage };

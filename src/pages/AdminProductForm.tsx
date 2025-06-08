@@ -16,7 +16,6 @@ const initialForm: Product = {
     ua: "",
     pl: ""
   } as MultilingualString,
-  // description: "",
   price: {
     en: 0,
     ru: 0,

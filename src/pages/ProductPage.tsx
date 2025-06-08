@@ -112,8 +112,6 @@ export default function ProductPage() {
         {/* Описание */}
         <div>
           <h1 className="text-2xl font-bold mb-2">{localizedName}</h1>
-          {/* <p className="text-gray-500 mb-4">{product.description}</p> */}
-
           {product.isSale && localizedSalePrice ? (
             <div className="flex items-center gap-2 mb-4">
               <span className="text-2xl font-bold text-red-500">

@@ -22,7 +22,6 @@ export function mapProductFromAPI(raw: RawProduct): Product {
   return {
     id: raw.id,
     name,
-    // description: raw.description || "",
     price,
     quantity: raw.quantity,
     images: raw.images || [],
@@ -55,7 +54,6 @@ export function mapProductToAPI(product: Product): RawProduct {
   return {
     id: product.id,
     name,
-    // description: product.description,
     price,
     quantity: product.quantity,
     images: product.images,
@@ -66,50 +64,27 @@ export function mapProductToAPI(product: Product): RawProduct {
   };
 }
 
-// Добавим функцию для получения символа валюты
-export function getCurrencySymbol(language: SupportedLanguage = 'en'): string {
-  return CURRENCY_SYMBOLS[language] || '$';
-}
-
-// Функция для форматирования цены с символом валюты
-export function formatPrice(price: number, language: SupportedLanguage = 'en'): string {
-  return `${price.toFixed(2)} ${getCurrencySymbol(language)}`;
-}
-
-// Вспомогательная функция для получения значения для текущего языка
+// Получение локализованного значения из многоязычного объекта
 export function getLocalizedValue<T>(
   value: T | Record<SupportedLanguage, T>,
-  language: SupportedLanguage = 'en',
-  fallbackLanguage: SupportedLanguage = 'en'
+  language: SupportedLanguage = 'en'
 ): T {
-  if (typeof value !== 'object' || value === null) {
-    return value as T;
-  }
-
-  const typedValue = value as Record<SupportedLanguage, T>;
-  
-  // Пробуем получить значение для запрошенного языка
-  if (typedValue[language] !== undefined) {
-    return typedValue[language];
+  if (typeof value === 'object' && value !== null && language in (value as Record<string, T>)) {
+    return (value as Record<SupportedLanguage, T>)[language];
   }
   
-  // Если значение для запрошенного языка отсутствует, используем запасной язык
-  if (typedValue[fallbackLanguage] !== undefined) {
-    return typedValue[fallbackLanguage];
-  }
-  
-  // Если и запасной язык отсутствует, берем первое доступное значение
-  const firstAvailableValue = Object.values(typedValue)[0];
-  return firstAvailableValue !== undefined ? firstAvailableValue : {} as T;
+  // Если значение не объект или нет нужного языка, возвращаем само значение
+  return value as T;
 }
 
-// Define a minimal interface for i18n
-interface I18n {
-  language: string;
-}
-
-// Replace any with the interface
-export function getCurrentLanguage(i18n: I18n): SupportedLanguage {
-  const lang = i18n.language.split('-')[0] as SupportedLanguage;
-  return Object.keys(CURRENCY_SYMBOLS).includes(lang) ? lang : 'en';
+// Форматирование цены с учетом валюты
+export function formatPrice(
+  price: number | RegionalPrice,
+  language: SupportedLanguage = 'en'
+): string {
+  const numericPrice = typeof price === 'number' 
+    ? price 
+    : getLocalizedValue(price, language);
+    
+  return `${numericPrice} ${CURRENCY_SYMBOLS[language]}`;
 }

@@ -3,7 +3,8 @@ import { supabase } from "@/lib/supabase-client";
 
 const router = express.Router();
 
-router.post("/login", async (req, res) => {
+// Убираем "/login" из пути, так как он уже указан в index.ts
+router.post("/", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {

@@ -1,12 +1,12 @@
 import express from "express";
 import cors from "cors";
 // import dotenv from "dotenv";
-import authRouter from "./routes/auth/register";
-import loginRouter from "./routes/auth/login";
-import productsRouter from "./routes/products";
-import usersRouter from "./routes/users";
-import ordersRouter from "./routes/orders";
-import paymentsRouter from './routes/payments/index';
+import authRouter from '@/server/routes/auth/register.ts';
+import loginRouter from '@/server/routes/auth/login.ts';
+import productsRouter from '@/server/routes/products/index.ts';
+import usersRouter from '@/server/routes/users/index.ts';
+import ordersRouter from '@/server/routes/orders/index.ts';
+import paymentsRouter from '@/server/routes/payments/index.ts';
 
 // dotenv.config();
 
@@ -14,10 +14,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 // Логирование запросов
-// app.use((req, res, next) => {
-//   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-//   next();
-// });
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
 
 // Добавьте этот middleware для отладки маршрутов
 // app.use((req, res, next) => {
@@ -29,11 +29,12 @@ app.use(express.json());
 
 
 
+
 // Добавляем тестовый маршрут для проверки
-// app.get('/api/test', (req, res) => {
-//   console.log('Test endpoint called');
-//   res.json({ status: 'ok', message: 'API is working' });
-// });
+app.get('/api/test', (req, res) => {
+  console.log('Test endpoint called');
+  res.json({ status: 'ok', message: 'API is working' });
+});
 
 app.use("/api/auth/register", authRouter);
 app.use("/api/auth/login", loginRouter);
