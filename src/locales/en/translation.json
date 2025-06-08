@@ -23,7 +23,7 @@
     "fastDelivery": "Fast delivery",
     "fastDeliveryTime": "From 24 hours"
   },
-  "header": { 
+  "header": {
     "shopName": "Hat Shop",
     "main": "Home",
     "openAriaLabel": "Open navigation menu",
@@ -319,5 +319,68 @@
   },
   "languageSwitcher": {
     "selectLanguage": "Select language"
+  },
+  "adminProductForm": {
+    "editProduct": "Edit Product",
+    "newProduct": "New Product",
+    "nameLabel": "Name ({{language}})",
+    "namePlaceholder": "Product name in {{language}}",
+    "priceLabel": "Price ({{currency}})",
+    "pricePlaceholder": "0.00 {{currency}}",
+    "salePriceLabel": "Sale Price ({{currency}})",
+    "salePricePlaceholder": "0.00 {{currency}}",
+    "categoryLabel": "Category",
+    "categoryPlaceholder": "Product category",
+    "quantityLabel": "Quantity",
+    "quantityPlaceholder": "0",
+    "imagesLabel": "Images",
+    "imagesPlaceholder": "Images separated by commas",
+    "isNewLabel": "New",
+    "isSaleLabel": "Sale",
+    "saveChanges": "Save Changes",
+    "createProduct": "Create Product",
+    "loading": "Loading...",
+    "errorLoadingProduct": "Failed to load product",
+    "errorSavingProduct": "Failed to save product"
+  },
+  "adminProducts": {
+    "title": "Products",
+    "newProduct": "New Product",
+    "category": "Category",
+    "price": "Price",
+    "salePrice": "Sale Price",
+    "inStock": "In Stock",
+    "units": "unit",
+    "units_plural": "units",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Delete this product?",
+    "errorLoading": "Error loading products",
+    "errorDeleting": "Error deleting product",
+    "errorDeletingAlert": "Error while deleting",
+    "errorUnknown": "Unknown error",
+    "loading": "Loading products...",
+    "error": "Error"
+  },
+  "payment": {
+    "checkingStatus": "Checking payment status...",
+    "errorNoSessionId": "Session ID not found",
+    "errorCheckingStatus": "Error checking payment status",
+    "errorUnknown": "An unknown error occurred",
+    "returnToCart": "Return to cart",
+    "successTitle": "Payment Successful!",
+    "successMessage": "Thank you for your order. Your payment has been processed successfully.",
+    "orderNumber": "Order #",
+    "continueShopping": "Continue Shopping"
+  },
+  "orderForm": {
+    "errorStripeKeyMissing": "ERROR: Environment variable VITE_STRIPE_PUBLISHABLE_KEY is not set!",
+    "errorServerResponse": "Server response error:",
+    "errorServer": "Server error: {{status}} {{statusText}}",
+    "creatingCheckoutSession": "Creating Stripe checkout session",
+    "redirectingToCheckout": "Redirecting to checkout",
+    "stripeRedirectError": "Stripe redirect error",
+    "paymentProcessingError": "Payment processing error",
+    "paymentError": "Payment error. Please try again."
   }
 }

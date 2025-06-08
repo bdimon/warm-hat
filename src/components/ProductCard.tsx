@@ -5,8 +5,8 @@ import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom'; // or 'next/link';
 import { useCart } from '@/hooks/use-cart';
 import { ProductInCart } from "@/types/cart";
-import { Product, SupportedLanguage, CURRENCY_SYMBOLS } from '@/types/Product';
-import { getLocalizedValue, formatPrice } from '@/lib/mappers/products';
+import { Product, SupportedLanguage } from '@/types/Product';
+import { getLocalizedValue, formatPrice } from "@/lib/mappers/products";
 import { useTranslation } from 'react-i18next';
  
 interface ProductCardProps {
@@ -14,77 +14,56 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { addToCart } = useCart();
-  const { i18n } = useTranslation();
-  
-  // Получаем текущий язык и преобразуем его в SupportedLanguage
+  const { i18n, t } = useTranslation();
   const currentLang = i18n.language.split('-')[0] as SupportedLanguage;
   
   // Получаем локализованные значения
   const localizedName = getLocalizedValue(product.name, currentLang);
-  const localizedPrice = getLocalizedValue(product.price, currentLang);
-  const localizedSalePrice = product.salePrice 
-    ? getLocalizedValue(product.salePrice, currentLang) 
-    : undefined;
+  // const localizedDescription = getLocalizedValue(product.description, currentLang);
   
-  // Получаем символ валюты для текущего языка
-  const currencySymbol = CURRENCY_SYMBOLS[currentLang];
-
-  const handleAddToCart = () => {
-    const productToAdd: ProductInCart = {
-      id: product.id,
-      name: product.name,
-      price: product.isSale && product.salePrice ? product.salePrice : product.price,
-      images: product.images && product.images.length > 0 ? product.images : ["/placeholder.svg"],
-      quantity: 1,
-    };
-    addToCart(productToAdd);
-  };
-
+  // Убедимся, что все значения - строки, а не объекты
+  const displayName = typeof localizedName === 'string' ? localizedName : '';
+  // const displayDescription = typeof localizedDescription === 'string' ? localizedDescription : '';
+  
+  // Форматируем цену
+  // const formattedPrice = new Intl.NumberFormat(i18n.language, {
+  //   style: 'currency',
+  //   currency: 'PLN',
+  // }).format(product.price);
+  
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group">
       <div className="relative h-64 overflow-hidden">
         <Link to={`/catalog/${product.id}`}>
         <img 
           src={product.images?.[0] || "/placeholder.svg"} 
-          alt={localizedName || "Без названия"}
+          alt={displayName || t('product.noName')}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
-        </Link >
+        </Link>
         {product.isNew && (
           <div className="absolute top-3 left-3 bg-shop-blue-dark text-white text-xs font-bold uppercase py-1 px-2 rounded">
-            Новинка
+            {t('product.new')}
           </div>
         )}
         {product.isSale && (
           <div className="absolute top-3 right-3 bg-[#FF5252] text-white text-xs font-bold uppercase py-1 px-2 rounded">
-            Скидка
+            {t('product.sale')}
           </div>
         )}
       </div>
+      
       <div className="p-4">
-        <div className="text-sm text-gray-500 mb-1">{product.category || "Категория"}</div>
-        <h3 className="text-lg font-semibold mb-2 text-shop-text transition-colors group-hover:text-shop-blue-dark">
-          {localizedName}
+        <h3 className="text-lg font-semibold mb-2 text-shop-text">
+          {displayName}
         </h3>
         <div className="flex justify-between items-center">
-          <div>
-            {product.isSale && localizedSalePrice ? (
-              <div className="flex items-center gap-2">
-                <span className="text-xl font-bold text-shop-text">{localizedSalePrice} {currencySymbol}</span>
-                <span className="text-sm text-gray-500 line-through">{localizedPrice} {currencySymbol}</span>
-              </div>
-            ) : (
-              <span className="text-xl font-bold text-shop-text">{localizedPrice} {currencySymbol}</span>
-            )}
-          </div>
-          <Button
-            onClick={handleAddToCart} 
-            className="bg-shop-blue-dark text-white hover:bg-shop-blue-dark/90 rounded-full p-2 h-10 w-10"
-            aria-label="Добавить в корзину"
-          >
-            <ShoppingCart className="h-5 w-5" />
-          </Button>
+          <span className="text-shop-blue-dark font-bold">
+            {formatPrice(product.price, currentLang)}
+          </span>
+          <button className="bg-shop-blue text-shop-text hover:bg-shop-blue-dark hover:text-white transition-colors py-2 px-4 rounded-full text-sm">
+            {t('product.addToCart')}
+          </button>
         </div>
       </div>
     </div>

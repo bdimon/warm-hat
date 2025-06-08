@@ -22,11 +22,12 @@ const stripePromise = loadStripe(stripePublishableKey);
 
 // Добавьте проверку при загрузке компонента
 function CheckStripeKey() {
+  const { t } = useTranslation();
   useEffect(() => {
     if (!stripePublishableKey) {
-      console.error('ОШИБКА: Переменная окружения VITE_STRIPE_PUBLISHABLE_KEY не установлена!');
+      console.error(t('orderForm.errorStripeKeyMissing'));
     }
-  }, []);
+  }, [t]);
   return null;
 }
 
@@ -225,8 +226,8 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
         
         if (!response.ok) {
           const errorText = await response.text();
-          console.error('12. Ошибка ответа сервера:', errorText);
-          throw new Error(`Ошибка сервера: ${response.status} ${response.statusText}`);
+          console.error(t('orderForm.errorServerResponse'), errorText);
+          throw new Error(t('orderForm.errorServer', { status: response.status, statusText: response.statusText }));
         }
 
         const responseData = await response.json();
