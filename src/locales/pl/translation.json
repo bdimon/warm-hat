@@ -2,7 +2,7 @@
   "catalogPage": {
     "title": "Katalog produktów",
     "description": "Oferujemy wyłącznie wysokiej jakości ręcznie robione wyroby z szybką dostawą w całej Europie",
-    "allCategories": "All",
+    "allCategories": "Wszystko",
     "hatsCategory": "Czapki",
     "scarvesCategory": "Apaszki",
     "combinationsCategory": "Kombinacje",
@@ -115,7 +115,7 @@
     "formTitle": "Skontaktuj się z nami",
     "labels": {
       "name": "Twoje imię",
-      "e-mail": "E-mail",
+      "email": "E-mail",
       "phone": "Telefon",
       "message": "Wiadomość"
     },
@@ -232,7 +232,7 @@
     "labelAddress": "Adres dostawy",
     "labelPayment": "Metoda płatności",
     "card": "Karta online",
-    "code": "Płatność przy odbiorze",
+    "cod": "Płatność przy odbiorze",
     "pickup": "Odbiór",
     "total": "Kwota:",
     "loading": "Wysyłanie...",
@@ -310,13 +310,15 @@
     "delete": "Usuń",
     "loading": "Ładowanie zamówień...",
     "error": "Błąd: {{errorMessage}}",
-    "deleteSuccess": "Zamówienie zostało pomyślnie usunięte",
     "deleteError": "Nie udało się usunąć zamówienia",
     "orderDeleted": "Zamówienie zostało pomyślnie usunięte",
     "deleteConfirmTitle": "Usuń zamówienie",
     "deleteConfirmDescription": "Czy na pewno chcesz usunąć to zamówienie? Tej czynności nie można cofnąć.",
     "deleteConfirmCancel": "Anuluj",
     "deleteConfirmAction": "Usuń"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Wybierz język"
   },
   "adminProductForm": {
     "editProduct": "Edytuj produkt",
@@ -339,7 +341,8 @@
     "createProduct": "Utwórz produkt",
     "loading": "Ładowanie...",
     "errorLoadingProduct": "Nie udało się załadować produktu",
-    "errorSavingProduct": "Nie udało się zapisać produktu"
+    "errorSavingProduct": "Nie udało się zapisać produktu",
+    "autoSaveNotice": "Ten formularz automatycznie zapisze Twoje zmiany"
   },
   "adminProducts": {
     "title": "Produkty",

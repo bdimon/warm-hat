@@ -7,8 +7,8 @@ import { mapProductFromAPI, mapProductToAPI } from "@/lib/mappers/products";
 import { useTranslation } from "react-i18next";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getLocalizedValue } from '@/lib/mappers/products';
-import Header from "@/components/Header";
-import { Loader2 } from "lucide-react";
+// import Header from "@/components/Header";
+import { ArrowLeft, Loader2 } from "lucide-react";
 
 const initialForm: Product = {
   id: "",
@@ -151,7 +151,7 @@ export default function AdminProductForm() {
 
   if (loading && !isEdit) return (
     <div className="min-h-screen flex flex-col">
-      <Header showBackButton onBackClick={() => navigate('/admin/products')} />
+      {/* <Header showBackButton onBackClick={() => navigate('/admin/products')} /> */}
       <div className="flex-grow flex items-center justify-center min-h-[300px]">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-shop-blue-dark mx-auto mb-2" />
@@ -163,7 +163,7 @@ export default function AdminProductForm() {
   
   if (error) return (
     <div className="min-h-screen flex flex-col">
-      <Header showBackButton onBackClick={() => navigate('/admin/products')} />
+      {/* <Header showBackButton onBackClick={() => navigate('/admin/products')} /> */}
       <div className="flex-grow flex items-center justify-center">
         <div className="text-center">
           <p className="text-xl text-red-600 mb-4">{error}</p>
@@ -173,20 +173,30 @@ export default function AdminProductForm() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header showBackButton onBackClick={() => navigate('/admin/products')} />
-      <div className="container mx-auto pt-24 pb-12 px-4">
+    <div className='min-h-screen flex flex-col'>
+      {/* <Header showBackButton onBackClick={() => navigate('/admin/products')} /> */}
+      <div className='container mx-auto pt-24 pb-12 px-4'>
         <div className='max-w-2xl mx-auto'>
+          {/* Кнопка Назад */}
+          <button
+            onClick={() => navigate('/admin/products')}
+            className='mb-4 text-shop-text hover:underline'
+          >
+            <ArrowLeft className='mr-1' size={20} /> {t('header.back')}
+          </button>
           <h1 className='text-2xl font-bold mb-4'>
             {isEdit ? t('adminProductForm.editProduct') : t('adminProductForm.newProduct')}
           </h1>
 
           <div className='space-y-4'>
-            <Tabs defaultValue={activeTab} onValueChange={(value) => setActiveTab(value as SupportedLanguage)}>
-              <TabsList className="mb-4">
-                {supportedLanguages.map(lang => (
-                  <TabsTrigger 
-                    key={lang} 
+            <Tabs
+              defaultValue={activeTab}
+              onValueChange={(value) => setActiveTab(value as SupportedLanguage)}
+            >
+              <TabsList className='mb-4'>
+                {supportedLanguages.map((lang) => (
+                  <TabsTrigger
+                    key={lang}
                     value={lang}
                     className={activeTab === lang ? 'bg-shop-blue text-white' : ''}
                   >
@@ -194,42 +204,62 @@ export default function AdminProductForm() {
                   </TabsTrigger>
                 ))}
               </TabsList>
+              {/* Уведомление об автосохранении */}
+              <p className='text-sm text-gray-500 mb-4'>{t('adminProductForm.autoSaveNotice')}</p>
 
-              {supportedLanguages.map(lang => (
+              {supportedLanguages.map((lang) => (
                 <TabsContent key={lang} value={lang}>
                   {/* Product name */}
-                  <FormField label={t('adminProductForm.nameLabel', { language: languageLabels[lang] })} error={formErrors.name}>
+                  <FormField
+                    label={t('adminProductForm.nameLabel', { language: languageLabels[lang] })}
+                    error={formErrors.name}
+                  >
                     <Input
                       value={typeof form.name === 'object' ? form.name[lang] || '' : form.name}
                       onChange={(e) => handleMultilingualChange('name', lang, e.target.value)}
-                      placeholder={t('adminProductForm.namePlaceholder', { language: languageLabels[lang] })}
+                      placeholder={t('adminProductForm.namePlaceholder', {
+                        language: languageLabels[lang],
+                      })}
                     />
                   </FormField>
 
                   {/* Цена */}
-                  <FormField label={t('adminProductForm.priceLabel', { currency: CURRENCY_SYMBOLS[lang] })} error={formErrors.price}>
+                  <FormField
+                    label={t('adminProductForm.priceLabel', { currency: CURRENCY_SYMBOLS[lang] })}
+                    error={formErrors.price}
+                  >
                     <Input
                       type='number'
                       value={typeof form.price === 'object' ? form.price[lang] || 0 : form.price}
                       onChange={(e) => handleMultilingualChange('price', lang, e.target.value)}
-                      placeholder={t('adminProductForm.pricePlaceholder', { currency: CURRENCY_SYMBOLS[lang] })}
+                      placeholder={t('adminProductForm.pricePlaceholder', {
+                        currency: CURRENCY_SYMBOLS[lang],
+                      })}
                     />
                   </FormField>
 
                   {/* Цена со скидкой - показывается только если включена скидка */}
                   {form.isSale && (
-                    <FormField label={t('adminProductForm.salePriceLabel', { currency: CURRENCY_SYMBOLS[lang] })}>
+                    <FormField
+                      label={t('adminProductForm.salePriceLabel', {
+                        currency: CURRENCY_SYMBOLS[lang],
+                      })}
+                    >
                       <Input
                         type='number'
                         value={
-                          form.salePrice 
-                            ? (typeof form.salePrice === 'object' 
-                              ? form.salePrice[lang] || 0 
-                              : form.salePrice) 
+                          form.salePrice
+                            ? typeof form.salePrice === 'object'
+                              ? form.salePrice[lang] || 0
+                              : form.salePrice
                             : ''
                         }
-                        onChange={(e) => handleMultilingualChange('salePrice', lang, e.target.value)}
-                        placeholder={t('adminProductForm.salePricePlaceholder', { currency: CURRENCY_SYMBOLS[lang] })}
+                        onChange={(e) =>
+                          handleMultilingualChange('salePrice', lang, e.target.value)
+                        }
+                        placeholder={t('adminProductForm.salePricePlaceholder', {
+                          currency: CURRENCY_SYMBOLS[lang],
+                        })}
                       />
                     </FormField>
                   )}
@@ -248,7 +278,7 @@ export default function AdminProductForm() {
             </FormField>
 
             {/* Количество - общее для всех языков */}
-            <FormField label='Количество' error={formErrors.quantity}>
+            <FormField label={t('adminProducts.inStock')} error={formErrors.quantity}>
               <Input
                 type='number'
                 name='quantity'
@@ -259,7 +289,7 @@ export default function AdminProductForm() {
             </FormField>
 
             {/* Изображения - общие для всех языков */}
-            <FormField label='Изображения'>
+            <FormField label={t('adminProductForm.imagesLabel')}>
               <Input
                 name='images'
                 value={form.images.join(', ')}
@@ -269,10 +299,10 @@ export default function AdminProductForm() {
                     images: e.target.value.split(',').map((s) => s.trim()),
                   }))
                 }
-                placeholder='Изображения через запятую'
+                placeholder={t('adminProductForm.imagesPlaceholder')}
               />
             </FormField>
-            
+
             {/* Новинка */}
             <label className='flex items-center space-x-2'>
               <input
@@ -281,7 +311,7 @@ export default function AdminProductForm() {
                 checked={form.isNew || false}
                 onChange={handleChange}
               />
-              <span>Новинка</span>
+              <span>{t('adminProductForm.isNewLabel')}</span>
             </label>
 
             {/* Скидка */}
@@ -292,7 +322,7 @@ export default function AdminProductForm() {
                 checked={form.isSale || false}
                 onChange={handleChange}
               />
-              <span>Скидка</span>
+              <span>{t('adminProductForm.isSaleLabel')}</span>
             </label>
           </div>
 
@@ -300,7 +330,7 @@ export default function AdminProductForm() {
             onClick={handleSubmit}
             className='mt-6 w-full bg-shop-blue-dark text-white py-2 rounded hover:bg-shop-blue-dark/90'
           >
-            {isEdit ? 'Сохранить изменения' : 'Создать товар'}
+            {isEdit ? t('adminProductForm.saveChanges') : t('adminProductForm.createProduct')}
           </button>
         </div>
       </div>

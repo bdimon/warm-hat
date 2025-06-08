@@ -13,7 +13,8 @@
     "seed": "vite-node src/scripts/seed.ts",
     "dev:api": "vite-node src/server/index.ts",
     "both": "concurrently \"npm run dev:api\" \"npm run dev\"",
-    "convert": "vite-node src/scripts/convert-images.ts"
+    "convert": "vite-node src/scripts/convert-images.ts",
+    "check-i18n": "vite-node src/scripts/check-i18n-integrity.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

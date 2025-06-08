@@ -203,7 +203,6 @@
     "loading": "Сохранение...",
     "title": "Изменить email/пароль",
     "oldEmail": "Текущий email",
-    "newEmail": "Current email",
     "oldPassword": "",
     "email": "Новый email",
     "password": "Новый пароль",
@@ -252,7 +251,7 @@
     "delete": "Удалить",
     "loading": "Загрузка заказов...",
     "error": "Ошибка: {{errorMessage}}",
-    "deleteSuccess": "Заказ успешно удален",
+    "orderDeleted": "Заказ успешно удален",
     "deleteError": "Не удалось удалить заказ",
     "deleteConfirmTitle": "Удалить заказ",
     "deleteConfirmDescription": "Вы уверены, что хотите удалить этот заказ? Это действие нельзя отменить.",
@@ -342,7 +341,8 @@
     "createProduct": "Создать товар",
     "loading": "Загрузка...",
     "errorLoadingProduct": "Не удалось загрузить товар",
-    "errorSavingProduct": "Не удалось сохранить товар"
+    "errorSavingProduct": "Не удалось сохранить товар",
+    "autoSaveNotice": "Эта форма автоматически сохранит ваши изменения"
   },
   "adminProducts": {
     "title": "Товары",

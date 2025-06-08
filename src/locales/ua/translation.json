@@ -143,7 +143,7 @@
     "continueShopping": "Продовжити покупки",
     "decreaseQuantityAriaLabel": "Зменшити кількість",
     "increaseQuantityAriaLabel": "Збільшити кількість",
-    "видалити": "Видалити",
+    "remove": "Видалити",
     "totalLabel": "Всього",
     "checkout": "Оформити замовлення"
   },
@@ -158,6 +158,7 @@
       "button": "Увійти",
       "forgotPassword": "Забули пароль?",
       "noAccount": "Немає облікового запису?",
+      "success": "Успішний вхід",
       "or": "АБО"
     },
     "register": {
@@ -310,7 +311,6 @@
     "delete": "Видалити",
     "loading": "Завантаження замовлень...",
     "error": "Помилка: {{errorMessage}}",
-    "deleteSuccess": "Замовлення успішно видалено",
     "deleteError": "Не вдалося видалити замовлення",
     "orderDeleted": "Замовлення успішно видалено",
     "deleteConfirmTitle": "Видалити замовлення",
@@ -318,6 +318,10 @@
     "deleteConfirmCancel": "Скасувати",
     "deleteConfirmAction": "Видалити"
   },
+  "languageSwitcher": {
+    "selectLanguage": "Выбрати мову"
+  },
+
   "adminProductForm": {
     "editProduct": "Редагувати товар",
     "newProduct": "Новий товар",
@@ -339,7 +343,8 @@
     "createProduct": "Створити товар",
     "loading": "Завантаження...",
     "errorLoadingProduct": "Не вдалося завантажити товар",
-    "errorSavingProduct": "Не вдалося зберегти товар"
+    "errorSavingProduct": "Не вдалося зберегти товар",
+    "autoSaveNotice": "Форма автоматично збереже ваші зміни"
   },
   "adminProducts": {
     "title": "Товари",

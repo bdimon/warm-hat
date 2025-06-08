@@ -101,7 +101,7 @@ router.get("/", async (req, res) => {
     // Используем JSON-путь для доступа к цене в указанной языковой версии
     const pricePath = `price->${language}`;
     
-    console.log(`Fetching products: page=${page}, pageSize=${pageSize}, sortBy=${sortBy}, order=${order}, language=${language}`);
+    // console.log(`Fetching products: page=${page}, pageSize=${pageSize}, sortBy=${sortBy}, order=${order}, language=${language}`);
     
     // Формируем запрос с учетом многоязычных полей
     let query = supabase
@@ -192,7 +192,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(`Fetching product with ID: ${id}`);
+    // console.log(`Fetching product with ID: ${id}`);
     
     const { data, error } = await supabase
       .from("products")
@@ -270,7 +270,7 @@ router.patch("/:id", async (req, res) => {
     const { id } = req.params;
     const updates: ProductValidationData = req.body;
 
-    console.log(`Updating product ${id}:`, JSON.stringify(updates, null, 2));
+    // console.log(`Updating product ${id}:`, JSON.stringify(updates, null, 2));
 
     // Проверка: если ничего не передано
     if (!updates || Object.keys(updates).length === 0) {
