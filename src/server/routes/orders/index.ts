@@ -1,6 +1,7 @@
 import express from "express";
 import { supabase, supabaseService } from "@/lib/supabase-client"; // Импортируем оба клиента
 import {Order} from "@/types/supabase";
+import { RegionalPrice } from "@/types/Product";
 
   // Определяем тип для обогащенных данных заказа, который будет использоваться и для списка
 interface EnrichedOrder extends Order {
@@ -36,7 +37,7 @@ router.post("/", async (req, res) => {
   }
 
   // Дополнительная валидация (примеры)
-  if (typeof total !== 'number' || total <= 0) {
+  if (typeof total !== 'number' && typeof total !== 'object' || total <= 0) {
     return res.status(400).json({ error: "Invalid total amount" });
   }
   if (!Array.isArray(items) || items.length === 0) {
@@ -44,10 +45,15 @@ router.post("/", async (req, res) => {
   }
   // TODO: Добавить валидацию формата email, структуры items и т.д.
 
+  // Convert total to RegionalPrice if it's a number
+  const formattedTotal = typeof total === 'number' 
+    ? { en: total, ru: total, ua: total, pl: total } // Create basic multilingual object
+    : total;
+
   const { error } = await supabase.from('orders').insert([
     {
       items,
-      total,
+      total: formattedTotal,
       customer_address,
       customer_email,
       customer_name,

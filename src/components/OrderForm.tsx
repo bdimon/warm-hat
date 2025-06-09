@@ -1,6 +1,10 @@
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import FormField from "./FormField";
+import { useTranslation} from "react-i18next";
+import { RegionalPrice, SupportedLanguage } from "@/types/Product";
+import { formatOrderTotal } from "@/lib/mappers/orders";
+import { formatPrice } from "@/lib/mappers/products";
 
 interface OrderFormData {
   name: string;
@@ -23,7 +27,7 @@ export interface OrderFormProps {
   ) => void;
   onSubmit: () => void;
   loading: boolean;
-  total: number;
+  total: number | RegionalPrice;
   userEmail?: string;
   disabled?: boolean; // <-- добавь эту строку
   submitText?: string; // <-- если используешь кастомный текст кнопки
@@ -38,19 +42,21 @@ export default function OrderForm({
   total,
   userEmail,
   disabled = false,
-  submitText = "Подтвердить заказ",
 }: OrderFormProps) {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language.split('-')[0] as SupportedLanguage;
+
   return (
     <div className='max-w-xl mx-auto p-4 sm:p-6 bg-white rounded-lg shadow-md'>
-      <h2 className='text-2xl font-bold mb-6'>Оформление заказа</h2>
+      <h2 className='text-2xl font-bold mb-6'>{t('orderFormModal.title')}</h2>
 
       <div className='space-y-4'>
-        <FormField label='Имя и фамилия'>
+        <FormField label={t('orderFormModal.labelName')} error={errors.name}>
           <input
             name='name'
             value={form.name}
             onChange={onChange}
-            placeholder='Введите имя'
+            placeholder={t('orderFormModal.name')}
             className='w-full border p-2 rounded border-gray-300'
           />
         </FormField>
@@ -61,29 +67,29 @@ export default function OrderForm({
           </div>
         )}
 
-        <FormField label='Адрес доставки' error={errors.address}>
+        <FormField label={t('orderFormModal.labelAddress')} error={errors.address}>
           <textarea
             name='address'
             value={form.address}
             onChange={onChange}
-            placeholder='Введите адрес'
+            placeholder={t('orderFormModal.address')}
             className='w-full border p-2 rounded border-gray-300'
             rows={4}
           />
         </FormField>
 
-        <FormField label='Телефон' error={errors.phone}>
+        <FormField label={t('orderFormModal.labelPhone')} error={errors.phone}>
           <input
             name='phone'
             type='tel'
             value={form.phone}
             onChange={onChange}
-            placeholder='+7...'
+            placeholder={t('orderFormModal.phone')}
             className='w-full border p-2 rounded border-gray-300'
           />
         </FormField>
 
-        <FormField label='Способ оплаты'>
+        <FormField label={t('orderFormModal.labelPayment')}>
           <select
             name='payment'
             value={form.payment}
@@ -93,16 +99,16 @@ export default function OrderForm({
               'focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-shop-blue-dark focus:border-shop-blue-dark'
             )}
           >
-            <option value='card'>Карта онлайн</option>
-            <option value='cod'>Наложенный платёж</option>
-            <option value='pickup'>Самовывоз</option>
+            <option value='card'>{t('paymentMethods.card')}</option>
+            <option value='cod'>{t('paymentMethods.cod')}</option>
+            <option value='pickup'>{t('paymentMethods.pickup')}</option>
           </select>
         </FormField>
       </div>
 
       <div className='mt-6 flex justify-between items-center'>
-        <span className='font-semibold'>Сумма:</span>
-        <span className='text-lg font-bold'>{total.toFixed(2)} ₽</span>
+        <span className='font-semibold'>{t('orderFormModal.total')}:</span>
+        <span className='text-lg font-bold'>{formatOrderTotal(total, currentLang)}</span>
       </div>
 
       <button
@@ -116,10 +122,10 @@ export default function OrderForm({
         {loading ? (
           <>
             <Loader2 className='mr-2 h-5 w-5 animate-spin' />
-            Отправка...
+            {t('orderFormModal.loading')}
           </>
         ) : (
-          submitText
+          t('orderFormModal.confirm')
         )}
       </button>
     </div>

@@ -17,6 +17,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button, buttonVariants } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
+import { SupportedLanguage, CURRENCY_SYMBOLS } from '@/types/Product'; // Импортируем типы для языка и валют
+import { formatPrice } from '@/lib/mappers/products'; // Импортируем функцию форматирования цены
+import { formatOrderTotal, translateOrderStatus } from '@/lib/mappers/orders';
 
 // Расширяем тип Order для дашборда, чтобы включить email пользователя из auth схемы и убедиться, что все необходимые поля для отображения присутствуют
 interface DashboardOrder extends SupabaseOrder {
@@ -31,7 +34,9 @@ export default function AdminOrders() {
   const navigate = useNavigate();
   const [orderToDelete, setOrderToDelete] = useState<string | null>(null);
   const { showSnackbar } = useSnackbar(); // Используем useSnackbar
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation(); // Получаем i18n для определения текущего языка
+  const currentLanguage = i18n.language as SupportedLanguage || 'en'; // Определяем текущий язык
+  // const currencySymbol = CURRENCY_SYMBOLS[currentLanguage]; // Символ валюты, если он нужен отдельно
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -147,7 +152,9 @@ export default function AdminOrders() {
                     <td className='px-4 py-2 text-sm'>
                       {order.customer_email || order.auth_user_email || '-'}
                     </td>
-                    <td className='px-4 py-2'>{order.total.toFixed(2)} ₽</td>
+                    <td className='px-4 py-2'>
+                      {formatOrderTotal(order.total, currentLanguage)}
+                    </td>
                     <td className='px-4 py-2'>
                       <span
                         className={`px-2 py-1 text-sm rounded ${
@@ -162,7 +169,7 @@ export default function AdminOrders() {
                                   : 'bg-red-100 text-red-800'
                         }`}
                       >
-                        {order.status}
+                        {translateOrderStatus(order.status, t)}
                       </span>
                     </td>
                     <td className='px-4 py-2 text-center'>

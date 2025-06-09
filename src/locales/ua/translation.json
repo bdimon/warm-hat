@@ -386,5 +386,30 @@
     "stripeRedirectError": "Помилка перенаправлення Stripe",
     "paymentProcessingError": "Помилка обробки платежу",
     "paymentError": "Помилка оплати. Будь ласка, спробуйте знову."
+  },
+  "orderCard": {
+    "more": "more",
+"noItems": "Немає товарів",
+"total": "Всього",
+"paymentMethod": "Спосіб оплати",
+"status": "Статус",
+"current": "Поточний",
+"changeStatus": "Змінити статус",
+"selectNewStatus": "Вибрати новий статус",
+"saveStatus": "Зберегти статус",
+"itemsInOrder": "Товари в замовленні",
+"quantity": "Кількість",
+"noItemsInfo": "Інформація про товар недоступна."
+},
+  "paymentMethods": {
+    "card": "Оплата карткою онлайн",
+    "cod": "Оплата при отриманні",
+    "pickup": "Самовивіз"
+  },
+  "orderStatuses": {
+    "new": "Новий",
+    "pending": "В обробці",
+    "paid": "Оплачено",
+    "delivered": "Доставлено"
   }
 }

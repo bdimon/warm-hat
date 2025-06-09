@@ -1,5 +1,5 @@
 // types/supabase.ts
-import { ProductInCart, SupportedLanguage, Product, RawProduct } from '@/types/Product';
+import { ProductInCart, SupportedLanguage, Product, RawProduct, RegionalPrice } from '@/types/Product';
 
 export type Profile = {
   id: string;
@@ -20,7 +20,7 @@ export type Order = {
   id: string;
   created_at: string;
   status: OrderStatus;
-  total: number;
+  total: number | RegionalPrice; // Changed from number to support both formats
   items: ProductInCart[];
   user_id: string;
   name?: string;

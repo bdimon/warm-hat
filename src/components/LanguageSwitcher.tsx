@@ -10,6 +10,7 @@ const LanguageSwitcher: React.FC = () => {
   };
   
   const currentLang = i18n.language.split('-')[0];
+  // console.log('[LanguageSwitcher] currentLang:', i18n.language);
   
   return (
     <div className='relative'>

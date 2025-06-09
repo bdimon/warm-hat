@@ -384,5 +384,31 @@
     "stripeRedirectError": "Ошибка перенаправления Stripe",
     "paymentProcessingError": "Ошибка обработки платежа",
     "paymentError": "Ошибка оплаты. Пожалуйста, попробуйте снова."
+  },
+  "orderCard": {
+    "more": "more",
+"noItems": "Нет товаров",
+"total": "Всего",
+"paymentMethod": "Способ оплаты",
+"status": "Статус",
+"current": "Текущий",
+"changeStatus": "Изменить статус",
+"selectNewStatus": "Выбрать новый статус",
+"saveStatus": "Сохранить статус",
+"itemsInOrder": "Товары в заказе",
+"quantity": "Количество",
+"noItemsInfo": "Информация о товарах отсутствует."
+  },
+  "paymentMethods": {
+    "card": "Оплата картой онлайн",
+    "cod": "Наложенный платеж",
+    "pickup": "Самовывоз"
+  },
+  "orderStatuses": {
+    "new": "Новый",
+    "pending": "В обработке",
+    "paid": "Оплачен",
+    "delivered": "Доставлен"
   }
 }
+

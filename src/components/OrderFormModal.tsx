@@ -9,9 +9,10 @@ import FormField from './FormField';
 import { useTranslation } from 'react-i18next';
 import { isValidPhoneNumber } from 'react-phone-number-input'; // 1. Импортируем функцию валидации
 import PhoneInput from '@/components/ui/phone-input';
-import { SupportedLanguage, CURRENCY_SYMBOLS } from '@/types/Product';
+import { SupportedLanguage, CURRENCY_SYMBOLS, RegionalPrice } from '@/types/Product';
 import { getLocalizedValue } from '@/lib/mappers/products';
 import { loadStripe } from '@stripe/stripe-js';
+import { formatOrderTotal } from '@/lib/mappers/orders';
 
 // Получаем ключ из переменных окружения
 const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
@@ -141,12 +142,26 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
     setForm((prev) => ({ ...prev, phone: phoneNumberE164 || '' }));
   };
 
-  const total = cart.reduce((sum, item) => {
-    const price = item.isSale && item.salePrice 
-      ? getLocalizedValue(item.salePrice, currentLang)
-      : getLocalizedValue(item.price, currentLang);
-    return sum + price * item.quantity;
-  }, 0);
+  // Calculate total as RegionalPrice
+  const totalPrice: RegionalPrice = {
+    en: 0,
+    ru: 0,
+    ua: 0,
+    pl: 0
+  };
+
+  // Calculate totals for each language
+  cart.forEach(item => {
+    const supportedLanguages: SupportedLanguage[] = ['en', 'ru', 'ua', 'pl'];
+    
+    supportedLanguages.forEach(lang => {
+      const price = item.isSale && item.salePrice 
+        ? getLocalizedValue(item.salePrice, lang)
+        : getLocalizedValue(item.price, lang);
+      
+      totalPrice[lang] += price * item.quantity;
+    });
+  });
 
   const handleSubmit = async () => {
     // console.log('1. handleSubmit начал выполнение, метод оплаты:', form.payment);
@@ -188,7 +203,7 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
         // console.log('7. Создаем заказ в Supabase');
         const { data: orderData, error } = await supabase.from('orders').insert({
           items,
-          total,
+          total: totalPrice, // Use the multilingual total
           user_id: profileId,
           payment_method: form.payment,
           status: 'pending',
@@ -251,7 +266,7 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
         // Обработка для других методов оплаты (наличные, самовывоз)
         const { error } = await supabase.from('orders').insert({
           items,
-          total,
+          total: totalPrice, // Use the multilingual total
           user_id: profileId,
           payment_method: form.payment,
           status: 'new',
@@ -361,16 +376,16 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
                 'focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-shop-blue-dark focus:border-shop-blue-dark'
               )}
             >
-              <option value='card'>{t('orderFormModal.card')}</option>
-              <option value='cod'>{t('orderFormModal.cod')}</option>
-              <option value='pickup'>{t('orderFormModal.pickup')}</option>
+              <option value='card'>{t('paymentMethods.card')}</option>
+              <option value='cod'>{t('paymentMethods.cod')}</option>
+              <option value='pickup'>{t('paymentMethods.pickup')}</option>
             </select>
           </FormField>
         </div>
 
         <div className='mt-6 flex justify-between items-center'>
           <span className='font-semibold text-shop-blue-dark'>{t('orderFormModal.total')}</span>
-          <span className='text-lg font-bold'>{total.toFixed(2)} {currencySymbol}</span>
+          <span className='text-lg font-bold'>{formatOrderTotal(totalPrice, currentLang)}</span>
         </div>
 
         <button

@@ -384,5 +384,30 @@
     "stripeRedirectError": "Stripe redirect error",
     "paymentProcessingError": "Payment processing error",
     "paymentError": "Payment error. Please try again."
+  },
+  "orderCard": {
+    "more": "more",
+    "noItems": "No items",
+    "total": "Total",
+    "paymentMethod": "Payment method",
+    "status": "Status",
+    "current": "Current",
+    "changeStatus": "Change status",
+    "selectNewStatus": "Select new status",
+    "saveStatus": "Save status",
+    "itemsInOrder": "Items in order",
+    "quantity": "Quantity",
+    "noItemsInfo": "No item information available."
+  },
+  "paymentMethods": {
+    "card": "Online card payment",
+    "cod": "Cash on delivery",
+    "pickup": "Pickup"
+  },
+  "orderStatuses": {
+    "new": "New",
+    "pending": "Pending",
+    "paid": "Paid",
+    "delivered": "Delivered"
   }
 }

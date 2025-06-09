@@ -3,6 +3,18 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useSnackbar } from '@/hooks/use-snackbar';
 import { supabase } from '@/lib/supabase-client';
 import OrderForm from '@/components/OrderForm';
+import { RegionalPrice } from '@/types/Product';
+import { useTranslation } from 'react-i18next';
+import { SupportedLanguage, CURRENCY_SYMBOLS } from '@/types/Product';
+import {
+  formatOrderTotal,
+  translatePaymentMethod,
+  translateOrderStatus,
+} from '@/lib/mappers/orders';
+import { formatPrice, getLocalizedValue} from '@/lib/mappers/products';
+import { isValidPhoneNumber } from 'react-phone-number-input'; // 1. Импортируем функцию валидации
+import PhoneInput from '@/components/ui/phone-input';
+
 // Эти типы используются локально, если они не экспортируются из use-order-form,
 // то импорт не нужен. Если экспортируются, раскомментируйте:
 // import { OrderFormData, OrderFormErrors } from "@/hooks/use-order-form";
@@ -24,6 +36,9 @@ export default function EditOrderPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar(); // Original showSnackbar
+  const { t, i18n } = useTranslation();
+  const currentLanguage = (i18n.language as SupportedLanguage) || 'en';
+  const currencySymbol = CURRENCY_SYMBOLS[currentLanguage];
 
   // Ref to hold the latest showSnackbar function
   // This helps if showSnackbar itself is a new function on every render,
@@ -42,7 +57,7 @@ export default function EditOrderPage() {
   const [errors, setErrors] = useState<OrderFormErrors>({});
   const [loading, setLoading] = useState(true); // Устанавливаем true изначально, т.к. данные загружаются
   const [userEmail, setUserEmail] = useState('');
-  const [total, setTotal] = useState(0);
+  const [total, setTotal] = useState<number | RegionalPrice>(0);
   const [editable, setEditable] = useState(false);
   // Ref to track if the fetch is in progress for the current id
   const isFetchingRef = useRef(false);
@@ -85,7 +100,7 @@ export default function EditOrderPage() {
 
         if (orderError || !orderData) {
           console.error('[EditOrderPage] Error fetching order data or no order data:', orderError);
-          showSnackbarRef.current('Заказ не найден', 'warning');
+          showSnackbarRef.current(t('adminOrderDetail.errorNotFound'), 'warning');
           navigate('/profile');
           return; // Exit after navigation
         }
@@ -116,7 +131,7 @@ export default function EditOrderPage() {
             '[EditOrderPage] Error fetching profile data or no profile data:',
             profileError
           );
-          showSnackbarRef.current('Не удалось загрузить данные профиля для заказа.', 'warning');
+          showSnackbarRef.current(t('adminOrderDetail.errorLoading'), 'warning');
           setForm({
             name: orderSpecificName || '',
             address: orderSpecificAddress || '',
@@ -150,7 +165,12 @@ export default function EditOrderPage() {
     };
 
     fetchOrderData();
-  }, [id, navigate]); // `showSnackbar` is now accessed via ref, so it's removed from deps.
+  }, [id, navigate, t]); // `showSnackbar` is now accessed via ref, so it's removed from deps.
+
+  // 2. Отдельный обработчик для номера телефона
+  const handlePhoneChange = (phoneNumberE164: string | undefined) => {
+    setForm((prev) => ({ ...prev, phone: phoneNumberE164 || '' }));
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -164,14 +184,9 @@ export default function EditOrderPage() {
 
   const validate = (): OrderFormErrors => {
     const newErrors: OrderFormErrors = {};
-    if (!form.name.trim()) newErrors.name = 'Введите имя';
-    if (!form.address.trim()) newErrors.address = 'Введите адрес';
-    if (!/^\+?\d{10,15}$/.test(form.phone)) {
-      newErrors.phone = 'Введите корректный телефон (например, +1234567890)';
-    } else if (form.phone.length < 10) {
-      // Дополнительная проверка на минимальную длину
-      newErrors.phone = 'Телефон слишком короткий';
-    }
+    if (!form.name.trim()) newErrors.name = t('orderFormModal.name');
+    if (!form.address.trim()) newErrors.address = t('orderFormModal.address');
+    newErrors.phone = form.phone && isValidPhoneNumber(form.phone) ? '' : t('orderFormModal.phone');
     return newErrors;
   };
 

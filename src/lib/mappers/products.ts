@@ -83,8 +83,8 @@ export function formatPrice(
   language: SupportedLanguage = 'en'
 ): string {
   const numericPrice = typeof price === 'number' 
-    ? price 
-    : getLocalizedValue(price, language);
+    ? Number(price.toFixed(2)) 
+    : Number(getLocalizedValue(price, language).toFixed(2));
     
   return `${numericPrice} ${CURRENCY_SYMBOLS[language]}`;
 }

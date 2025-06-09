@@ -384,5 +384,30 @@
     "stripeRedirectError": "Błąd przekierowania Stripe",
     "paymentProcessingError": "Błąd przetwarzania płatności",
     "paymentError": "Błąd płatności. Spróbuj ponownie."
+  },
+  "orderCard": {
+    "more": "more",
+"noItems": "Brak pozycji",
+"total": "Suma",
+"paymentMethod": "Metoda płatności",
+"status": "Status",
+"current": "Bieżący",
+"changeStatus": "Zmień status",
+"selectNewStatus": "Wybierz nowy status",
+"saveStatus": "Zapisz status",
+"itemsInOrder": "Pozycje w kolejności",
+"quantity": "Ilość",
+"noItemsInfo": "Brak dostępnych informacji o pozycji"
+  },
+  "paymentMethods": {
+    "card": "Płatność kartą online",
+    "cod": "Płatność przy odbiorze",
+    "pickup": "Odbiór osobisty"
+  },
+  "orderStatuses": {
+    "new": "Nowy",
+    "pending": "W trakcie realizacji",
+    "paid": "Opłacony",
+    "delivered": "Dostarczony"
   }
 }

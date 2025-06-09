@@ -10,6 +10,7 @@ import { useSnackbar } from '@/hooks/use-snackbar';
 import { SupportedLanguage, CURRENCY_SYMBOLS } from '@/types/Product';
 import { useTranslation } from 'react-i18next';
 import { formatPrice, getLocalizedValue } from '@/lib/mappers/products';
+import { formatOrderTotal, translatePaymentMethod, translateOrderStatus } from '@/lib/mappers/orders';
 
 // Возможные статусы заказа
 const ORDER_STATUSES: SupabaseOrder['status'][] = ['new', 'pending', 'paid', 'delivered'];
@@ -177,10 +178,10 @@ export default function AdminOrderDetailPage() {
                 <strong>{t('adminOrderDetail.createdAt')}:</strong> {new Date(order.created_at).toLocaleString(i18n.language)}
               </p>
               <p>
-                <strong>{t('adminOrderDetail.totalAmount')}:</strong> {formatPrice(order.total, currentLanguage)}
+                <strong>{t('adminOrderDetail.totalAmount')}:</strong> {formatOrderTotal(order.total, currentLanguage)}
               </p>
               <p>
-                <strong>{t('adminOrderDetail.paymentMethod')}:</strong> {order.payment_method}
+                <strong>{t('adminOrderDetail.paymentMethod')}:</strong> {translatePaymentMethod(order.payment_method, t)}
               </p>
             </div>
           </div>
@@ -203,7 +204,7 @@ export default function AdminOrderDetailPage() {
                           : 'bg-gray-100 text-gray-700'
                 }`}
               >
-                {t(`adminOrderDetail.statuses.${order.status}`)}
+                {translateOrderStatus(order.status, t)}
               </span>
             </p>
             <div>
@@ -223,7 +224,7 @@ export default function AdminOrderDetailPage() {
                 <SelectContent>
                   {ORDER_STATUSES.map((statusValue) => (
                     <SelectItem key={statusValue} value={statusValue} className='capitalize'>
-                      {t(`adminOrderDetail.statuses.${statusValue}`)}
+                      {translateOrderStatus(statusValue, t)}
                     </SelectItem>
                   ))}
                 </SelectContent>

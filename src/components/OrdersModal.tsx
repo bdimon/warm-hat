@@ -3,6 +3,7 @@ import { useUserOrders } from '@/hooks/use-user-orders';
 import OrderCard from '@/components/ui/order-card';
 import { X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 
 interface OrdersModalProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ const ORDERS_PER_PAGE = 3; // Можно настроить количество
 const OrdersModal: React.FC<OrdersModalProps> = ({ isOpen, onClose }) => {
   const { orders, loading, refetchOrders } = useUserOrders();
   const [page, setPage] = useState(1);
+  const { t } = useTranslation();
 
   // console.log(
   //   '[OrdersModal] Rendering. Orders count:',
@@ -80,7 +82,7 @@ const OrdersModal: React.FC<OrdersModalProps> = ({ isOpen, onClose }) => {
     <div className='fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[60] p-4 transition-opacity duration-300 ease-in-out'>
       <div className='bg-white p-6 sm:p-8 rounded-lg shadow-xl max-w-2xl w-full relative max-h-[90vh] flex flex-col transform transition-all duration-300 ease-in-out scale-95 opacity-0 animate-modal-scale-fade-in'>
         <div className='flex justify-between items-center mb-6'>
-          <h2 className='text-2xl font-semibold text-shop-text'>Мои заказы</h2>
+          <h2 className='text-2xl font-semibold text-shop-text'>{t('profile.orders')}</h2>
           <button
             onClick={onClose}
             className='text-gray-400 hover:text-gray-600 transition-colors'
@@ -96,10 +98,10 @@ const OrdersModal: React.FC<OrdersModalProps> = ({ isOpen, onClose }) => {
           {loading ? (
             <div className='flex justify-center items-center h-40'>
               <Loader2 className='h-8 w-8 animate-spin text-shop-blue-dark' />
-              <p className='ml-2 text-gray-600'>Загрузка заказов...</p>
+              <p className='ml-2 text-gray-600'>{t('adminOrders.loading')}</p>
             </div>
           ) : orders.length === 0 ? (
-            <p className='text-center py-10 text-gray-600'>У вас пока нет заказов.</p>
+            <p className='text-center py-10 text-gray-600'>{t('adminOrders.noOrders')}</p>
           ) : (
             <ul className='space-y-4'>
               {paginatedOrders.map((order) => (
@@ -116,7 +118,7 @@ const OrdersModal: React.FC<OrdersModalProps> = ({ isOpen, onClose }) => {
               onClick={() => setPage((p) => Math.max(p - 1, 1))}
               disabled={page === 1}
             >
-              ⬅ Назад
+              ⬅ {t('header.back')}
             </Button>
             <span className='text-sm text-gray-700'>
               Страница {page} из {totalPages}
