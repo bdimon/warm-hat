@@ -14,7 +14,7 @@ import SignUpForm from "./components/SignupForm";
 import ProfilePage from "./pages/ProfilePage";
 import UpdatePasswordPage from "./pages/UpdatePasswordPage";
 import EditOrderPage from "./pages/EditOrderPage";
-import AdminDashboard from "./pages/AdminDashboard";  
+import AdminOrders from "./pages/AdminOrders";  
 import AdminOrderDetailPage from "./pages/AdminOrderDetailPage";
 import AdminUsersPage from "./pages/AdminUsersPage"; // <-- Добавляем импорт
 import PaymentSuccessPage from './pages/PaymentSuccessPage';
@@ -31,7 +31,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/catalog/:id" element={<ProductPage />} />
           <Route path="/edit-order/:id" element={<EditOrderPage />} />
-          <Route path="/admin/orders" element={<AdminDashboard />} />
+          <Route path="/admin/orders" element={<AdminOrders />} />
           {/* <Route path="/catalog" element={<CatalogPage />} /> */}
           {/* <Route path="/signup" element={<SignUpForm />} /> */}
           <Route path="/profile" element={<ProfilePage />} />

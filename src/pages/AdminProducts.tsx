@@ -66,7 +66,7 @@ export default function AdminProducts() {
 
   if (loading) return (
     <div className="min-h-screen flex flex-col">
-      <Header showBackButton onBackClick={() => navigate('/admin/dashboard')} />
+      <Header showBackButton onBackClick={() => navigate('/admin/orders')} />
       <div className="flex-grow flex items-center justify-center min-h-[300px]">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-shop-blue-dark mx-auto mb-2" />
@@ -78,7 +78,7 @@ export default function AdminProducts() {
   
   if (error) return (
     <div className="min-h-screen flex flex-col">
-      <Header showBackButton onBackClick={() => navigate('/admin/dashboard')} />
+      <Header showBackButton onBackClick={() => navigate('/admin/orders')} />
       <div className="flex-grow flex items-center justify-center">
         <div className="text-center">
           <p className="text-xl text-red-600 mb-4">{t('adminProducts.error')}: {error}</p>
@@ -89,7 +89,7 @@ export default function AdminProducts() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header showBackButton onBackClick={() => navigate('/admin/dashboard')} />
+      <Header showBackButton onBackClick={() => navigate('/admin/orders')} />
       <div className="container mx-auto pt-24 pb-12 px-4">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold">{t('adminProducts.title')}</h1>

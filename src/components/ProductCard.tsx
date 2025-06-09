@@ -43,12 +43,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </Link>
         {product.isNew && (
           <div className="absolute top-3 left-3 bg-shop-blue-dark text-white text-xs font-bold uppercase py-1 px-2 rounded">
-            {t('product.new')}
+            {t('adminProductForm.isNewLabel')}
           </div>
         )}
         {product.isSale && (
           <div className="absolute top-3 right-3 bg-[#FF5252] text-white text-xs font-bold uppercase py-1 px-2 rounded">
-            {t('product.sale')}
+            {t('adminProductForm.isSaleLabel')}
           </div>
         )}
       </div>
@@ -62,7 +62,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             {formatPrice(product.price, currentLang)}
           </span>
           <button className="bg-shop-blue text-shop-text hover:bg-shop-blue-dark hover:text-white transition-colors py-2 px-4 rounded-full text-sm">
-            {t('product.addToCart')}
+            {t('catalogPage.addToCart')}
           </button>
         </div>
       </div>

@@ -8,7 +8,8 @@
     "combinationsCategory": "Combinations",
     "loading": "Loading products...",
     "error": "Error: {{errorMessage}}",
-    "showMore": "Show more products"
+    "showMore": "Show more products",
+    "addToCart": "Add to cart"
   },
   "hero": {
     "welcome": "Welcome to our <1>warm store</1>",
@@ -238,7 +239,7 @@
     "loading": "Sending...",
     "confirm": "Confirm order"
   },
-  "adminDashboard": {
+  "adminOrders": {
     "title": "Admin Dashboard - Orders",
     "noOrders": "No orders",
     "date": "Date",

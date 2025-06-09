@@ -95,11 +95,11 @@ export default function AdminUsersPage() {
   if (error) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Header showBackButton onBackClick={() => navigate('/admin/dashboard')} />
+        <Header showBackButton onBackClick={() => navigate('/admin/orders')} />
         <div className="flex-grow flex items-center justify-center">
           <div className="text-center">
             <p className="text-xl text-red-600 mb-4">{t('adminUsers.error')}: {error}</p>
-            <Button onClick={() => navigate('/admin/dashboard')} className="bg-shop-blue-dark text-white">
+            <Button onClick={() => navigate('/admin/orders')} className="bg-shop-blue-dark text-white">
               {t('adminUsers.backToAdmin')}
             </Button>
           </div>
@@ -110,7 +110,7 @@ export default function AdminUsersPage() {
 
   return (
     <div className='min-h-screen flex flex-col bg-gray-50'>
-      <Header showBackButton onBackClick={() => navigate('/admin/dashboard')} />
+      <Header showBackButton onBackClick={() => navigate('/admin/orders')} />
       <div className='container mx-auto pt-24 pb-12 px-4'>
         <h1 className='text-3xl font-bold mb-8 text-shop-text'>{t('adminUsers.title')}</h1>
 

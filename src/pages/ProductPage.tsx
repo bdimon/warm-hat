@@ -77,6 +77,8 @@ export default function ProductPage() {
     ? getLocalizedValue(product.salePrice, currentLang) 
     : undefined;
 
+    const displayName = typeof localizedName === 'string' ? localizedName : '';
+
   return (
     // Если Header имеет фиксированное или "липкое" позиционирование,
     // секции нужен достаточный верхний отступ (padding-top),
@@ -111,7 +113,7 @@ export default function ProductPage() {
 
         {/* Описание */}
         <div>
-          <h1 className="text-2xl font-bold mb-2">{localizedName}</h1>
+          <h1 className="text-2xl font-bold mb-2">{displayName}</h1>
           {product.isSale && localizedSalePrice ? (
             <div className="flex items-center gap-2 mb-4">
               <span className="text-2xl font-bold text-red-500">
@@ -130,7 +132,7 @@ export default function ProductPage() {
             aria-label="Добавить в корзину"
           >
             <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6 mr-2" color="white" />
-             <span className="text-lg font-bold ml-1">{t('product.addToCart')}</span>
+             <span className="text-lg font-bold ml-1">{t('catalogPage.addToCart')}</span>
           </Button>
         </div>
       </div>

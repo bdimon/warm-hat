@@ -8,7 +8,8 @@
     "combinationsCategory": "Комплекты",
     "loading": "Загрузка товаров...",
     "error": "Ошибка: {{errorMessage}}",
-    "showMore": "Показать больше товаров"
+    "showMore": "Показать больше товаров",
+    "addToCart": "Добавить в корзину"
   },
   "hero": {
     "welcome": "Добро пожаловать в наш <1>теплый магазин</1>",
@@ -238,7 +239,7 @@
     "loading": "Отправка...",
     "confirm": "Подтвердить заказ"
   },
-  "adminDashboard": {
+  "adminOrders": {
     "title": "Админка — Заказы",
     "noOrders": "Нет заказов",
     "date": "Дата",

@@ -106,7 +106,7 @@ export default function AdminOrderDetailPage() {
   if (loading) {
     return (
       <div className='min-h-screen flex flex-col'>
-        <Header showBackButton onBackClick={() => navigate('/admin/dashboard')} />
+        <Header showBackButton onBackClick={() => navigate('/admin/orders')} />
         <div className='flex-grow flex items-center justify-center'>
           <Loader2 className='h-8 w-8 animate-spin text-shop-blue-dark' />
           <p className='ml-2 text-gray-600'>{t('adminOrderDetail.loading')}</p>
@@ -118,11 +118,11 @@ export default function AdminOrderDetailPage() {
   if (error) {
     return (
       <div className='min-h-screen flex flex-col'>
-        <Header showBackButton onBackClick={() => navigate('/admin/dashboard')} />
+        <Header showBackButton onBackClick={() => navigate('/admin/orders')} />
         <div className='flex-grow flex items-center justify-center text-center'>
           <div>
             <p className='text-xl text-red-600 mb-4'>{t('adminOrderDetail.error')}: {error}</p>
-            <Button onClick={() => navigate('/admin/dashboard')} className='bg-shop-blue-dark text-white'>
+            <Button onClick={() => navigate('/admin/orders')} className='bg-shop-blue-dark text-white'>
               {t('adminOrderDetail.backToOrders')}
             </Button>
           </div>
@@ -134,7 +134,7 @@ export default function AdminOrderDetailPage() {
   if (!order) {
     return (
       <div className='min-h-screen flex flex-col'>
-        <Header showBackButton onBackClick={() => navigate('/admin/dashboard')} />
+        <Header showBackButton onBackClick={() => navigate('/admin/orders')} />
         <div className='flex-grow flex items-center justify-center'>
           <p className='text-xl text-gray-700'>{t('adminOrderDetail.orderNotFound')}</p>
         </div>
@@ -144,7 +144,7 @@ export default function AdminOrderDetailPage() {
 
   return (
     <div className='min-h-screen bg-gray-50'>
-      <Header showBackButton onBackClick={() => navigate('/admin/dashboard')} />
+      <Header showBackButton onBackClick={() => navigate('/admin/orders')} />
       <div className='container mx-auto pt-24 pb-12 px-4'>
         <h1 className='text-3xl font-bold mb-8 text-shop-text'>
           {t('adminOrderDetail.title')} <span className='font-mono'>{order.id.substring(0, 8)}...</span>

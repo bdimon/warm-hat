@@ -24,7 +24,7 @@ interface DashboardOrder extends SupabaseOrder {
   customer_email?: string; // Email, указанный при оформлении заказа name поле уже должно быть в SupabaseOrder для имени клиента
 }
 
-export default function AdminDashboard() {
+export default function AdminOrders() {
   const [orders, setOrders] = useState<DashboardOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -40,18 +40,18 @@ export default function AdminDashboard() {
 
         if (!res.ok) {
           const errorText = await res.text().catch(() => "Could not read error text from response");
-          console.error(`[AdminDashboard] Fetch error, response not ok. Status: ${res.status}. Response text: ${errorText}`);
-          throw new Error(t('adminDashboard.errorLoading'));
+          console.error(`[AdminOrders] Fetch error, response not ok. Status: ${res.status}. Response text: ${errorText}`);
+          throw new Error(t('adminOrders.errorLoading'));
         }
 
         const data = await res.json();
-        // console.log('[AdminDashboard] Data received from API for orders:', data);
+        // console.log('[AdminOrders] Data received from API for orders:', data);
         setOrders(data);
       } catch (err) {
         if (err instanceof Error) {
-          setError(err.message || t('adminDashboard.errorLoading'));
+          setError(err.message || t('adminOrders.errorLoading'));
         } else {
-          setError(t('adminDashboard.errorUnknown'));
+          setError(t('adminOrders.errorUnknown'));
         }
       } finally {
         setLoading(false);
@@ -69,14 +69,14 @@ export default function AdminDashboard() {
         method: 'DELETE',
       });
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ message: t('adminDashboard.errorDelete') }));
-        throw new Error(errorData.message || t('adminDashboard.errorDelete'));
+        const errorData = await res.json().catch(() => ({ message: t('adminOrders.errorDelete') }));
+        throw new Error(errorData.message || t('adminOrders.errorDelete'));
       }
       setOrders(prevOrders => prevOrders.filter(order => order.id !== orderToDelete));
-      showSnackbar(t('adminDashboard.orderDeleted'), "success");
+      showSnackbar(t('adminOrders.orderDeleted'), "success");
     } catch (err) {
-      console.error(t('adminDashboard.errorDelete'), err);
-      const errorMessage = err instanceof Error ? err.message : t('adminDashboard.errorDelete');
+      console.error(t('adminOrders.errorDelete'), err);
+      const errorMessage = err instanceof Error ? err.message : t('adminOrders.errorDelete');
       setError(errorMessage);
       showSnackbar(errorMessage, "error");
     } finally {
@@ -90,7 +90,7 @@ export default function AdminDashboard() {
       <div className="flex-grow flex items-center justify-center min-h-[300px]">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-shop-blue-dark mx-auto mb-2" />
-          <div>{t('adminDashboard.loading')}</div>
+          <div>{t('adminOrders.loading')}</div>
         </div>
       </div>
     </div>
@@ -101,7 +101,7 @@ export default function AdminDashboard() {
       <Header showBackButton onBackClick={() => navigate('/')} />
       <div className="flex-grow flex items-center justify-center">
         <div className="text-center">
-          <p className="text-xl text-red-600 mb-4">{t('adminDashboard.error')}: {error}</p>
+          <p className="text-xl text-red-600 mb-4">{t('adminOrders.error')}: {error}</p>
         </div>
       </div>
     </div>
@@ -111,31 +111,31 @@ export default function AdminDashboard() {
     <div className='min-h-screen flex flex-col bg-gray-50'>
       <Header showBackButton onBackClick={() => navigate('/')} />
       <div className='container mx-auto pt-24 pb-12 px-4'>
-        <h1 className='text-3xl font-bold mb-8 text-shop-text'>{t('adminDashboard.title')}</h1>
+        <h1 className='text-3xl font-bold mb-8 text-shop-text'>{t('adminOrders.title')}</h1>
         {orders.length === 0 ? (
-          <p className='text-center text-gray-500 my-8'>{t('adminDashboard.noOrders')}</p>
+          <p className='text-center text-gray-500 my-8'>{t('adminOrders.noOrders')}</p>
         ) : (
           <div className='overflow-x-auto bg-white rounded-lg shadow'>
             <table className='min-w-full table-auto'>
               <thead className='bg-gray-100'>
                 <tr>
                   <th className='px-4 py-3 text-left text-sm font-medium text-gray-600'>
-                    {t('adminDashboard.date')}
+                    {t('adminOrders.date')}
                   </th>
                   <th className='px-4 py-3 text-left text-sm font-medium text-gray-600'>
-                    {t('adminDashboard.name')}
+                    {t('adminOrders.name')}
                   </th>
                   <th className='px-4 py-3 text-left text-sm font-medium text-gray-600'>
-                    {t('adminDashboard.email')}
+                    {t('adminOrders.email')}
                   </th>
                   <th className='px-4 py-3 text-left text-sm font-medium text-gray-600'>
-                    {t('adminDashboard.amount')}
+                    {t('adminOrders.amount')}
                   </th>
                   <th className='px-4 py-3 text-left text-sm font-medium text-gray-600'>
-                    {t('adminDashboard.status')}
+                    {t('adminOrders.status')}
                   </th>
                   <th className='px-4 py-3 text-sm font-medium text-gray-600'>
-                    {t('adminDashboard.actions')}
+                    {t('adminOrders.actions')}
                   </th>
                 </tr>
               </thead>
@@ -170,14 +170,14 @@ export default function AdminDashboard() {
                         className='text-sm text-blue-600 hover:underline mr-2'
                         onClick={() => navigate(`/admin/order/edit/${order.id}`)}
                       >
-                        {t('adminDashboard.details')}
+                        {t('adminOrders.details')}
                       </button>
                       <Button
                         variant='link'
                         className='text-sm text-red-600 hover:underline p-0 h-auto'
                         onClick={() => setOrderToDelete(order.id)}
                       >
-                        {t('adminDashboard.delete')}
+                        {t('adminOrders.delete')}
                       </Button>
                     </td>
                   </tr>
@@ -194,21 +194,21 @@ export default function AdminDashboard() {
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle className='text-red-600 text-xl text-center'>
-                {t('adminDashboard.deleteConfirmTitle')}
+                {t('adminOrders.deleteConfirmTitle')}
               </AlertDialogTitle>
               <AlertDialogDescription>
-                {t('adminDashboard.deleteConfirmDescription')}
+                {t('adminOrders.deleteConfirmDescription')}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel onClick={() => setOrderToDelete(null)}>
-                {t('adminDashboard.deleteConfirmCancel')}
+                {t('adminOrders.deleteConfirmCancel')}
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={confirmDeleteOrder}
                 className={buttonVariants({ variant: 'destructive' })}
               >
-                {t('adminDashboard.deleteConfirmAction')}
+                {t('adminOrders.deleteConfirmAction')}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
