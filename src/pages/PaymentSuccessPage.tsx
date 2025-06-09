@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import Header from '@/components/Header';
+import { useCart } from '@/hooks/use-cart'; // Импортируем useCart
+// import Header from '@/components/Header';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Loader2 } from 'lucide-react';
-
 export default function PaymentSuccessPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -12,6 +12,7 @@ export default function PaymentSuccessPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const { clearCart } = useCart(); // Получаем функцию clearCart
   useEffect(() => {
     const checkPaymentStatus = async () => {
       try {
@@ -27,25 +28,35 @@ export default function PaymentSuccessPage() {
         
         // Проверяем статус платежа
         const response = await fetch(`http://localhost:3010/api/payments/check-status?session_id=${sessionId}`);
-        
+
         if (!response.ok) {
           throw new Error(t('payment.errorCheckingStatus'));
         }
-        
-        setLoading(false);
+
+        const data = await response.json();
+
+        if (data.paymentStatus === 'paid') {
+          clearCart(); // Очищаем корзину, если платеж успешен
+          setLoading(false);
+        } else {
+          // Если статус не 'paid', показываем ошибку
+          // Рекомендую добавить такой ключ в файлы локализации, например:
+          // "payment.errorPaymentNotCompleted": "Payment not completed. Status: {{status}}"
+          setError(t('payment.errorPaymentNotCompleted', { status: data.paymentStatus || 'unknown' }));
+          setLoading(false);
+        }
       } catch (err) {
-        setError(err.message || t('payment.errorUnknown'));
+        setError((err as Error).message || t('payment.errorUnknown'));
         setLoading(false);
       }
     };
-    
     checkPaymentStatus();
-  }, [location, t]);
+  }, [location, t, clearCart]); // Добавляем clearCart в зависимости
 
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Header showBackButton onBackClick={() => navigate('/')} />
+        {/* <Header showBackButton onBackClick={() => navigate('/')} /> */}
         <div className="flex-grow flex items-center justify-center">
           <div className="text-center">
             <Loader2 className="h-8 w-8 animate-spin text-shop-blue-dark mx-auto mb-2" />
@@ -59,7 +70,7 @@ export default function PaymentSuccessPage() {
   if (error) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Header showBackButton onBackClick={() => navigate('/')} />
+        {/* <Header showBackButton onBackClick={() => navigate('/')} /> */}
         <div className="flex-grow flex items-center justify-center">
           <div className="text-center max-w-md mx-auto p-6">
             <p className="text-red-500 mb-4">{error}</p>
@@ -74,7 +85,7 @@ export default function PaymentSuccessPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header showBackButton onBackClick={() => navigate('/')} />
+      {/* <Header showBackButton onBackClick={() => navigate('/')} /> */}
       <div className="flex-grow flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-6 border rounded-lg shadow-sm">
           <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />

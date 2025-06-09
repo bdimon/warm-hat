@@ -48,7 +48,7 @@ router.post("/create-checkout-session", async (req, res) => {
         orderId,
       },
       // Добавить параметр locale на основе заголовка Accept-Language
-      locale: req.headers['accept-language']?.split(',')[0].split('-')[0] || 'en',
+      // locale: req.headers['accept-language']?.split(',')[0].split('-')[0] || 'en',
     });
 
     console.log('Сессия создана успешно:', session.id);

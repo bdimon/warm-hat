@@ -63,6 +63,7 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
 
   // Получаем текущий язык и преобразуем его в SupportedLanguage
   const currentLang = i18n.language.split('-')[0] as SupportedLanguage;
+  console.log('[OrderFormModal] currentLang:', currentLang);
   
   // Получаем символ валюты для текущего языка
   const currencySymbol = CURRENCY_SYMBOLS[currentLang];
@@ -201,10 +202,10 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
           throw error;
         }
 
-        // console.log('9. Заказ успешно создан:', orderData);
+        console.log('9. Заказ успешно создан:', orderData);
 
         // Создаем Checkout Session на сервере
-        // console.log('10. Отправляем запрос на создание Checkout Session');
+        console.log('10. Отправляем запрос на создание Checkout Session');
         const response = await fetch('http://localhost:3010/api/payments/create-checkout-session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -215,14 +216,14 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
               price: item.price,
               quantity: item.quantity,
               // Преобразуем относительные URL в абсолютные
-              images: item.images && item.images.length > 0 
-                ? [getAbsoluteImageUrl(item.images[0])]
-                : []
+              // images: item.images && item.images.length > 0 
+                // ? [getAbsoluteImageUrl(item.images[0])]
+                // : []
             }))
           }),
         });
 
-        // console.log('11. Получен ответ от сервера:', response.status, response.statusText);
+        console.log('11. Получен ответ от сервера:', response.status, response.statusText);
         
         if (!response.ok) {
           const errorText = await response.text();
