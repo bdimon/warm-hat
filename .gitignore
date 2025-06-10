@@ -10,7 +10,6 @@ lerna-debug.log*
 # Environment variables
 .env
 .env.*
-!.env.example
 
 # Build directories
 public/
@@ -21,4 +20,8 @@ node_modules/
 # Generated files
 converted/
 originals/
-!public/*.
+
+#development
+.env.local
+.vscode/
+.idea/
