@@ -72,7 +72,7 @@ function findDuplicateValues(translations: Record<string, unknown>): Record<stri
 }
 
 // Основная функция проверки
-async function checkTranslationsIntegrity() {
+async function main() {
   const localesDir = path.resolve('src/locales');
   const languages = fs.readdirSync(localesDir);
   
@@ -148,4 +148,4 @@ async function checkTranslationsIntegrity() {
 }
 
 // Запускаем проверку
-checkTranslationsIntegrity().catch(console.error);
+main().catch(console.error);
