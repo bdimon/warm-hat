@@ -29,7 +29,7 @@ export default function AccountPage() {
         <Header showBackButton onBackClick={() => navigate('/')} />
         <div className='flex-grow flex items-center justify-center'>
           <Loader2 className='h-8 w-8 animate-spin text-shop-blue-dark' />
-          <p className='text-gray-600'>{t('profile.warning')}</p>
+          <p className='text-gray-600'>{t('profile.loading')}</p>
         </div>
       </div>
     );

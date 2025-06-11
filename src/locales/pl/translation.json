@@ -37,7 +37,8 @@
     "logout": "Wyloguj się",
     "profile": "Profil",
     "cart": "Otwórz koszyk",
-    "back": "Wstecz"
+    "back": "Wstecz",
+    "next": "Dalej"
   },
   "footer": {
     "navigation": "Nawigacja",
@@ -386,6 +387,8 @@
     "paymentError": "Błąd płatności. Spróbuj ponownie."
   },
   "orderCard": {
+    "page": "Strona",
+    "ofTotal": "z {{total}}",
     "more": "more",
 "noItems": "Brak pozycji",
 "total": "Suma",

@@ -121,14 +121,14 @@ const OrdersModal: React.FC<OrdersModalProps> = ({ isOpen, onClose }) => {
               ⬅ {t('header.back')}
             </Button>
             <span className='text-sm text-gray-700'>
-              Страница {page} из {totalPages}
+              {t('orderCard.page')} {page} {t('orderCard.ofTotal', { total: totalPages })}
             </span>
             <Button
               variant='outline'
               onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
               disabled={page === totalPages}
             >
-              Вперёд ➡
+              {t('header.next')} ➡
             </Button>
           </div>
         )}
