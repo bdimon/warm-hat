@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import { SupportedLanguage, CURRENCY_SYMBOLS } from '@/types/Product';
 import {
   formatOrderTotal,
-  translatePaymentMethod,
   translateOrderStatus,
 } from '@/lib/mappers/orders';
 import { formatPrice, getLocalizedValue} from '@/lib/mappers/products';
@@ -24,7 +23,6 @@ interface OrderFormData {
   name: string;
   address: string;
   phone: string;
-  payment: string;
 }
 interface OrderFormErrors {
   name?: string;
@@ -52,7 +50,6 @@ export default function EditOrderPage() {
     name: '',
     address: '',
     phone: '',
-    payment: 'card',
   });
   const [errors, setErrors] = useState<OrderFormErrors>({});
   const [loading, setLoading] = useState(true); // Устанавливаем true изначально, т.к. данные загружаются
@@ -94,7 +91,7 @@ export default function EditOrderPage() {
       try {
         const { data: orderData, error: orderError } = await supabase
           .from('orders')
-          .select('*, user_id, name, address, phone, payment_method') // Be specific if possible
+          .select('*, user_id, name, address, phone') // Be specific if possible
           .eq('id', id)
           .single();
 
@@ -109,7 +106,6 @@ export default function EditOrderPage() {
         const {
           total: orderTotalAmount,
           status: orderStatus,
-          payment_method: orderPaymentMethod,
           user_id,
           name: orderSpecificName,
           address: orderSpecificAddress,
@@ -136,7 +132,6 @@ export default function EditOrderPage() {
             name: orderSpecificName || '',
             address: orderSpecificAddress || '',
             phone: orderSpecificPhone || '',
-            payment: orderPaymentMethod,
           });
           setUserEmail('');
         } else {
@@ -146,7 +141,6 @@ export default function EditOrderPage() {
             name: orderSpecificName || profileData.full_name || '',
             address: orderSpecificAddress || profileData.address || '',
             phone: orderSpecificPhone || profileData.phone || '',
-            payment: orderPaymentMethod,
           });
         }
       } catch (e) {
@@ -208,7 +202,6 @@ export default function EditOrderPage() {
           name: form.name,
           address: form.address,
           phone: form.phone,
-          payment_method: form.payment,
         },
         { count: 'exact' }
       ) // Опция для получения точного количества измененных строк

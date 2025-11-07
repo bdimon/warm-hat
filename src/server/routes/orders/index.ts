@@ -22,7 +22,7 @@ router.use((req, res, next) => {
 });
 
 router.post("/", async (req, res) => {
-  const { items, total, customer_address, customer_email, customer_name, payment_method, status } =
+  const { items, total, customer_address, customer_email, customer_name, status } =
     req.body;
 
   if (
@@ -30,8 +30,7 @@ router.post("/", async (req, res) => {
     !total ||
     !customer_name ||
     !customer_email ||
-    !customer_address ||
-    !payment_method
+    !customer_address 
   ) {
     return res.status(400).json({ error: "Missing required fields" });
   }
@@ -57,7 +56,6 @@ router.post("/", async (req, res) => {
       customer_address,
       customer_email,
       customer_name,
-      payment_method,
       status: status || 'new',
     }, // Используем supabase (anon) для создания заказа, если это публичная операция
   ]);

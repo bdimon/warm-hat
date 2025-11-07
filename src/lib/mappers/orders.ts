@@ -37,16 +37,7 @@ export function formatOrderTotal(total: number | RegionalPrice, language: Suppor
   return formatPrice(total, language);
 }
 
-/**
- * Translates a payment method code to a localized string
- * @param method Payment method code (card, cod, pickup)
- * @param t Translation function from useTranslation
- * @returns Localized payment method name
- */
-export function translatePaymentMethod(method: string, t: unknown): string {
-  return (t as (key: string) => string)(`paymentMethods.${method}`);
-  // return t(`paymentMethods.${method}`);
-}
+
 
 /**
  * Translates an order status code to a localized string

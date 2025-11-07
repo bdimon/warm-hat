@@ -10,7 +10,6 @@ interface OrderFormData {
   name: string;
   address: string;
   phone: string;
-  payment: string;
 }
 
 interface OrderFormErrors {
@@ -89,21 +88,7 @@ export default function OrderForm({
           />
         </FormField>
 
-        <FormField label={t('orderFormModal.labelPayment')}>
-          <select
-            name='payment'
-            value={form.payment}
-            onChange={onChange}
-            className={cn(
-              'w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 text-sm',
-              'focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-shop-blue-dark focus:border-shop-blue-dark'
-            )}
-          >
-            <option value='card'>{t('paymentMethods.card')}</option>
-            <option value='cod'>{t('paymentMethods.cod')}</option>
-            <option value='pickup'>{t('paymentMethods.pickup')}</option>
-          </select>
-        </FormField>
+       
       </div>
 
       <div className='mt-6 flex justify-between items-center'>

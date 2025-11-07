@@ -11,7 +11,6 @@ import { isValidPhoneNumber } from 'react-phone-number-input'; // 1. Импор�
 import PhoneInput from '@/components/ui/phone-input';
 import { SupportedLanguage, CURRENCY_SYMBOLS, RegionalPrice } from '@/types/Product';
 import { getLocalizedValue } from '@/lib/mappers/products';
-import { loadStripe } from '@stripe/stripe-js';
 import { formatOrderTotal } from '@/lib/mappers/orders';
 
 // Получаем ключ из переменных окружения
@@ -19,7 +18,6 @@ const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 // console.log('[OrderFormModal] Publishable Key:', stripePublishableKey); // Для отладки
 
 // Загружаем Stripe один раз при инициализации приложения
-const stripePromise = loadStripe(stripePublishableKey);
 
 // Добавьте проверку при загрузке компонента
 function CheckStripeKey() {
@@ -58,7 +56,6 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
     name: '',
     address: '',
     phone: '',
-    payment: 'card',
   });
   const { t, i18n } = useTranslation();
 
@@ -164,13 +161,11 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
   });
 
   const handleSubmit = async () => {
-    // console.log('1. handleSubmit начал выполнение, метод оплаты:', form.payment);
     
     const errors = {
       name: form.name.trim() ? '' : t('orderFormModal.name'),
       address: form.address.trim() ? '' : t('orderFormModal.address'),
       phone: form.phone && isValidPhoneNumber(form.phone) ? '' : t('orderFormModal.phone'),
-      payment: form.payment ? '' : t('orderFormModal.payment'),
     };
 
     setFormErrors(errors);
@@ -194,106 +189,7 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
     // console.log('4. Подготовленные товары:', items);
     // console.log('5. Общая сумма:', total);
 
-    setLoading(true);
-    try {
-      if (form.payment === 'card') {
-        // console.log('6. Начинаем обработку оплаты картой');
-        
-        // Создаем заказ в Supabase
-        // console.log('7. Создаем заказ в Supabase');
-        const { data: orderData, error } = await supabase.from('orders').insert({
-          items,
-          total: totalPrice, // Use the multilingual total
-          user_id: profileId,
-          payment_method: form.payment,
-          status: 'pending',
-          name: form.name,
-          address: form.address,
-          phone: form.phone,
-        }).select().single();
-
-        if (error) {
-          console.error('8. Ошибка при создании заказа:', error);
-          throw error;
-        }
-
-        console.log('9. Заказ успешно создан:', orderData);
-
-        // Создаем Checkout Session на сервере
-        console.log('10. Отправляем запрос на создание Checkout Session');
-        const response = await fetch('http://localhost:3010/api/payments/create-checkout-session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            orderId: orderData.id,
-            items: cart.map(item => ({
-              name: item.name,
-              price: item.price,
-              quantity: item.quantity,
-              // Преобразуем относительные URL в абсолютные
-              // images: item.images && item.images.length > 0 
-                // ? [getAbsoluteImageUrl(item.images[0])]
-                // : []
-            }))
-          }),
-        });
-
-        console.log('11. Получен ответ от сервера:', response.status, response.statusText);
-        
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error(t('orderForm.errorServerResponse'), errorText);
-          throw new Error(t('orderForm.errorServer', { status: response.status, statusText: response.statusText }));
-        }
-
-        const responseData = await response.json();
-        // console.log('13. Данные ответа:', responseData);
-        
-        // Перенаправляем на Checkout
-        console.log('14. Загружаем Stripe');
-        const stripe = await stripePromise;
-        console.log('15. Перенаправляем на Checkout с sessionId:', responseData.sessionId);
-        const { error: stripeError } = await stripe.redirectToCheckout({
-          sessionId: responseData.sessionId
-        });
-        
-        if (stripeError) {
-          console.error('16. Ошибка Stripe redirectToCheckout:', stripeError);
-          throw stripeError;
-        }
-      } else {
-        console.log('6. Начинаем обработку другого метода оплаты:', form.payment);
-        // Обработка для других методов оплаты (наличные, самовывоз)
-        const { error } = await supabase.from('orders').insert({
-          items,
-          total: totalPrice, // Use the multilingual total
-          user_id: profileId,
-          payment_method: form.payment,
-          status: 'new',
-          name: form.name,
-          address: form.address,
-          phone: form.phone,
-        });
-
-        if (error) {
-          console.error('7. Ошибка при создании заказа:', error);
-          showSnackbar(t('orderFormModal.serverError'), 'error');
-          return;
-        }
-
-        // console.log('8. Заказ успешно создан, очищаем корзину и закрываем модальное окно');
-        clearCart();
-        onClose();
-        closeCart();
-        showSnackbar(t('orderFormModal.orderSuccess'), 'success');
-      }
-    } catch (err) {
-      console.error('Ошибка при оформлении заказа:', err);
-      showSnackbar(t('orderFormModal.orderError'), 'error');
-    } finally {
-      // console.log('17. Завершение handleSubmit, устанавливаем loading в false');
-      setLoading(false);
-    }
+    
   };
 
   if (!isOpen) return null;
@@ -366,21 +262,7 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
             />
           </FormField>
 
-          <FormField label={t('orderFormModal.labelPayment')}>
-            <select
-              name='payment'
-              value={form.payment}
-              onChange={handleChange}
-              className={cn(
-                'w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 text-sm',
-                'focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-shop-blue-dark focus:border-shop-blue-dark'
-              )}
-            >
-              <option value='card'>{t('paymentMethods.card')}</option>
-              <option value='cod'>{t('paymentMethods.cod')}</option>
-              <option value='pickup'>{t('paymentMethods.pickup')}</option>
-            </select>
-          </FormField>
+          
         </div>
 
         <div className='mt-6 flex justify-between items-center'>

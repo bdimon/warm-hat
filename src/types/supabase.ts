@@ -27,7 +27,6 @@ export type Order = {
   customer_email?: string;
   address?: string;
   phone?: string;
-  payment_method: string;
 };
 
 // Используем тип Product из Product.ts

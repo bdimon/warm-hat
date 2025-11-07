@@ -17,7 +17,6 @@ import EditOrderPage from "./pages/EditOrderPage";
 import AdminOrders from "./pages/AdminOrders";  
 import AdminOrderDetailPage from "./pages/AdminOrderDetailPage";
 import AdminUsersPage from "./pages/AdminUsersPage"; // <-- Добавляем импорт
-import PaymentSuccessPage from './pages/PaymentSuccessPage';
 
 const queryClient = new QueryClient();
 
@@ -42,8 +41,6 @@ const App = () => (
           <Route path="/admin/products/edit/:id" element={<AdminProductForm />} />
           <Route path="/admin/order/edit/:id" element={<AdminOrderDetailPage />} />
           <Route path="/admin/users" element={<AdminUsersPage />} /> {/* <-- Добавляем роут */}
-          <Route path="/payment-success" element={<PaymentSuccessPage />} />
-          <Route path="/payment-cancel" element={<Navigate to="/cart" />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

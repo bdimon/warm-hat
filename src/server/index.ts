@@ -6,7 +6,6 @@ import loginRouter from '@/server/routes/auth/login.ts';
 import productsRouter from '@/server/routes/products/index.ts';
 import usersRouter from '@/server/routes/users/index.ts';
 import ordersRouter from '@/server/routes/orders/index.ts';
-import paymentsRouter from '@/server/routes/payments/index.ts';
 
 // dotenv.config();
 
@@ -41,7 +40,6 @@ app.use("/api/auth/login", loginRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/orders", ordersRouter);
-app.use('/api/payments', paymentsRouter);
 
 // Добавьте обработчик для несуществующих маршрутов
 app.use((req, res) => {

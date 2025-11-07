@@ -10,7 +10,7 @@ import { useSnackbar } from '@/hooks/use-snackbar';
 import { SupportedLanguage, CURRENCY_SYMBOLS } from '@/types/Product';
 import { useTranslation } from 'react-i18next';
 import { formatPrice, getLocalizedValue } from '@/lib/mappers/products';
-import { formatOrderTotal, translatePaymentMethod, translateOrderStatus } from '@/lib/mappers/orders';
+import { formatOrderTotal, translateOrderStatus } from '@/lib/mappers/orders';
 
 // Возможные статусы заказа
 const ORDER_STATUSES: SupabaseOrder['status'][] = ['new', 'pending', 'paid', 'delivered'];
@@ -180,9 +180,7 @@ export default function AdminOrderDetailPage() {
               <p>
                 <strong>{t('adminOrderDetail.totalAmount')}:</strong> {formatOrderTotal(order.total, currentLanguage)}
               </p>
-              <p>
-                <strong>{t('adminOrderDetail.paymentMethod')}:</strong> {translatePaymentMethod(order.payment_method, t)}
-              </p>
+             
             </div>
           </div>
 

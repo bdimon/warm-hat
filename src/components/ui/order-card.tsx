@@ -8,7 +8,7 @@ import { formatPrice } from '@/lib/mappers/products';
 import { MultilingualString, RegionalPrice, SupportedLanguage } from '@/types/Product';
 import { getLocalizedValue } from '@/lib/mappers/products';
 import { useTranslation } from 'react-i18next';
-import { formatOrderTotal, translatePaymentMethod, translateOrderStatus } from '@/lib/mappers/orders';
+import { formatOrderTotal, translateOrderStatus } from '@/lib/mappers/orders';
 
 interface OrderCardProps {
   order: {
@@ -20,7 +20,6 @@ interface OrderCardProps {
       images: string[];
     }>;
     total: number | RegionalPrice;
-    payment_method: string;
     status: string;
   };
   onOrderDeleted?: () => void; // Новый проп
@@ -80,9 +79,7 @@ export default function OrderCard({ order, onOrderDeleted }: OrderCardProps) {
   return (
     <li className='border rounded-lg p-3 shadow-sm bg-white space-y-3 list-none'>
       <div className='flex justify-between items-center text-sm'>
-        <p className='font-semibold text-gray-800'>
-          {t('payment.orderNumber')} : <span className='font-mono'>{order.id.substring(0, 8)}...</span>
-        </p>
+        
         <p className='text-gray-500'>{new Date(order.created_at).toLocaleDateString()}</p>
       </div>
 
@@ -119,8 +116,6 @@ export default function OrderCard({ order, onOrderDeleted }: OrderCardProps) {
             </span>
           </div>
           <div>
-            <span className='text-gray-600'>{t('adminOrderDetail.paymentMethod')}:</span>{' '}
-            <span className='text-gray-700'>{translatePaymentMethod(order.payment_method, t)}</span>
           </div>
           <div className='sm:col-span-2'>
             <span className='text-gray-600'>{t('adminOrderDetail.orderStatus')}:</span>{' '}
