@@ -10,13 +10,13 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Настройка прямого подключения к базе данных для серверных операций
 export const dbConfig = {
-  host: 'aws-0-us-east-2.pooler.supabase.com',
+  host: 'aws-1-eu-west-1.pooler.supabase.com',
   port: 6543,
   database: 'postgres',
-  user: 'postgres.sjnupqsbfcxpkiunahyy',
+  user: 'postgres.ejjzxkfjxwyofxjrzkks',
   password: process.env.SUPABASE_DB_PASSWORD,
   ssl: true,
-  poolMode: 'transaction'
+  poolMode: 'transaction',
 };
 
 // Клиент с сервисным ключом (для операций на сервере, обходящих RLS)
