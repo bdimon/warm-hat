@@ -1,5 +1,5 @@
 import { TFunction } from 'i18next';
-import { isValidPhoneNumber } from 'react-phone-number-input';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
 
 export const validateEmail = (email: string, t: TFunction): string => {
   if (!email.trim()) return t('authModal.validation.emailRequired');
@@ -51,5 +51,10 @@ export const validateRequired = (value: string, t: TFunction, msgKey: string): s
  */
 export const validatePhone = (phone: string, t: TFunction, msgKey: string): string => {
   if (!phone) return t(msgKey);
-  return isValidPhoneNumber(phone) ? '' : t(msgKey);
+  try {
+    const parsed = parsePhoneNumberFromString(phone);
+    return parsed && parsed.isValid() ? '' : t(msgKey);
+  } catch (e) {
+    return t(msgKey);
+  }
 };

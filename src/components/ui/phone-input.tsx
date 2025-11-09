@@ -1,19 +1,17 @@
-import React from 'react';
-import PhoneInput, { Country } from 'react-phone-number-input';
-import 'react-phone-number-input/style.css'; // Стили для react-phone-number-input
+import React, { useEffect, useState } from 'react';
+import {
+  AsYouType,
+  parsePhoneNumberFromString,
+  getCountryCallingCode,
+  type CountryCode,
+} from 'libphonenumber-js';
 
 interface PhoneInputProps {
-  value: string; // Текущее значение номера телефона (желательно в E.164 формате)
-  // onChange теперь принимает только номер телефона, так как react-phone-number-input
-  // обычно используется с react-hook-form или напрямую управляет своим состоянием.
-  // Для простоты интеграции с вашими текущими формами, мы будем передавать только значение.
-  // Если вам нужны данные о стране, их можно получить из самого значения E.164.
+  value: string | undefined; // E.164 value preferred
   onChange: (phoneNumberE164: string | undefined) => void;
-  defaultCountry?: Country; // Страна по умолчанию (например, 'ua', 'pl')
-  preferredCountries?: Country[];
-  inputClassName?: string; // Классы для стилизации самого поля ввода
-  // containerClassName больше не так актуален, так как стилизация компонента другая
-  containerClassName?: string; // Классы для стилизации контейнера компонента
+  defaultCountry?: CountryCode; // e.g. 'PL', 'UA'
+  preferredCountries?: CountryCode[];
+  inputClassName?: string;
 }
 
 const PhoneInputField: React.FC<PhoneInputProps> = ({
@@ -21,33 +19,74 @@ const PhoneInputField: React.FC<PhoneInputProps> = ({
   onChange,
   defaultCountry = 'PL',
   preferredCountries = ['PL', 'UA', 'US', 'DE'],
-  // Стилизуем инпут, чтобы он был похож на другие поля в вашем проекте
   inputClassName = 'w-full border p-2 rounded border-gray-300 focus:border-shop-blue-dark focus:ring-shop-blue-dark',
-  // containerClassName = 'intl-tel-input w-full', // Этот класс специфичен для старой библиотеки
 }) => {
+  const [display, setDisplay] = useState<string>(() => {
+    if (!value) return '';
+    try {
+      const parsed = parsePhoneNumberFromString(value);
+      return parsed ? parsed.formatInternational() : value;
+    } catch {
+      return value;
+    }
+  });
+  const [selectedCountry, setSelectedCountry] = useState<CountryCode>(defaultCountry);
+
+  // keep local display in sync when external value changes
+  useEffect(() => {
+    if (!value) return setDisplay('');
+    try {
+      const parsed = parsePhoneNumberFromString(value);
+      setDisplay(parsed ? parsed.formatInternational() : value);
+      if (parsed && parsed.country) setSelectedCountry(parsed.country);
+    } catch {
+      setDisplay(value);
+    }
+  }, [value]);
+
+  const handleChange = (raw: string) => {
+    // format as user types using AsYouType for the default country
+    try {
+      const formatter = new AsYouType(selectedCountry);
+      const formatted = formatter.input(raw);
+      setDisplay(formatted);
+
+      // attempt to parse to E.164 and pass that to onChange when possible
+      const parsed = parsePhoneNumberFromString(formatted, selectedCountry);
+      if (parsed && parsed.isValid()) {
+        onChange(parsed.number);
+      } else {
+        // if not valid yet, pass undefined so validators can handle empty/invalid
+        onChange(undefined);
+      }
+    } catch (e) {
+      setDisplay(raw);
+      onChange(undefined);
+    }
+  };
+
   return (
-    <PhoneInput
-      international // Показывает + перед кодом страны
-      defaultCountry={defaultCountry}
-      value={value}
-      onChange={onChange} // onChange передает значение в формате E.164 или undefined
-      countries={preferredCountries}
-      className={inputClassName} // Применяем стили к самому инпуту
-      // Для react-phone-number-input стили применяются к корневому элементу
-      // и к внутреннему <input> через inputComponent или напрямую через CSS.
-      // Класс inputClassName будет применен к обертке, а не к самому <input>.
-      // Чтобы стилизовать сам <input>, можно использовать CSS или передать кастомный inputComponent.
-      // Однако, для простоты, попробуем так. Если стили не применятся как надо,
-      // можно будет добавить глобальные стили для `.PhoneInputInput`.
-      // Пример:
-      // inputComponent={React.forwardRef((props, ref) => (
-      //   <input {...props} ref={ref} className={inputClassName} />
-      // ))}
-      // Но для начала попробуем без этого.
-      // `react-phone-number-input/react-hook-form` ожидает `control` из react-hook-form,
-      // но мы можем использовать его и как управляемый компонент, передавая value и onChange.
-      // Если возникнут проблемы, можно использовать базовый `import PhoneInput from 'react-phone-number-input'`
-    />
+    <div className='flex items-center gap-2'>
+      <select
+        aria-label='Select country'
+        value={selectedCountry}
+        onChange={(e) => setSelectedCountry(e.target.value as CountryCode)}
+        className='border rounded p-2 bg-white'
+      >
+        {preferredCountries.map((c) => (
+          <option key={c} value={c}>
+            {c} (+{getCountryCallingCode(c)})
+          </option>
+        ))}
+      </select>
+      <input
+        type='tel'
+        className={inputClassName}
+        value={display}
+        onChange={(e) => handleChange(e.target.value)}
+        placeholder={undefined}
+      />
+    </div>
   );
 };
 
