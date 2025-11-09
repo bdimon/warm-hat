@@ -23,7 +23,7 @@ export function ForgotPasswordForm({ onSuccess, onSwitchMode }: ForgotPasswordFo
       return;
     }
     if (!isEmail(email)) {
-      showSnackbar(t('authModal.forgotPassword.enterEmail'), 'info');
+      showSnackbar(t('authModal.validation.emailInvalid'), 'info');
       return;
     }
 

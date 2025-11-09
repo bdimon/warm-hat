@@ -84,7 +84,7 @@ export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
     const { error: updateError } = await supabase.auth.updateUser(updates);
 
     if (updateError) {
-      setError("t('authSettings.error')): " + updateError.message);
+      setError(`${t('authSettings.error')}: ${updateError.message}`);
     } else {
       let successMsg = t('authSettings.successPassword');
       if (updates.email && updates.password) {
