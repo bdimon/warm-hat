@@ -41,5 +41,26 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, './src'),
       },
     },
+    build: {
+      rollupOptions: {
+        output: {
+          // conservative manualChunks to split vendor and large libs
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('react') || id.includes('react-dom')) return 'vendor-react';
+              if (
+                id.includes('libphonenumber-js') ||
+                id.includes('recharts') ||
+                id.includes('react-day-picker')
+              )
+                return 'vendor-charts';
+              if (id.includes('@radix-ui') || id.includes('cmdk') || id.includes('sonner'))
+                return 'vendor-ui';
+              return 'vendor';
+            }
+          },
+        },
+      },
+    },
   };
 });
