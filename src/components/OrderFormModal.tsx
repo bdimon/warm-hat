@@ -8,7 +8,7 @@ import { BaseModal } from '@/components/ui/base-modal';
 import { useEffect, useState } from 'react';
 import FormField from './FormField';
 import { useTranslation } from 'react-i18next';
-import { isValidPhoneNumber } from 'react-phone-number-input'; // 1. Импортируем функцию валидации
+import { validateRequired, validatePhone } from '@/lib/validation';
 import PhoneInput from '@/components/ui/phone-input';
 import { SupportedLanguage, CURRENCY_SYMBOLS, RegionalPrice } from '@/types/Product';
 import { getLocalizedValue } from '@/lib/mappers/products';
@@ -164,9 +164,9 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
 
   const handleSubmit = async () => {
     const errors = {
-      name: form.name.trim() ? '' : t('orderFormModal.name'),
-      address: form.address.trim() ? '' : t('orderFormModal.address'),
-      phone: form.phone && isValidPhoneNumber(form.phone) ? '' : t('orderFormModal.phone'),
+      name: validateRequired(form.name, t, 'orderFormModal.name'),
+      address: validateRequired(form.address, t, 'orderFormModal.address'),
+      phone: validatePhone(form.phone, t, 'orderFormModal.phone'),
     };
 
     setFormErrors(errors);
@@ -227,62 +227,57 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
   };
 
   return (
-    <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={t('orderFormModal.title')}
-      maxWidth="lg"
-    >
+    <BaseModal isOpen={isOpen} onClose={onClose} title={t('orderFormModal.title')} maxWidth='lg'>
       <div className='space-y-4'>
-          <FormField label={t('orderFormModal.labelName')} error={formErrors.name}>
-            <input
-              name='name'
-              value={form.name}
-              onChange={handleChange}
-              placeholder={t('orderFormModal.name')}
-              className={cn(
-                'rounded border w-full p-2',
-                formErrors.name
-                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
-                  : 'border-gray-300 focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
-                // Базовые стили, включая border
-              )}
-            />
-          </FormField>
+        <FormField label={t('orderFormModal.labelName')} error={formErrors.name}>
+          <input
+            name='name'
+            value={form.name}
+            onChange={handleChange}
+            placeholder={t('orderFormModal.name')}
+            className={cn(
+              'rounded border w-full p-2',
+              formErrors.name
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
+                : 'border-gray-300 focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
+              // Базовые стили, включая border
+            )}
+          />
+        </FormField>
 
-          <div className='text-sm text-gray-500 pt-1'>
-            Email: <span className='font-medium'>{userEmail}</span>
-          </div>
+        <div className='text-sm text-gray-500 pt-1'>
+          Email: <span className='font-medium'>{userEmail}</span>
+        </div>
 
-          <FormField label={t('orderFormModal.labelAddress')} error={formErrors.address}>
-            <textarea
-              name='address'
-              value={form.address}
-              onChange={handleChange}
-              placeholder={t('orderFormModal.address')}
-              className={cn(
-                'rounded border w-full p-2',
-                formErrors.address
-                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
-                  : 'border-gray-300 focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
-                // Базовые стили, включая border
-              )}
-              rows={4}
-            />
-          </FormField>
+        <FormField label={t('orderFormModal.labelAddress')} error={formErrors.address}>
+          <textarea
+            name='address'
+            value={form.address}
+            onChange={handleChange}
+            placeholder={t('orderFormModal.address')}
+            className={cn(
+              'rounded border w-full p-2',
+              formErrors.address
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
+                : 'border-gray-300 focus:border-shop-blue-dark focus:ring-shop-blue-dark' // Стили по умолчанию/при фокусе) ${
+              // Базовые стили, включая border
+            )}
+            rows={4}
+          />
+        </FormField>
 
-          <FormField label={t('orderFormModal.labelPhone')} error={formErrors.phone}>
-            <PhoneInput
-              value={form.phone}
-              onChange={handlePhoneChange}
-              inputClassName={cn(
-                'rounded border w-full p-2',
-                formErrors.phone
-                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
-                  : 'border-gray-300 focus:border-shop-blue-dark focus:ring-shop-blue-dark'
-              )}
-            />
-          </FormField>
+        <FormField label={t('orderFormModal.labelPhone')} error={formErrors.phone}>
+          <PhoneInput
+            value={form.phone}
+            onChange={handlePhoneChange}
+            inputClassName={cn(
+              'rounded border w-full p-2',
+              formErrors.phone
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500' // Стили для ошибки
+                : 'border-gray-300 focus:border-shop-blue-dark focus:ring-shop-blue-dark'
+            )}
+          />
+        </FormField>
       </div>
 
       <div className='mt-6 flex justify-between items-center'>

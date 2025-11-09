@@ -11,7 +11,7 @@ import {
   translateOrderStatus,
 } from '@/lib/mappers/orders';
 import { formatPrice, getLocalizedValue} from '@/lib/mappers/products';
-import { isValidPhoneNumber } from 'react-phone-number-input'; // 1. Импортируем функцию валидации
+import { validateRequired, validatePhone } from '@/lib/validation';
 import PhoneInput from '@/components/ui/phone-input';
 
 // Эти типы используются локально, если они не экспортируются из use-order-form,
@@ -178,9 +178,9 @@ export default function EditOrderPage() {
 
   const validate = (): OrderFormErrors => {
     const newErrors: OrderFormErrors = {};
-    if (!form.name.trim()) newErrors.name = t('orderFormModal.name');
-    if (!form.address.trim()) newErrors.address = t('orderFormModal.address');
-    newErrors.phone = form.phone && isValidPhoneNumber(form.phone) ? '' : t('orderFormModal.phone');
+    newErrors.name = validateRequired(form.name, t, 'orderFormModal.name');
+    newErrors.address = validateRequired(form.address, t, 'orderFormModal.address');
+    newErrors.phone = validatePhone(form.phone, t, 'orderFormModal.phone');
     return newErrors;
   };
 

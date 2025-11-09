@@ -1,4 +1,5 @@
 import { TFunction } from 'i18next';
+import { isValidPhoneNumber } from 'react-phone-number-input';
 
 export const validateEmail = (email: string, t: TFunction): string => {
   if (!email.trim()) return t('authModal.validation.emailRequired');
@@ -34,4 +35,21 @@ export const validateConfirmPassword = (
 export const isEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
+};
+
+/**
+ * Generic required validator that accepts a translation key for the error message.
+ * Useful for fields where the translation key differs (e.g. orderFormModal.name).
+ */
+export const validateRequired = (value: string, t: TFunction, msgKey: string): string => {
+  return value && value.trim() ? '' : t(msgKey);
+};
+
+/**
+ * Phone validator wrapper using react-phone-number-input's isValidPhoneNumber.
+ * Returns translated error message (msgKey) when invalid.
+ */
+export const validatePhone = (phone: string, t: TFunction, msgKey: string): string => {
+  if (!phone) return t(msgKey);
+  return isValidPhoneNumber(phone) ? '' : t(msgKey);
 };

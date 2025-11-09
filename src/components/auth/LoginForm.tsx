@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import FormField from "../FormField";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { validateEmail, validatePassword } from "./validation.ts";
+import { validateEmail, validatePassword } from "@/lib/validation";
 
 interface LoginFormProps {
   onSuccess: () => void;

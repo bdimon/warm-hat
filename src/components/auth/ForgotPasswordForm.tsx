@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { isEmail } from '@/lib/validation';
 import { useSnackbar } from "@/hooks/use-snackbar";
 import { supabase } from "@/lib/supabase-client";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,10 @@ export function ForgotPasswordForm({ onSuccess, onSwitchMode }: ForgotPasswordFo
   const handlePasswordResetRequest = async () => {
     if (!email.trim()) {
       showSnackbar(t("authModal.forgotPassword.enterEmail"), "info");
+      return;
+    }
+    if (!isEmail(email)) {
+      showSnackbar(t('authModal.forgotPassword.enterEmail'), 'info');
       return;
     }
 

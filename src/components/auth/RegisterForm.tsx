@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import FormField from "../FormField";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { validateName, validateEmail, validatePassword, validateConfirmPassword } from "./validation.ts";
+import { validateName, validateEmail, validatePassword, validateConfirmPassword } from "@/lib/validation";
 
 interface RegisterFormProps {
   onSuccess: () => void;
