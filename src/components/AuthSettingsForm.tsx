@@ -5,9 +5,8 @@ import { User } from "@supabase/supabase-js";
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import {Loader2} from 'lucide-react'
-
-
+import { validateEmail, validatePassword, validateConfirmPassword } from '@/lib/validation';
+import { Loader2 } from 'lucide-react';
 
 type FormState = {
   email: string;
@@ -54,25 +53,11 @@ export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
   };
 
   const validate = (): boolean => {
-    const errors = { email: '', password: '', confirmPassword: '' };
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!form.email.trim()) {
-      errors.email = t('authModal.validation.emailRequired');
-    } else if (!emailRegex.test(form.email)) {
-      errors.email = t('authModal.validation.emailInvalid');
-    }
-    if (!form.password.trim()) {
-      errors.password = t('authModal.validation.passwordRequired');
-    } else if (form.password.length < 6) {
-      errors.password = t('authModal.validation.passwordTooShort');
-    }
-
-    if (!form.confirmPassword.trim()) {
-      errors.confirmPassword = t('authModal.validation.confirmPasswordRequired');
-    } else if (form.password !== form.confirmPassword) {
-      errors.confirmPassword = t('authModal.validation.passwordsDoNotMatch');
-    }
+    const errors = {
+      email: validateEmail(form.email, t),
+      password: validatePassword(form.password, t),
+      confirmPassword: validateConfirmPassword(form.password, form.confirmPassword, t),
+    };
 
     setFormErrors(errors);
 

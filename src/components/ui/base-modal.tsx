@@ -68,11 +68,11 @@ export function BaseModal({
           </button>
         )}
 
-        {title && (
+        {/* {title && (
           <div className="px-6 py-4 border-b">
             <h2 className="text-xl font-bold">{title}</h2>
           </div>
-        )}
+        )} */}
 
         <div className={cn("p-6", !title && "pt-8")}>
           {children}
