@@ -12,7 +12,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/variants';
 import { useSnackbar } from "@/hooks/use-snackbar";
 import { User } from "@supabase/supabase-js";
 import { useTranslation } from "react-i18next";

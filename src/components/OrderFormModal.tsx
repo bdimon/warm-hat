@@ -3,7 +3,8 @@ import { useCart } from '@/hooks/use-cart';
 import { useSnackbar } from '@/hooks/use-snackbar';
 import { supabase } from '@/lib/supabase-client';
 import { cn } from '@/lib/utils';
-import { Loader2, X } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
+import { BaseModal } from '@/components/ui/base-modal';
 import { useEffect, useState } from 'react';
 import FormField from './FormField';
 import { useTranslation } from 'react-i18next';
@@ -225,26 +226,14 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div
-      className='fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center'
-      onClick={onClose}
+    <BaseModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={t('orderFormModal.title')}
+      maxWidth="lg"
     >
-      <div
-        className='bg-white w-full max-w-lg rounded-lg p-4 sm:p-6 relative shadow-xl'
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          className='absolute top-3 right-3 text-gray-500 hover:text-gray-700 transition-colors'
-          onClick={onClose}
-        >
-          <X />
-        </button>
-        <h2 className='text-xl font-bold mb-4'>{t('orderFormModal.title')}</h2>
-
-        <div className='space-y-4'>
+      <div className='space-y-4'>
           <FormField label={t('orderFormModal.labelName')} error={formErrors.name}>
             <input
               name='name'
@@ -294,31 +283,30 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
               )}
             />
           </FormField>
-        </div>
-
-        <div className='mt-6 flex justify-between items-center'>
-          <span className='font-semibold text-shop-blue-dark'>{t('orderFormModal.total')}</span>
-          <span className='text-lg font-bold'>{formatOrderTotal(totalPrice, currentLang)}</span>
-        </div>
-
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
-          className={cn(
-            'mt-6 w-full flex items-center justify-center bg-shop-blue-dark text-white py-2.5 rounded-md hover:bg-shop-blue-dark/90 transition-colors',
-            'disabled:opacity-60 disabled:cursor-not-allowed'
-          )}
-        >
-          {loading ? (
-            <>
-              <Loader2 className='mr-2 h-5 w-5 animate-spin' />
-              {t('orderFormModal.loading')}
-            </>
-          ) : (
-            t('orderFormModal.confirm')
-          )}
-        </button>
       </div>
-    </div>
+
+      <div className='mt-6 flex justify-between items-center'>
+        <span className='font-semibold text-shop-blue-dark'>{t('orderFormModal.total')}</span>
+        <span className='text-lg font-bold'>{formatOrderTotal(totalPrice, currentLang)}</span>
+      </div>
+
+      <button
+        onClick={handleSubmit}
+        disabled={loading}
+        className={cn(
+          'mt-6 w-full flex items-center justify-center bg-shop-blue-dark text-white py-2.5 rounded-md hover:bg-shop-blue-dark/90 transition-colors',
+          'disabled:opacity-60 disabled:cursor-not-allowed'
+        )}
+      >
+        {loading ? (
+          <>
+            <Loader2 className='mr-2 h-5 w-5 animate-spin' />
+            {t('orderFormModal.loading')}
+          </>
+        ) : (
+          t('orderFormModal.confirm')
+        )}
+      </button>
+    </BaseModal>
   );
 }

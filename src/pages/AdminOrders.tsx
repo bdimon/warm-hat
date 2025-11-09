@@ -15,7 +15,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/variants';
 import { useTranslation } from 'react-i18next';
 import { SupportedLanguage, CURRENCY_SYMBOLS } from '@/types/Product'; // Импортируем типы для языка и валют
 import { formatPrice } from '@/lib/mappers/products'; // Импортируем функцию форматирования цены
