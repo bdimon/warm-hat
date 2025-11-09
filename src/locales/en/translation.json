@@ -412,5 +412,12 @@
     "pending": "Pending",
     "paid": "Paid",
     "delivered": "Delivered"
-  }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "close": "Close"
+  } 
 }

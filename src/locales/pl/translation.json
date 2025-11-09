@@ -412,5 +412,12 @@
     "pending": "W trakcie realizacji",
     "paid": "Opłacony",
     "delivered": "Dostarczony"
+  },
+  "common": {
+    "loading": "Ładowanie...",
+    "error": "Błąd",
+    "submit": "Zatwierdź",
+    "cancel": "Anuluj",
+    "close": "Zamknij"
   }
 }

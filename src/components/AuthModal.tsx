@@ -22,9 +22,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   }, [isOpen]);
 
   const titles = {
-    login: t('authModal.loginTitle'),
-    register: t('authModal.registerTitle'),
-    'forgot-password': t('authModal.forgotPasswordTitle'),
+    login: t('authModal.login.title'),
+    register: t('authModal.register.title'),
+    'forgot-password': t('authModal.forgotPassword.title'),
   };
 
   return (

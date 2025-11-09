@@ -369,7 +369,7 @@
     "errorNoSessionId": "Не найден идентификатор сессии",
     "errorCheckingStatus": "Ошибка при проверке статуса платежа",
     "errorUnknown": "Произошла неизвестная ошибка",
-    "errorPaymentNotCompleted":"Платеж не завершен. Статус: {{status}}",
+    "errorPaymentNotCompleted": "Платеж не завершен. Статус: {{status}}",
     "returnToCart": "Вернуться в корзину",
     "successTitle": "Оплата успешна!",
     "successMessage": "Спасибо за ваш заказ. Ваш платеж успешно обработан.",
@@ -390,17 +390,17 @@
     "page": "Страница",
     "ofTotal": "из {{total}}",
     "more": "more",
-"noItems": "Нет товаров",
-"total": "Всего",
-"paymentMethod": "Способ оплаты",
-"status": "Статус",
-"current": "Текущий",
-"changeStatus": "Изменить статус",
-"selectNewStatus": "Выбрать новый статус",
-"saveStatus": "Сохранить статус",
-"itemsInOrder": "Товары в заказе",
-"quantity": "Количество",
-"noItemsInfo": "Информация о товарах отсутствует."
+    "noItems": "Нет товаров",
+    "total": "Всего",
+    "paymentMethod": "Способ оплаты",
+    "status": "Статус",
+    "current": "Текущий",
+    "changeStatus": "Изменить статус",
+    "selectNewStatus": "Выбрать новый статус",
+    "saveStatus": "Сохранить статус",
+    "itemsInOrder": "Товары в заказе",
+    "quantity": "Количество",
+    "noItemsInfo": "Информация о товарах отсутствует."
   },
   "paymentMethods": {
     "card": "Оплата картой онлайн",
@@ -412,6 +412,13 @@
     "pending": "В обработке",
     "paid": "Оплачен",
     "delivered": "Доставлен"
+  },
+  "common": {
+    "loading": "Загрузка...",
+    "error": "Ошибка",
+    "submit": "Отправить",
+    "cancel": "Отмена",
+    "close": "Закрыть"
   }
 }
 
