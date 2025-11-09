@@ -61,8 +61,8 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
 
   // Получаем текущий язык и преобразуем его в SupportedLanguage
   const currentLang = i18n.language.split('-')[0] as SupportedLanguage;
-  console.log('[OrderFormModal] currentLang:', currentLang);
-  
+  // console.log('[OrderFormModal] currentLang:', currentLang);
+
   // Получаем символ валюты для текущего языка
   const currencySymbol = CURRENCY_SYMBOLS[currentLang];
 
@@ -144,24 +144,24 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
     en: 0,
     ru: 0,
     ua: 0,
-    pl: 0
+    pl: 0,
   };
 
   // Calculate totals for each language
-  cart.forEach(item => {
+  cart.forEach((item) => {
     const supportedLanguages: SupportedLanguage[] = ['en', 'ru', 'ua', 'pl'];
-    
-    supportedLanguages.forEach(lang => {
-      const price = item.isSale && item.salePrice 
-        ? getLocalizedValue(item.salePrice, lang)
-        : getLocalizedValue(item.price, lang);
-      
+
+    supportedLanguages.forEach((lang) => {
+      const price =
+        item.isSale && item.salePrice
+          ? getLocalizedValue(item.salePrice, lang)
+          : getLocalizedValue(item.price, lang);
+
       totalPrice[lang] += price * item.quantity;
     });
   });
 
   const handleSubmit = async () => {
-    
     const errors = {
       name: form.name.trim() ? '' : t('orderFormModal.name'),
       address: form.address.trim() ? '' : t('orderFormModal.address'),
@@ -170,11 +170,11 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
 
     setFormErrors(errors);
     const hasErrors = Object.values(errors).some(Boolean);
-    // console.log('2. Валидация формы:', hasErrors ? 'есть ошибки' : 'форма валидна');
-    
+    console.log('2. Валидация формы:', hasErrors ? 'есть ошибки' : 'форма валидна');
+
     if (hasErrors || cart.length === 0) {
       if (cart.length === 0) showSnackbar(t('cartModal.emptyCart'), 'warning');
-      // console.log('3. Выход из handleSubmit из-за ошибок или пустой корзины');
+      console.log('3. Выход из handleSubmit из-за ошибок или пустой корзины');
       return;
     }
 
@@ -186,10 +186,43 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
       price: item.isSale && item.salePrice ? item.salePrice : item.price,
     }));
 
-    // console.log('4. Подготовленные товары:', items);
-    // console.log('5. Общая сумма:', total);
+    console.log('4. Подготовленные товары:', items);
+    console.log('5. Общая сумма:', totalPrice[currentLang], currencySymbol);
 
-    
+    setLoading(true);
+    try {
+      console.log('6. Начинаем обработку другого метода оплаты:');
+      // Обработка для других методов оплаты (наличные, самовывоз)
+      const { error } = await supabase.from('orders').insert({
+        items,
+        total: totalPrice, // Use the multilingual total
+        user_id: profileId,
+        // payment_method: form.payment,
+        status: 'new',
+        name: form.name,
+        address: form.address,
+        phone: form.phone,
+      });
+
+      if (error) {
+        console.error('7. Ошибка при создании заказа:', error);
+        showSnackbar(t('orderFormModal.serverError'), 'error');
+        return;
+      }
+
+      console.log('8. Заказ успешно создан, очищаем корзину и закрываем модальное окно');
+      clearCart();
+      onClose();
+      closeCart();
+      showSnackbar(t('orderFormModal.orderSuccess'), 'success');
+    } catch (error) {
+      console.error('Ошибка при создании заказа:', error);
+      showSnackbar(t('orderFormModal.errorSubmit'), 'error');
+      setLoading(false);
+    } finally {
+      console.log('17. Завершение handleSubmit, устанавливаем loading в false');
+      setLoading(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -261,8 +294,6 @@ export default function OrderFormModal({ isOpen, onClose, closeCart }: OrderForm
               )}
             />
           </FormField>
-
-          
         </div>
 
         <div className='mt-6 flex justify-between items-center'>
