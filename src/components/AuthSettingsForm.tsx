@@ -78,8 +78,14 @@ export default function AuthSettingsForm({ onClose }: AuthSettingsFormProps) {
       password?: string;
     } = {};
 
-    if (form.email.trim()) updates.email = form.email.trim();
-    if (form.password.trim()) updates.password = form.password;
+    // If email field is not empty and valid, include it
+    if (form.email && !validateEmail(form.email, t)) {
+      updates.email = form.email.trim();
+    }
+    // If password field is not empty and valid, include it
+    if (form.password && !validatePassword(form.password, t)) {
+      updates.password = form.password;
+    }
 
     const { error: updateError } = await supabase.auth.updateUser(updates);
 
